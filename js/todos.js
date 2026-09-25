@@ -1,17 +1,45 @@
+window.todoStore = {
+    todos: JSON.parse(localStorage.getItem('todo-store') || '[]'),
+
+    save() {
+        localStorage.setItem('todo-store', JSON.stringify(this.todos));
+    },
+};
+
+/*
+window.Todo = function (body) {
+    this.id = Date.now();
+    this.body = body;
+    this.completed = false;
+
+    return new Proxy(this, {
+        set(obj, prop, val) {
+            obj[prop] = val;
+        }
+    });
+}
+    */
+
 window.todos = function () {
 
     return {
-
+            ...todoStore,
             filter: 'all',
-            todos: [],
-            
-            editedTodo: false,
+            newTodo: '',
+            editedTodo: null,
+
             get active() {
                 return this.todos.filter(todo => !todo.completed);
             },
 
             get completed() {
                 return this.todos.filter(todo => todo.completed);
+            },
+
+            get allComplete() {
+                return this.todos.length > 0 &&
+                        this.todos.length === this.completed.length;
+                //return this.todos.length === this.completed.length;        
             },
 
             get filteredTodos() {
@@ -38,8 +66,6 @@ window.todos = function () {
                 */
             },
 
-            newTodo: '',
-
             addTodo() {
 
                 if (! this.newTodo) {
@@ -50,12 +76,16 @@ window.todos = function () {
                     return;
                 }
 
+                
                 this.todos.push({
                     id: Date.now(), //this.todos.length + 1,
                     body: this.newTodo,
                     completed: false
                 });
+                
+               //this.todos.push(new Todo(this.newTodo));
 
+                this.save();
                 this.newTodo = '';
             },
 
@@ -73,6 +103,8 @@ window.todos = function () {
                 todo.body = todo.body.trim();
                 this.editedTodo = null;
                 delete todo.cachedBody;
+
+                this.save();
             },
             
             cancelEdit(todo) {
@@ -86,11 +118,33 @@ window.todos = function () {
                 let position = this.todos.indexOf(todo);
 
                 this.todos.splice(position, 1);
+                this.save();
             },
 
             completeTodo (todo) {
                 //alert ('hello');
                 todo.completed = true;
-            }
+            },
+
+            toggleTodoCompletion(todo) {
+                todo.completed = !todo.completed;
+
+                this.save();
+            },
+
+            toggleAllComplete() {
+                let allComplete = this.allComplete;
+
+                this.todos.forEach(todo => {
+                    todo.completed = !allComplete;
+                });
+                this.save();
+            },
+
+            clearCompletedTodos() {
+                this.todos = this.active;
+                this.save();
+            },
+            
     }
 }

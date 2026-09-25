@@ -68,6 +68,8 @@
             <!-- Mark all todos complete -->
 
             <input
+                :checked="allComplete"
+                @click="toggleAllComplete"
                 id="toggle-all"
                 class="toggle-all"
                 type="checkbox"
@@ -122,7 +124,7 @@
 
                             <input 
                                 x-model="todo.completed"
-                                @click="todo.completed = ! todo.completed; /*completeTodo(todo);*/"
+                                @click="toggleTodoCompletion(todo); /*todo.completed = ! todo.completed;*/ /*toggleTodoCompletion(todo);*/"
                                 class="toggle"
                                 type="checkbox"
                             >
@@ -212,7 +214,7 @@
                         @click.prevent="filter = 'completed'" 
                         :class="{ selected: filter === 'completed' }"
                         href="#/completed">
-                        Completed
+                        Completed (<span x-text="completed.length > 0 ? completed.length : '0'"></span>)
                     </a>
                 </li>
 
@@ -222,7 +224,7 @@
             <button 
                 x-show="completed.length"
                 class="clear-completed"
-                @click="todos = active"
+                @click="/*todos = active*/ clearCompletedTodos"
 
             
             >
@@ -242,10 +244,6 @@
         class="info"
         x-show="true"
     >
-
-        <p>
-            Double-click to edit a todo
-        </p>
 
         <p>
             Created by
