@@ -583,6 +583,21 @@
         .task-edit-modal-body{padding:12px 20px 8px}
         .task-edit-modal-actions{padding:10px 20px 12px}
     }
+
+    /* Phase 7.6.2 — Milestones in Project Command Center */
+    .command-metrics.command-metrics-five{grid-template-columns:repeat(5,1fr)}
+    .command-metric.milestone-metric strong{color:#555}
+    .dashboard-milestone-panel{margin-bottom:18px}
+    .dashboard-milestone-row{padding:11px 2px;border-bottom:1px solid #eee}
+    .dashboard-milestone-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
+    .dashboard-milestone-copy{min-width:0;display:flex;flex-direction:column;gap:3px}
+    .dashboard-milestone-copy strong{font-size:13px}
+    .dashboard-milestone-copy small{font-size:10px;color:#888}
+    .dashboard-milestone-progress{margin-top:7px}
+    .dashboard-milestone-overdue{color:#a33!important;font-weight:700}
+    .milestone-attention-row{cursor:pointer}
+    @media(max-width:1000px){.command-metrics.command-metrics-five{grid-template-columns:repeat(2,1fr)}}
+    @media(max-width:560px){.command-metrics.command-metrics-five{grid-template-columns:1fr}}
 </style>
 
 </head>
@@ -670,7 +685,7 @@
         </div>
       </div>
 
-      <div class="command-metrics">
+      <div class="command-metrics command-metrics-five">
         <div class="command-metric">
           <span>Open tasks</span>
           <strong x-text="dashboardOpenTasks.length"></strong>
@@ -690,6 +705,12 @@
           <span>High / urgent</span>
           <strong x-text="dashboardHighPriorityTasks.length"></strong>
           <small>open priority tasks</small>
+        </div>
+        <div class="command-metric milestone-metric"
+             :class="{danger:dashboardOverdueMilestones.length>0,warning:dashboardRemainingMilestones.length>0 && dashboardOverdueMilestones.length===0}">
+          <span>Milestones</span>
+          <strong x-text="dashboardRemainingMilestones.length + ' remaining'"></strong>
+          <small x-text="dashboardCompletedMilestones.length + ' completed · ' + dashboardMilestones.length + ' total'"></small>
         </div>
       </div>
 
@@ -716,7 +737,21 @@
             </button>
           </template>
 
-          <div x-show="dashboardAttentionTasks.length===0" class="command-empty">
+          <template x-for="m in dashboardOverdueMilestones" :key="'attention-milestone-'+m.id">
+            <button class="attention-row milestone-attention-row" @click="openProjectMilestone(m)">
+              <span class="attention-copy">
+                <strong x-text="m.title"></strong>
+                <small>
+                  <span>Overdue milestone</span>
+                  <span> · </span>
+                  <span x-text="Number(m.completed_tasks||0)+'/'+Number(m.total_tasks||0)+' tasks completed'"></span>
+                </small>
+              </span>
+              <span class="attention-date overdue" x-text="formatDate(m.target_date)"></span>
+            </button>
+          </template>
+
+          <div x-show="dashboardAttentionTasks.length===0 && dashboardOverdueMilestones.length===0" class="command-empty">
             No urgent attention items.
           </div>
         </section>
@@ -792,6 +827,37 @@
           </div>
         </section>
       </div>
+
+      <section class="command-panel dashboard-milestone-panel">
+        <div class="command-panel-head">
+          <strong>Milestone delivery</strong>
+          <button class="inline-link" @click="screen='projects'">Open milestones</button>
+        </div>
+
+        <template x-for="m in dashboardMilestones" :key="'dashboard-milestone-'+m.id">
+          <div class="dashboard-milestone-row">
+            <div class="dashboard-milestone-head">
+              <span class="dashboard-milestone-copy">
+                <strong x-text="m.title"></strong>
+                <small>
+                  <span x-show="m.target_date" :class="{'dashboard-milestone-overdue':isMilestoneOverdue(m)}"
+                        x-text="m.target_date ? 'Target '+formatDate(m.target_date) : 'No target date'"></span>
+                  <span> · </span>
+                  <span x-text="Number(m.completed_tasks||0)+'/'+Number(m.total_tasks||0)+' tasks'"></span>
+                </small>
+              </span>
+              <span class="mini-badge" x-text="isMilestoneCompleted(m) ? 'Completed' : milestoneProgress(m)+'%'"></span>
+            </div>
+            <div class="mini-progress dashboard-milestone-progress">
+              <span :style="'width:'+milestoneProgress(m)+'%'"></span>
+            </div>
+          </div>
+        </template>
+
+        <div x-show="dashboardMilestones.length===0" class="command-empty">
+          No milestones have been created for this project.
+        </div>
+      </section>
 
       <section class="command-panel command-activity-panel">
         <div class="command-panel-head">
@@ -2310,6 +2376,21 @@ function taskManager(){
     get dashboardHighPriorityTasks(){
       return this.dashboardOpenTasks.filter(t=>['high','urgent'].includes(String(t.priority||'normal').toLowerCase()));
     },
+    get dashboardMilestones(){
+      return [...this.milestones].sort((a,b)=>{
+        if(this.isMilestoneCompleted(a)!==this.isMilestoneCompleted(b)) return this.isMilestoneCompleted(a)?1:-1;
+        return String(a.target_date||'9999-12-31').localeCompare(String(b.target_date||'9999-12-31'));
+      });
+    },
+    get dashboardCompletedMilestones(){
+      return this.dashboardMilestones.filter(m=>this.isMilestoneCompleted(m));
+    },
+    get dashboardRemainingMilestones(){
+      return this.dashboardMilestones.filter(m=>!this.isMilestoneCompleted(m));
+    },
+    get dashboardOverdueMilestones(){
+      return this.dashboardMilestones.filter(m=>this.isMilestoneOverdue(m));
+    },
     get dashboardAttentionTasks(){
       const rows=[...this.dashboardOpenTasks].filter(t=>
         this.isDashboardOverdue(t) || ['high','urgent'].includes(String(t.priority||'').toLowerCase())
@@ -2952,6 +3033,7 @@ function taskManager(){
         await Promise.all([
           this.loadProjectPeople(),
           this.loadProjectAssignments(),
+          this.loadPlanning(),
           this.loadDashboardSchedule(),
           this.loadDashboardActivity()
         ]);
@@ -3022,6 +3104,15 @@ function taskManager(){
     dashboardTaskCategory(todo){
       if(!todo?.category_id)return 'Uncategorized';
       return this.categories.find(c=>Number(c.id)===Number(todo.category_id))?.name || 'Uncategorized';
+    },
+
+    openProjectMilestone(m){
+      this.screen='projects';
+      this.expandedMilestoneId=Number(m.id);
+      this.$nextTick(()=>{
+        const el=document.querySelector('.milestone-panel');
+        if(el)el.scrollIntoView({behavior:'smooth',block:'start'});
+      });
     },
 
 
