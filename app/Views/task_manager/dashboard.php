@@ -370,6 +370,51 @@
     .ai-subtask-row input{margin-top:3px}.ai-subtask-copy strong,.ai-subtask-copy small{display:block}.ai-subtask-copy small{color:#777;margin-top:4px}
     .ai-confidence{font-size:10px;color:#777;white-space:nowrap}
 
+    /* Phase 7 — Meetings + AI Meeting Intelligence */
+    .meeting-row{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:14px;align-items:center;padding:14px 4px;border-bottom:1px solid #e7e7e7;cursor:pointer}
+    .meeting-row:hover{background:#fafafa}.meeting-copy strong,.meeting-copy small{display:block}.meeting-copy small{color:#777;margin-top:4px}
+    .meeting-status{font-size:10px;text-transform:uppercase;letter-spacing:.04em;color:#666;border:1px solid #d7d7d7;border-radius:12px;padding:4px 8px;background:#fafafa}
+    .meeting-detail-head{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;margin-bottom:18px}.meeting-detail-actions{display:flex;gap:7px;flex-wrap:wrap}
+    .meeting-panel{border-top:1px solid #ddd;padding:16px 2px}.meeting-panel h3{font-size:14px;margin:0 0 9px}.meeting-pre{white-space:pre-wrap;line-height:1.55;color:#444}
+    .meeting-participants{display:flex;gap:8px;flex-wrap:wrap}.meeting-person-chip{display:flex;align-items:center;gap:8px;border:1px solid #ddd;border-radius:20px;padding:5px 12px 5px 5px;font-size:11px;background:#fafafa;min-width:170px}.meeting-person-chip .person-avatar.small{width:34px;height:34px;flex:none}
+    .meeting-ai-box{border:1px solid #d9d9d9;border-radius:6px;padding:14px 16px;background:#fcfcfb;margin-top:12px}.meeting-ai-box h3{margin:0 0 9px;font-size:14px}
+    .meeting-action-row{padding:13px 0;border-bottom:1px solid #e9e9e9}.meeting-action-head{display:flex;justify-content:space-between;gap:12px}.meeting-action-meta{display:flex;gap:7px;flex-wrap:wrap;margin-top:7px}.meeting-action-reason{font-size:11px;color:#777;margin-top:7px;line-height:1.45}.meeting-action-buttons{display:flex;gap:6px;margin-top:9px}
+    .meeting-form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    .meeting-participant-list{
+      max-height:280px;overflow-y:auto;display:grid;
+      grid-template-columns:repeat(2,minmax(0,1fr));
+      border:1px solid #ddd;border-radius:6px;background:#fff
+    }
+    .meeting-participant-option{
+      display:grid;grid-template-columns:20px 38px minmax(0,1fr);
+      align-items:center;gap:8px;min-width:0;padding:10px;
+      border-bottom:1px solid #eee;border-right:1px solid #eee;
+      cursor:pointer;margin:0
+    }
+    .meeting-participant-option:hover{background:#fafafa}
+    .meeting-participant-option input{width:auto!important;margin:0}
+    .meeting-participant-option:nth-child(2n){border-right:0}
+    @media(min-width:1180px){
+      .meeting-participant-list{grid-template-columns:repeat(3,minmax(0,1fr))}
+      .meeting-participant-option:nth-child(2n){border-right:1px solid #eee}
+      .meeting-participant-option:nth-child(3n){border-right:0}
+    }
+    @media(max-width:760px){
+      .meeting-participant-list{grid-template-columns:1fr}
+      .meeting-participant-option,
+      .meeting-participant-option:nth-child(2n),
+      .meeting-participant-option:nth-child(3n){border-right:0}
+    }
+    .meeting-participant-avatar{width:38px;height:38px;border-radius:50%;overflow:hidden;border:1px solid #d8d8d8;background:#f1f1f1;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#666;flex:none}
+    .meeting-participant-avatar img{width:100%;height:100%;object-fit:cover;display:block}
+    .meeting-participant-copy{min-width:0;display:flex;flex-direction:column;line-height:1.25}
+    .meeting-participant-name{font-size:13px;font-weight:700;color:#333;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .meeting-participant-role{font-size:11px;color:#777;margin-top:3px;white-space:normal;overflow-wrap:anywhere}
+    .meeting-person-chip .person-avatar.small{overflow:hidden}
+    .meeting-person-chip .person-avatar.small img{width:100%;height:100%;object-fit:cover;display:block}
+    .meeting-transcript-box textarea{min-height:180px}.meeting-empty{padding:22px 2px;color:#888}.meeting-back{border:0;background:transparent;color:#4776a8;padding:0;text-decoration:underline;font:inherit;cursor:pointer}
+    @media(max-width:700px){.meeting-form-grid{grid-template-columns:1fr}.meeting-detail-head{flex-direction:column}}
+
 </style>
 
 </head>
@@ -387,6 +432,7 @@
       <a href="#" @click.prevent="screen='mytasks'" :class="{active:screen==='mytasks'}">My Tasks</a>
       <a href="#" @click.prevent="openSchedule()" :class="{active:screen==='schedule'}">Schedule</a>
       <a href="#" @click.prevent="openPeople()" :class="{active:screen==='people'}">People</a>
+      <a href="#" @click.prevent="openMeetings()" :class="{active:screen==='meetings'}">Meetings</a>
       <a href="#" @click.prevent="openActivity()" :class="{active:screen==='activity'}">Activity</a>
       <a href="#" @click.prevent="importModal=true">Import</a>
     </nav>
@@ -886,6 +932,135 @@
           <div class="meta" x-text="taskPeople(todo.id).map(p=>p.name).join(', ') || todo.assignee || 'Unassigned'"></div>
           <div class="meta" x-text="formatDate(todo.due_date)"></div>
           <button class="delete" @click="remove(todo)">×</button>
+        </div>
+      </template>
+    </section>
+
+    <!-- ============================================================
+         PHASE 7 — MEETINGS + AI MEETING INTELLIGENCE
+         ============================================================ -->
+    <section x-show="screen==='meetings'" x-cloak>
+      <template x-if="!selectedMeeting">
+        <div>
+          <div class="top">
+            <div>
+              <h1>Meetings</h1>
+              <div class="muted">Project discussions, decisions and reviewed action items.</div>
+            </div>
+            <button class="btn btn-primary" @click="openMeetingModal()">+ New meeting</button>
+          </div>
+
+          <div x-show="meetingLoading" class="meeting-empty">Loading meetings…</div>
+          <div x-show="!meetingLoading && meetings.length===0" class="meeting-empty">No meetings have been added to this project yet.</div>
+
+          <template x-for="meeting in meetings" :key="meeting.id">
+            <div class="meeting-row" @click="openMeeting(meeting)">
+              <div class="meeting-copy">
+                <strong x-text="meeting.title"></strong>
+                <small>
+                  <span x-text="formatDateTime(meeting.start_at)"></span>
+                  <span x-show="meeting.location" x-text="' · '+meeting.location"></span>
+                </small>
+              </div>
+              <span class="meeting-status" x-text="meeting.status || 'scheduled'"></span>
+            </div>
+          </template>
+        </div>
+      </template>
+
+      <template x-if="selectedMeeting">
+        <div>
+          <button class="meeting-back" @click="closeMeetingDetail()">← Back to meetings</button>
+          <div class="meeting-detail-head" style="margin-top:14px">
+            <div>
+              <h1 x-text="selectedMeeting.title"></h1>
+              <div class="muted">
+                <span x-text="formatDateTime(selectedMeeting.start_at)"></span>
+                <span x-show="selectedMeeting.location" x-text="' · '+selectedMeeting.location"></span>
+              </div>
+            </div>
+            <div class="meeting-detail-actions">
+              <button class="btn" @click="openMeetingModal(selectedMeeting)">Edit</button>
+              <button class="btn" @click="analyzeMeeting()" :disabled="meetingAnalyzing" x-text="meetingAnalyzing ? 'Analyzing…' : '✨ Analyze meeting'"></button>
+              <button class="btn danger-btn" @click="deleteMeeting(selectedMeeting)">Delete</button>
+            </div>
+          </div>
+
+          <div class="meeting-panel" x-show="selectedMeeting.agenda">
+            <h3>Agenda</h3><div class="meeting-pre" x-text="selectedMeeting.agenda"></div>
+          </div>
+          <div class="meeting-panel" x-show="selectedMeeting.notes">
+            <h3>Notes</h3><div class="meeting-pre" x-text="selectedMeeting.notes"></div>
+          </div>
+          <div class="meeting-panel">
+            <h3>Participants</h3>
+            <div class="meeting-participants">
+              <template x-for="participant in meetingParticipants" :key="participant.id">
+                <div class="meeting-person-chip">
+                  <span class="person-avatar small">
+                    <img x-show="meetingParticipantPerson(participant)?.photo"
+                         :src="photoUrl(meetingParticipantPerson(participant)?.photo || '')"
+                         :alt="meetingParticipantName(participant)">
+                    <span x-show="!meetingParticipantPerson(participant)?.photo"
+                          x-text="initials(meetingParticipantName(participant))"></span>
+                  </span>
+                  <span class="meeting-participant-copy">
+                    <span class="meeting-participant-name"
+                          x-text="meetingParticipantName(participant)"></span>
+                    <span class="meeting-participant-role"
+                          x-show="meetingParticipantPerson(participant)?.job_title || meetingParticipantPerson(participant)?.role"
+                          x-text="meetingParticipantPerson(participant)?.job_title || meetingParticipantPerson(participant)?.role || ''"></span>
+                  </span>
+                </div>
+              </template>
+              <span class="muted" x-show="meetingParticipants.length===0">No participants selected.</span>
+            </div>
+          </div>
+
+          <div class="meeting-panel meeting-transcript-box">
+            <div class="field-label-actions"><h3>Transcript</h3><button class="inline-link" @click="saveMeetingTranscript()" :disabled="meetingTranscriptSaving" x-text="meetingTranscriptSaving ? 'Saving…' : 'Save transcript'"></button></div>
+            <textarea x-model="meetingTranscriptText" placeholder="Paste meeting transcript, minutes, or spoken notes here before AI analysis."></textarea>
+          </div>
+
+          <div class="meeting-ai-box">
+            <h3>AI Summary</h3>
+            <div class="meeting-pre" x-text="selectedMeeting.ai_summary || 'Analyze this meeting to generate a concise project summary.'"></div>
+          </div>
+
+          <div class="meeting-ai-box">
+            <h3>Decisions</h3>
+            <template x-for="decision in meetingDecisions" :key="decision.id"><div class="meeting-action-row" x-text="decision.decision_text"></div></template>
+            <div class="muted" x-show="meetingDecisions.length===0">No decisions extracted yet.</div>
+          </div>
+
+          <div class="meeting-ai-box">
+            <h3>Risks / Blockers</h3>
+            <template x-for="(risk,index) in meetingRisks" :key="index"><div class="meeting-action-row" x-text="risk"></div></template>
+            <div class="muted" x-show="meetingRisks.length===0">No risks or blockers extracted yet.</div>
+          </div>
+
+          <div class="meeting-ai-box">
+            <h3>Action Items</h3>
+            <div class="phase6-help">AI action items remain proposals until you explicitly create a task.</div>
+            <template x-for="action in meetingActionItems" :key="action.id">
+              <div class="meeting-action-row">
+                <div class="meeting-action-head"><strong x-text="action.body"></strong><span class="mini-badge" x-text="action.status"></span></div>
+                <div class="meeting-action-meta">
+                  <span class="mini-badge" x-show="action.suggested_assignee_id" x-text="meetingAssigneeName(action)"></span>
+                  <span class="mini-badge" x-show="action.due_date" x-text="formatDate(action.due_date)"></span>
+                  <span class="mini-badge" x-text="action.priority || 'normal'"></span>
+                  <span class="mini-badge" x-show="action.confidence!==null && action.confidence!==''" x-text="meetingConfidence(action.confidence)"></span>
+                </div>
+                <div class="meeting-action-reason" x-show="action.assignment_reason" x-text="action.assignment_reason"></div>
+                <div class="meeting-action-buttons" x-show="action.status==='proposed'">
+                  <button class="btn" @click="rejectMeetingAction(action)">Reject</button>
+                  <button class="btn btn-primary" @click="acceptMeetingAction(action)">Create task</button>
+                </div>
+                <div class="phase6-help" x-show="action.created_task_id" x-text="'Created task #'+action.created_task_id"></div>
+              </div>
+            </template>
+            <div class="muted" x-show="meetingActionItems.length===0">No action items extracted yet.</div>
+          </div>
         </div>
       </template>
     </section>
@@ -1498,6 +1673,57 @@
     </div>
   </div>
 
+  <!-- Phase 7 — Add / Edit meeting -->
+  <div class="modal-backdrop" x-show="meetingModal" x-transition @click.self="closeMeetingModal()" x-cloak>
+    <div class="modal" style="width:min(700px,calc(100vw - 30px));max-height:calc(100vh - 40px);overflow:auto">
+      <h3 x-text="meetingForm.id ? 'Edit meeting' : 'New meeting'"></h3>
+      <div class="error-box" x-show="meetingError" x-text="meetingError"></div>
+      <div class="field"><label>Title</label><input x-model="meetingForm.title" placeholder="e.g. Weekly delivery review"></div>
+      <div class="field"><label>Project</label><select x-model.number="meetingForm.project_id"><template x-for="project in projects" :key="project.id"><option :value="Number(project.id)" x-text="project.name"></option></template></select></div>
+      <div class="meeting-form-grid">
+        <div class="field"><label>Starts</label><input type="datetime-local" x-model="meetingForm.start_at"></div>
+        <div class="field"><label>Ends</label><input type="datetime-local" x-model="meetingForm.end_at"></div>
+      </div>
+      <div class="meeting-form-grid">
+        <div class="field"><label>Type</label><select x-model="meetingForm.meeting_type"><option value="project">Project</option><option value="standup">Stand-up</option><option value="planning">Planning</option><option value="review">Review</option><option value="retrospective">Retrospective</option><option value="client">Client</option></select></div>
+        <div class="field"><label>Status</label><select x-model="meetingForm.status"><option value="scheduled">Scheduled</option><option value="in_progress">In progress</option><option value="completed">Completed</option><option value="cancelled">Cancelled</option></select></div>
+      </div>
+      <div class="field"><label>Location / link</label><input x-model="meetingForm.location" placeholder="Room, Google Meet, Zoom, etc."></div>
+      <div class="field"><label>Agenda</label><textarea x-model="meetingForm.agenda" placeholder="What should this meeting cover?"></textarea></div>
+      <div class="field"><label>Notes</label><textarea x-model="meetingForm.notes" placeholder="Meeting notes and important context"></textarea></div>
+      <div class="field">
+        <label>Participants</label>
+        <div class="meeting-participant-list">
+          <template x-for="person in meetingAvailablePeople" :key="person.id">
+            <label class="meeting-participant-option">
+              <input type="checkbox"
+                     :value="Number(person.id)"
+                     x-model.number="meetingForm.participant_ids">
+
+              <span class="meeting-participant-avatar">
+                <img x-show="person.photo"
+                     :src="photoUrl(person.photo)"
+                     :alt="person.name">
+                <span x-show="!person.photo"
+                      x-text="initials(person.name)"></span>
+              </span>
+
+              <span class="meeting-participant-copy">
+                <span class="meeting-participant-name"
+                      x-text="person.name"></span>
+                <span class="meeting-participant-role"
+                      x-show="person.job_title || person.role"
+                      x-text="person.job_title || person.role || ''"></span>
+              </span>
+            </label>
+          </template>
+          <div class="muted" x-show="meetingAvailablePeople.length===0">No people are available for this project.</div>
+        </div>
+      </div>
+      <div class="modal-actions"><button class="btn" @click="closeMeetingModal()">Cancel</button><button class="btn btn-primary" @click="saveMeeting()" :disabled="meetingSaving" x-text="meetingSaving ? 'Saving…' : 'Save meeting'"></button></div>
+    </div>
+  </div>
+
   <footer class="footer">
     <p>Task Manager &nbsp;·&nbsp; Basecamp-inspired project workspace</p>
   </footer>
@@ -1563,6 +1789,21 @@ function taskManager(){
     activityOffset: 0,
     activityHasMore: false,
     activityLoading: false,
+    // Phase 7 — meeting state
+    meetings: [],
+    selectedMeeting: null,
+    meetingParticipants: [],
+    meetingTranscripts: [],
+    meetingDecisions: [],
+    meetingActionItems: [],
+    meetingLoading: false,
+    meetingAnalyzing: false,
+    meetingSaving: false,
+    meetingTranscriptSaving: false,
+    meetingModal: false,
+    meetingError: '',
+    meetingTranscriptText: '',
+    meetingForm: {id:null,project_id:null,title:'',agenda:'',notes:'',meeting_type:'project',status:'scheduled',start_at:'',end_at:'',location:'',participant_ids:[]},
     projectForm: {id:null,name:'',color:''},
     taskForm: {
       id:null,
@@ -1598,7 +1839,19 @@ function taskManager(){
       return list;
     },
     get screenTitle(){
-      return {dashboard:'Dashboard',mytasks:'My Tasks',schedule:'Schedule',people:'People',activity:'Activity'}[this.screen] || 'Projects';
+      return {dashboard:'Dashboard',mytasks:'My Tasks',schedule:'Schedule',people:'People',meetings:'Meetings',activity:'Activity'}[this.screen] || 'Projects';
+    },
+    get meetingAvailablePeople(){
+      const pid=Number(this.meetingForm.project_id||this.currentProjectId);
+      // projectPeople represents the selected project's membership; when editing another project,
+      // teamMembers remains a safe fallback and backend membership validation remains authoritative.
+      return pid===Number(this.currentProjectId) && this.projectPeople.length ? this.projectPeople : this.teamMembers.filter(p=>p.status==='active');
+    },
+    get meetingRisks(){
+      const raw=this.selectedMeeting?.ai_risks;
+      if(!raw)return [];
+      if(Array.isArray(raw))return raw;
+      try{const parsed=JSON.parse(raw);return Array.isArray(parsed)?parsed:[String(raw)];}catch(e){return [String(raw)];}
     },
     get myVisibleTasks(){ return this.todos; },
 
@@ -2688,6 +2941,183 @@ function taskManager(){
 
     scheduleDay(date){return new Date(date+'T00:00:00').getDate();},
     scheduleMonthShort(date){return new Date(date+'T00:00:00').toLocaleDateString(undefined,{month:'short'});},
+
+    // --------------------------------------------------------------
+    // PHASE 7 — MEETINGS + AI MEETING INTELLIGENCE
+    // --------------------------------------------------------------
+    async openMeetings(){
+      this.screen='meetings';
+      this.selectedMeeting=null;
+
+      // Meeting detail needs the People directory so participant IDs can
+      // resolve to the real person's name, role and profile photo.
+      await Promise.all([
+        this.loadTeam(),
+        this.loadProjectPeople(),
+        this.loadMeetings()
+      ]);
+    },
+
+    async loadMeetings(){
+      this.meetingLoading=true;
+      try{
+        const suffix=this.currentProjectId ? '?project_id='+encodeURIComponent(this.currentProjectId) : '';
+        const data=await this.request('<?= site_url('task-manager/meetings') ?>'+suffix);
+        this.meetings=data.meetings||[];
+      }catch(e){
+        console.error(e); this.meetings=[];
+      }finally{this.meetingLoading=false;}
+    },
+
+    async openMeeting(meeting){
+      this.meetingLoading=true;
+      try{
+        const data=await this.request('<?= site_url('task-manager/meetings') ?>/'+meeting.id);
+        this.applyMeetingDetail(data);
+      }catch(e){alert(e.message);}
+      finally{this.meetingLoading=false;}
+    },
+
+    applyMeetingDetail(data){
+      this.selectedMeeting=data.meeting||null;
+      this.meetingParticipants=data.participants||[];
+      this.meetingTranscripts=data.transcripts||[];
+      this.meetingDecisions=data.decisions||[];
+      this.meetingActionItems=data.action_items||[];
+      this.meetingTranscriptText=this.meetingTranscripts.length ? (this.meetingTranscripts[this.meetingTranscripts.length-1].transcript_text||'') : '';
+    },
+
+    closeMeetingDetail(){
+      this.selectedMeeting=null; this.meetingParticipants=[]; this.meetingTranscripts=[]; this.meetingDecisions=[]; this.meetingActionItems=[]; this.meetingTranscriptText='';
+    },
+
+    async openMeetingModal(meeting=null){
+      this.meetingError='';
+      let participantIds=[];
+      if(meeting && this.selectedMeeting && Number(this.selectedMeeting.id)===Number(meeting.id)) participantIds=this.meetingParticipants.map(p=>Number(p.team_member_id));
+      this.meetingForm=meeting ? {
+        id:Number(meeting.id),project_id:Number(meeting.project_id),title:meeting.title||'',agenda:meeting.agenda||'',notes:meeting.notes||'',meeting_type:meeting.meeting_type||'project',status:meeting.status||'scheduled',start_at:this.toDateTimeLocal(meeting.start_at),end_at:this.toDateTimeLocal(meeting.end_at),location:meeting.location||'',participant_ids:participantIds
+      } : {
+        id:null,project_id:Number(this.currentProjectId||this.projects[0]?.id||0),title:'',agenda:'',notes:'',meeting_type:'project',status:'scheduled',start_at:'',end_at:'',location:'',participant_ids:[]
+      };
+      this.meetingModal=true;
+    },
+
+    closeMeetingModal(){this.meetingModal=false;this.meetingError='';},
+
+    async saveMeeting(){
+      if(!String(this.meetingForm.title||'').trim() || !Number(this.meetingForm.project_id)){this.meetingError='Project and title are required.';return;}
+      this.meetingSaving=true; this.meetingError='';
+      try{
+        const editing=!!this.meetingForm.id;
+        const url='<?= site_url('task-manager/meetings') ?>'+(editing?'/'+this.meetingForm.id:'');
+        const payload={...this.meetingForm,start_at:this.meetingForm.start_at||null,end_at:this.meetingForm.end_at||null,participant_ids:this.meetingForm.participant_ids.map(Number)};
+        const data=await this.request(url,{method:editing?'PUT':'POST',body:JSON.stringify(payload)});
+        this.meetingModal=false;
+        await this.loadMeetings();
+        if(editing && this.selectedMeeting) await this.openMeeting(data.meeting);
+      }catch(e){this.meetingError=e.message;}
+      finally{this.meetingSaving=false;}
+    },
+
+    async deleteMeeting(meeting){
+      if(!meeting || !confirm('Delete this meeting and its Phase 7 meeting records?'))return;
+      try{await this.request('<?= site_url('task-manager/meetings') ?>/'+meeting.id,{method:'DELETE'});this.closeMeetingDetail();await this.loadMeetings();}
+      catch(e){alert(e.message);}
+    },
+
+    async saveMeetingTranscript(){
+      if(!this.selectedMeeting)return;
+      const transcript=String(this.meetingTranscriptText||'').trim();
+      if(!transcript){alert('Transcript is required.');return;}
+      this.meetingTranscriptSaving=true;
+      try{
+        await this.request('<?= site_url('task-manager/meetings') ?>/'+this.selectedMeeting.id+'/transcripts',{method:'POST',body:JSON.stringify({transcript_text:transcript,source_type:'manual'})});
+        await this.openMeeting(this.selectedMeeting);
+      }catch(e){alert(e.message);}
+      finally{this.meetingTranscriptSaving=false;}
+    },
+
+    async analyzeMeeting(){
+      if(!this.selectedMeeting)return;
+      this.meetingAnalyzing=true;
+      try{
+        await this.request('<?= site_url('task-manager/meetings') ?>/'+this.selectedMeeting.id+'/analyze',{method:'POST',body:JSON.stringify({})});
+        await this.openMeeting(this.selectedMeeting);
+      }catch(e){alert(e.message);}
+      finally{this.meetingAnalyzing=false;}
+    },
+
+    async acceptMeetingAction(action,overrides={}){
+      if(!this.selectedMeeting || !action)return;
+      try{
+        await this.request('<?= site_url('task-manager/meetings') ?>/'+this.selectedMeeting.id+'/actions/'+action.id,{method:'PUT',body:JSON.stringify({status:'accepted',...overrides})});
+        await Promise.all([this.openMeeting(this.selectedMeeting),this.loadData()]);
+      }catch(e){alert(e.message);}
+    },
+
+    async rejectMeetingAction(action){
+      if(!this.selectedMeeting || !action)return;
+      try{
+        await this.request('<?= site_url('task-manager/meetings') ?>/'+this.selectedMeeting.id+'/actions/'+action.id,{method:'PUT',body:JSON.stringify({status:'rejected'})});
+        await this.openMeeting(this.selectedMeeting);
+      }catch(e){alert(e.message);}
+    },
+
+    meetingParticipantPerson(participant){
+      const memberId=Number(
+        participant?.team_member_id ??
+        participant?.member_id ??
+        participant?.person_id ??
+        participant?.id ??
+        0
+      );
+
+      // Some API responses may already include joined person information.
+      // Prefer it when present, then fall back to the project's people list
+      // and finally the complete team directory.
+      if(participant?.person && typeof participant.person==='object'){
+        return participant.person;
+      }
+
+      if(participant?.member && typeof participant.member==='object'){
+        return participant.member;
+      }
+
+      const embeddedName=participant?.name || participant?.team_member_name || participant?.person_name;
+      if(embeddedName){
+        return {
+          id:memberId,
+          name:embeddedName,
+          photo:participant?.photo || participant?.team_member_photo || participant?.person_photo || '',
+          job_title:participant?.job_title || participant?.team_member_job_title || '',
+          role:participant?.role || participant?.participant_role || ''
+        };
+      }
+
+      return this.projectPeople.find(p=>Number(p.id)===memberId)
+        || this.teamMembers.find(p=>Number(p.id)===memberId)
+        || null;
+    },
+
+    meetingParticipantName(participant){
+      const person=this.meetingParticipantPerson(participant);
+      return person?.name || 'Team member #'+participant.team_member_id;
+    },
+    meetingAssigneeName(action){
+      const id=Number(action.explicit_owner_id||action.suggested_assignee_id||0);
+      const person=this.teamMembers.find(p=>Number(p.id)===id);
+      return person?.name || (id ? 'Person #'+id : 'Unassigned');
+    },
+    meetingConfidence(value){
+      const n=Number(value); if(Number.isNaN(n))return '';
+      return Math.round((n<=1?n:n/100)*100)+'% confidence';
+    },
+    formatDateTime(value){
+      if(!value)return 'Date not set';
+      const d=new Date(String(value).replace(' ','T')); if(Number.isNaN(d.getTime()))return value;
+      return d.toLocaleString([],{year:'numeric',month:'short',day:'numeric',hour:'numeric',minute:'2-digit'});
+    },
 
     // --------------------------------------------------------------
     // ACTIVITY / AUDIT TRAIL
