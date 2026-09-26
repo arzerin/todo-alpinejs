@@ -187,6 +187,20 @@ $routes->post('task-manager/meetings/(:num)/analyze', 'Meetings::analyze/$1');
 $routes->put('task-manager/meetings/(:num)/actions/(:num)', 'Meetings::reviewAction/$1/$2');
 
 
+// Task detail / discussion / files
+$routes->get('task-manager/tasks/(:num)/detail', 'TaskDetail::show/$1');
+$routes->get('task-manager/tasks/(:num)/detail-data', 'TaskDetail::data/$1');
+$routes->post('task-manager/tasks/(:num)/comments', 'TaskDetail::comment/$1');
+$routes->post('task-manager/tasks/(:num)/files', 'TaskDetail::upload/$1');
+$routes->get('task-manager/task-files/(:num)/download', 'TaskDetail::download/$1');
+$routes->delete('task-manager/task-files/(:num)', 'TaskDetail::deleteFile/$1');
+
+// Meeting attachments; meeting_files already exists in Phase 7.
+$routes->get('task-manager/meetings/(:num)/files', 'MeetingFiles::index/$1');
+$routes->post('task-manager/meetings/(:num)/files', 'MeetingFiles::upload/$1');
+$routes->get('task-manager/meeting-files/(:num)/download', 'MeetingFiles::download/$1');
+$routes->delete('task-manager/meeting-files/(:num)', 'MeetingFiles::delete/$1');
+
 
 /*
  * --------------------------------------------------------------------

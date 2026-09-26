@@ -85,7 +85,7 @@
     .modal{width:min(520px,100%);background:#fff;border-radius:8px;border:1px solid #ccc;box-shadow:0 18px 55px rgba(0,0,0,.2);padding:24px}
     .modal h3{margin:0 0 20px;font-size:20px}.field{margin-bottom:15px}.field label{display:block;font-size:12px;font-weight:700;margin-bottom:6px;color:#555}
     .field input,.field select{width:100%;border:1px solid #bbb;border-radius:5px;padding:10px 11px;font-size:14px}
-    .modal-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:20px}.btn{border:1px solid #bbb;background:#fff;border-radius:5px;padding:9px 14px;font-weight:650}.btn-primary{background:#2f7d32;color:#fff;border-color:#2f7d32}
+    .modal-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:20px}.btn{border:1px solid #bbb;background:#fff;border-radius:5px;padding:9px 14px;font-weight:650}.btn-primary{background:#2f7d32;color:#fff;border-color:#2f7d32}.btn-secondary{background:#0000ff;color:#fff;border-color:#2f7d32}
     .error-box{background:#fff2f0;border:1px solid #e4b6ae;color:#8b2e22;padding:9px 11px;border-radius:5px;font-size:13px;margin-bottom:15px}
 
 
@@ -159,12 +159,22 @@
     .activity-tabs button:hover,.activity-tabs button.active{background:#f0f0ee;color:#222}
     .activity-day{margin-top:24px}
     .activity-day-title{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.08em;color:#777;border-bottom:1px solid #ddd;padding-bottom:7px}
-    .activity-row{display:grid;grid-template-columns:62px 34px minmax(0,1fr);gap:11px;padding:14px 3px;border-bottom:1px solid #ececec;align-items:start}
+    .activity-row{display:grid;grid-template-columns:62px 42px minmax(0,1fr);gap:11px;padding:14px 3px;border-bottom:1px solid #ececec;align-items:start}
+    .activity-row>.person-avatar.small{width:38px;height:38px;overflow:hidden}
+    .activity-row>.person-avatar.small img{width:100%;height:100%;object-fit:cover;display:block}
     .activity-time{font-size:11px;color:#888;padding-top:7px}
     .activity-content{font-size:13px;line-height:1.45}
     .activity-subject{font-size:14px;font-weight:700;margin-top:3px;color:#333}
     .activity-project{margin-top:2px;font-size:11px}
     .activity-changes{display:inline-block;background:#f5f5f2;border-radius:4px;padding:4px 7px;margin-top:6px;font-size:10px;color:#666}
+    .activity-assignment-change{margin-top:9px;display:flex;flex-direction:column;gap:7px}
+    .activity-assignment-line{display:flex;align-items:flex-start;gap:8px;min-width:0}
+    .activity-assignment-label{width:62px;flex:none;padding-top:5px;font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.04em;color:#888}
+    .activity-assignment-people{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+    .activity-person-pill{display:inline-flex;align-items:center;gap:6px;border:1px solid #ddd;border-radius:16px;background:#fafafa;padding:3px 8px 3px 3px;font-size:11px;color:#444}
+    .activity-person-pill .person-avatar{width:26px;height:26px;overflow:hidden;flex:none}
+    .activity-person-pill .person-avatar img{width:100%;height:100%;object-fit:cover;display:block}
+    .activity-assignment-arrow{color:#999;font-size:14px;padding-top:3px}
     .activity-load-more{text-align:center;padding:22px 0 4px}
     @media(max-width:800px){
       .activity-row{grid-template-columns:34px minmax(0,1fr)}
@@ -414,6 +424,21 @@
     .meeting-person-chip .person-avatar.small img{width:100%;height:100%;object-fit:cover;display:block}
     .meeting-transcript-box textarea{min-height:180px}.meeting-empty{padding:22px 2px;color:#888}.meeting-back{border:0;background:transparent;color:#4776a8;padding:0;text-decoration:underline;font:inherit;cursor:pointer}
     @media(max-width:700px){.meeting-form-grid{grid-template-columns:1fr}.meeting-detail-head{flex-direction:column}}
+
+    /* Phase 7.1 — task detail links + meeting attachments */
+    .task-detail-link{border:0;background:transparent;padding:0;text-align:left;font:inherit;color:inherit;text-decoration:none;cursor:pointer}
+    .task-detail-link:hover{text-decoration:underline}
+    .meeting-files-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:8px}
+    .meeting-file-upload{display:inline-flex;align-items:center;gap:6px;color:#2f7d32;font-size:12px;font-weight:700;cursor:pointer}
+    .meeting-file-row{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:12px;align-items:center;padding:10px 0;border-bottom:1px solid #eee}
+    .meeting-file-copy{min-width:0;display:flex;flex-direction:column;gap:3px}
+    .meeting-file-copy a{color:#356b9a;text-decoration:none;font-size:13px;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+    .meeting-file-copy a:hover{text-decoration:underline}
+    .meeting-file-copy small{color:#888;font-size:10px}
+    .meeting-file-actions{display:flex;align-items:center;gap:8px}
+    .meeting-file-actions a{font-size:11px;color:#356b9a;text-decoration:none}
+    .meeting-file-actions button{border:0;background:transparent;color:#a33;font-size:11px;padding:0}
+    .meeting-upload-status{font-size:11px;color:#777;margin-top:7px}
 
 </style>
 
@@ -734,10 +759,10 @@
                      @change="toggle(todo)">
 
               <button type="button"
-                      class="title task-title-btn"
-                      x-text="todo.body"
-                      @click="openTaskModal(todo)"
-                      title="Edit task"></button>
+                       class="title task-title-btn"
+                       x-text="todo.body"
+                       @click="openTaskModal(todo)"
+                       title="Edit task"></button>
 
               <!-- Assignee avatar stack -->
               <button type="button"
@@ -928,7 +953,11 @@
       <template x-for="todo in myVisibleTasks" :key="todo.id">
         <div class="todo" :class="{completed:isCompleted(todo)}">
           <input type="checkbox" :checked="isCompleted(todo)" @change="toggle(todo)">
-          <button type="button" class="title task-title-btn" x-text="todo.body" @click="openTaskModal(todo)"></button>
+          <button type="button"
+                       class="title task-title-btn"
+                       x-text="todo.body"
+                       @click="openTaskModal(todo)"
+                       title="Edit task"></button>
           <div class="meta" x-text="taskPeople(todo.id).map(p=>p.name).join(', ') || todo.assignee || 'Unassigned'"></div>
           <div class="meta" x-text="formatDate(todo.due_date)"></div>
           <button class="delete" @click="remove(todo)">×</button>
@@ -1015,6 +1044,28 @@
               </template>
               <span class="muted" x-show="meetingParticipants.length===0">No participants selected.</span>
             </div>
+          </div>
+
+          <!-- Phase 7.1 — downloadable meeting attachments -->
+          <div class="meeting-panel">
+            <div class="meeting-files-head">
+              <h3 style="margin:0">Files</h3>
+              <label class="meeting-file-upload">
+                <span x-text="meetingFileUploading ? 'Uploading…' : '+ Upload files'"></span>
+                <input type="file" multiple hidden :disabled="meetingFileUploading" @change="uploadMeetingFiles($event)">
+              </label>
+            </div>
+            <template x-for="file in meetingFiles" :key="'meeting-file-'+file.id">
+              <div class="meeting-file-row">
+                <div class="meeting-file-copy">
+                  <a :href="meetingFileDownloadUrl(file.id)" x-text="file.file_name"></a>
+                  <small><span x-text="file.uploader_name || 'User'"></span> · <span x-text="formatFileSize(file.file_size)"></span><span x-show="file.created_at"> · <span x-text="formatDateTime(file.created_at)"></span></span></small>
+                </div>
+                <div class="meeting-file-actions"><a :href="meetingFileDownloadUrl(file.id)">Download</a><button type="button" @click="deleteMeetingFile(file)">Delete</button></div>
+              </div>
+            </template>
+            <div class="muted" x-show="!meetingFileLoading && meetingFiles.length===0">No files uploaded for this meeting.</div>
+            <div class="meeting-upload-status" x-show="meetingFileLoading">Loading files…</div>
           </div>
 
           <div class="meeting-panel meeting-transcript-box">
@@ -1112,16 +1163,16 @@
               <div class="activity-time" x-text="activityTime(item.created_at)"></div>
 
               <div class="person-avatar small">
-                <img x-show="item.actor_photo"
-                     :src="photoUrl(item.actor_photo)"
-                     alt="">
-                <span x-show="!item.actor_photo"
-                      x-text="initials(item.actor_name || 'System')"></span>
+                <img x-show="activityActorPhoto(item)"
+                     :src="photoUrl(activityActorPhoto(item))"
+                     :alt="activityActorName(item)">
+                <span x-show="!activityActorPhoto(item)"
+                      x-text="initials(activityActorName(item))"></span>
               </div>
 
               <div class="activity-content">
                 <div>
-                  <strong x-text="item.actor_name || 'System'"></strong>
+                  <strong x-text="activityActorName(item)"></strong>
                   <span x-text="' ' + activityDescription(item)"></span>
                 </div>
 
@@ -1136,6 +1187,56 @@
                 <div class="activity-changes"
                      x-show="activityChanges(item)"
                      x-text="activityChanges(item)"></div>
+
+                <!-- Assignment audit: show exactly who was removed and who was added. -->
+                <div class="activity-assignment-change"
+                     x-show="item.action==='task.assignment_delta'">
+
+                  <div class="activity-assignment-line"
+                       x-show="activityAssignmentPeople(item,'removed').length">
+                    <span class="activity-assignment-label">Previous</span>
+                    <span class="activity-assignment-people">
+                      <template x-for="person in activityAssignmentPeople(item,'removed')"
+                                :key="'removed-'+person.id">
+                        <span class="activity-person-pill">
+                          <span class="person-avatar small">
+                            <img x-show="person.photo"
+                                 :src="photoUrl(person.photo)"
+                                 :alt="person.name">
+                            <span x-show="!person.photo"
+                                  x-text="initials(person.name)"></span>
+                          </span>
+                          <span x-text="person.name"></span>
+                        </span>
+                      </template>
+                    </span>
+                  </div>
+
+                  <div class="activity-assignment-line"
+                       x-show="activityAssignmentPeople(item,'added').length">
+                    <span class="activity-assignment-label">Assigned to</span>
+                    <span class="activity-assignment-people">
+                      <template x-for="person in activityAssignmentPeople(item,'added')"
+                                :key="'added-'+person.id">
+                        <span class="activity-person-pill">
+                          <span class="person-avatar small">
+                            <img x-show="person.photo"
+                                 :src="photoUrl(person.photo)"
+                                 :alt="person.name">
+                            <span x-show="!person.photo"
+                                  x-text="initials(person.name)"></span>
+                          </span>
+                          <span x-text="person.name"></span>
+                        </span>
+                      </template>
+                    </span>
+                  </div>
+
+                  <div class="activity-assignment-line"
+                       x-show="!activityAssignmentPeople(item,'removed').length && !activityAssignmentPeople(item,'added').length">
+                    <span class="muted">Assignment list was cleared.</span>
+                  </div>
+                </div>
               </div>
             </div>
           </template>
@@ -1317,6 +1418,13 @@
       </div>
 
       <div class="modal-actions">
+        <a x-show="taskForm.id"
+           class="btn btn-secondary" 
+           style="text-decoration:none;"
+           :href="taskDetailUrl(taskForm.id)"
+           title="Open task discussion, files and full details">
+          View details
+        </a>
         <button class="btn" @click="closeTaskModal()">Cancel</button>
         <button class="btn btn-primary"
                 @click="saveTask()"
@@ -1796,6 +1904,9 @@ function taskManager(){
     meetingTranscripts: [],
     meetingDecisions: [],
     meetingActionItems: [],
+    meetingFiles: [],
+    meetingFileLoading: false,
+    meetingFileUploading: false,
     meetingLoading: false,
     meetingAnalyzing: false,
     meetingSaving: false,
@@ -2974,6 +3085,7 @@ function taskManager(){
       try{
         const data=await this.request('<?= site_url('task-manager/meetings') ?>/'+meeting.id);
         this.applyMeetingDetail(data);
+        await this.loadMeetingFiles(meeting.id);
       }catch(e){alert(e.message);}
       finally{this.meetingLoading=false;}
     },
@@ -2988,7 +3100,7 @@ function taskManager(){
     },
 
     closeMeetingDetail(){
-      this.selectedMeeting=null; this.meetingParticipants=[]; this.meetingTranscripts=[]; this.meetingDecisions=[]; this.meetingActionItems=[]; this.meetingTranscriptText='';
+      this.selectedMeeting=null; this.meetingParticipants=[]; this.meetingTranscripts=[]; this.meetingDecisions=[]; this.meetingActionItems=[]; this.meetingFiles=[]; this.meetingTranscriptText='';
     },
 
     async openMeetingModal(meeting=null){
@@ -3104,6 +3216,59 @@ function taskManager(){
       const person=this.meetingParticipantPerson(participant);
       return person?.name || 'Team member #'+participant.team_member_id;
     },
+    taskDetailUrl(taskId){
+      return '<?= site_url('task-manager/tasks') ?>/'+Number(taskId)+'/detail';
+    },
+
+    async loadMeetingFiles(meetingId=null){
+      const id=Number(meetingId || this.selectedMeeting?.id || 0);
+      if(!id){this.meetingFiles=[];return;}
+      this.meetingFileLoading=true;
+      try{
+        const data=await this.request('<?= site_url('task-manager/meetings') ?>/'+id+'/files');
+        this.meetingFiles=data.files||[];
+      }catch(e){console.error(e);this.meetingFiles=[];}
+      finally{this.meetingFileLoading=false;}
+    },
+
+    async uploadMeetingFiles(event){
+      const id=Number(this.selectedMeeting?.id||0);
+      const files=[...(event.target.files||[])];
+      if(!id || files.length===0)return;
+      this.meetingFileUploading=true;
+      try{
+        const form=new FormData();
+        files.forEach(file=>form.append('files[]',file));
+        form.append(csrfName,csrfHash);
+        const response=await fetch('<?= site_url('task-manager/meetings') ?>/'+id+'/files',{method:'POST',body:form,headers:{'Accept':'application/json','X-Requested-With':'XMLHttpRequest'}});
+        const data=await response.json().catch(()=>({success:false,message:'Invalid server response'}));
+        if(data.csrfHash)csrfHash=data.csrfHash;
+        if(!response.ok || data.success===false)throw new Error(data.message||('HTTP '+response.status));
+        event.target.value='';
+        await this.loadMeetingFiles(id);
+      }catch(e){alert(e.message);}
+      finally{this.meetingFileUploading=false;}
+    },
+
+    meetingFileDownloadUrl(fileId){
+      return '<?= site_url('task-manager/meeting-files') ?>/'+Number(fileId)+'/download';
+    },
+
+    async deleteMeetingFile(file){
+      if(!file?.id || !confirm('Delete '+(file.file_name||'this file')+'?'))return;
+      try{
+        await this.request('<?= site_url('task-manager/meeting-files') ?>/'+file.id,{method:'DELETE',body:JSON.stringify({})});
+        await this.loadMeetingFiles();
+      }catch(e){alert(e.message);}
+    },
+
+    formatFileSize(bytes){
+      const n=Number(bytes||0);if(!n)return '0 B';
+      const units=['B','KB','MB','GB'];let value=n,index=0;
+      while(value>=1024 && index<units.length-1){value/=1024;index++;}
+      return (index===0?Math.round(value):value.toFixed(value>=10?0:1))+' '+units[index];
+    },
+
     meetingAssigneeName(action){
       const id=Number(action.explicit_owner_id||action.suggested_assignee_id||0);
       const person=this.teamMembers.find(p=>Number(p.id)===id);
@@ -3124,7 +3289,14 @@ function taskManager(){
     // --------------------------------------------------------------
     async openActivity(){
       this.screen='activity';
-      await this.loadActivity(true);
+
+      // Activity is a system-wide audit feed. Load the People directory as
+      // well so every actor can be rendered with their real name/photo even
+      // when an older activity response only contains an actor/member ID.
+      await Promise.all([
+        this.loadTeam(),
+        this.loadActivity(true)
+      ]);
     },
 
     async loadActivity(reset=true){
@@ -3205,6 +3377,47 @@ function taskManager(){
       });
     },
 
+    activityActor(item){
+      const meta=item?.metadata || {};
+      const actorId=Number(
+        item?.actor_id ??
+        item?.team_member_id ??
+        item?.user_id ??
+        meta?.actor_id ??
+        meta?.team_member_id ??
+        0
+      );
+
+      // Prefer actor data joined by the Activity API.
+      if(item?.actor && typeof item.actor==='object'){
+        return item.actor;
+      }
+
+      const embeddedName=item?.actor_name || item?.person_name || item?.user_name;
+      const embeddedPhoto=item?.actor_photo || item?.person_photo || item?.user_photo;
+
+      if(embeddedName || embeddedPhoto){
+        const directoryPerson=this.teamMembers.find(p=>Number(p.id)===actorId);
+        return {
+          ...(directoryPerson || {}),
+          id:actorId || directoryPerson?.id || null,
+          name:embeddedName || directoryPerson?.name || 'System',
+          photo:embeddedPhoto || directoryPerson?.photo || ''
+        };
+      }
+
+      return this.teamMembers.find(p=>Number(p.id)===actorId)
+        || {id:null,name:'System',photo:''};
+    },
+
+    activityActorName(item){
+      return this.activityActor(item)?.name || 'System';
+    },
+
+    activityActorPhoto(item){
+      return this.activityActor(item)?.photo || '';
+    },
+
     activityDescription(item){
       const descriptions={
         'task.created':'created a task',
@@ -3212,7 +3425,8 @@ function taskManager(){
         'task.completed':'completed a task',
         'task.reopened':'reopened a task',
         'task.deleted':'deleted a task',
-        'task.assignees_changed':'changed task assignees',
+        'task.assignees_changed':'updated task assignees',
+        'task.assignment_delta':'changed task assignment',
         'category.created':'created a category',
         'category.updated':'updated a category',
         'category.deleted':'deleted a category',
@@ -3224,6 +3438,21 @@ function taskManager(){
         'project.created':'created a project',
         'project.updated':'updated a project',
         'project.deleted':'deleted a project',
+        'person.created':'created a person',
+        'person.updated':'updated a person',
+        'person.deleted':'deleted a person',
+        'meeting.created':'created a meeting',
+        'meeting.updated':'updated a meeting',
+        'meeting.deleted':'deleted a meeting',
+        'meeting.transcript_created':'added a meeting transcript',
+        'meeting.analyzed':'analyzed a meeting with AI',
+        'meeting.action_accepted':'accepted a meeting action item',
+        'meeting.action_rejected':'rejected a meeting action item',
+        'meeting.task_created':'created a task from a meeting',
+        'ai.brief_generated':'generated an AI project brief',
+        'ai.question_asked':'asked Project Intelligence a question',
+        'ai.subtasks_generated':'generated AI subtask suggestions',
+        'ai.subtasks_accepted':'created reviewed AI subtasks',
         'import.completed':'imported Markdown tasks'
       };
 
@@ -3245,7 +3474,32 @@ function taskManager(){
       return '';
     },
 
+    activityAssignmentPeople(item,type){
+      const raw=Array.isArray(item?.metadata?.[type]) ? item.metadata[type] : [];
+
+      return raw.map(entry=>{
+        const id=Number(
+          (entry && typeof entry==='object' ? entry.id : entry) || 0
+        );
+
+        const directoryPerson=this.teamMembers.find(
+          person=>Number(person.id)===id
+        );
+
+        const embedded=(entry && typeof entry==='object') ? entry : {};
+
+        return {
+          ...(directoryPerson || {}),
+          id:id || directoryPerson?.id || embedded.id || 0,
+          name:directoryPerson?.name || embedded.name || (id ? 'Person #'+id : 'Unknown person'),
+          photo:directoryPerson?.photo || embedded.photo || ''
+        };
+      });
+    },
+
     activityChanges(item){
+      if(item?.action==='task.assignment_delta')return '';
+
       const changes=item.metadata?.changes;
       if(!changes || typeof changes!=='object')return '';
 
