@@ -1,0 +1,2 @@
+<?php
+namespace App\Models; use CodeIgniter\Model; class ProjectCommitmentModel extends Model { protected $table='project_commitments'; protected $primaryKey='id'; protected $returnType='array'; protected $allowedFields=['project_id','meeting_id','source_action_item_id','task_id','title','owner_id','due_date','status','confidence','notes','fulfilled_at','created_by']; protected $useTimestamps=true; }

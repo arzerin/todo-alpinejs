@@ -467,14 +467,6 @@
 
     /* Phase 7.3 + 7.9 — Workflow, Decision & Commitment Intelligence */
     .task-title-stack{min-width:0;display:flex;flex-direction:column;align-items:flex-start;gap:4px}.workflow-status{display:inline-flex;align-items:center;border:1px solid #ddd;border-radius:12px;padding:2px 7px;font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:.04em;background:#fafafa;color:#666;white-space:nowrap}.workflow-status.status-todo{background:#f6f6f4;color:#666}.workflow-status.status-in_progress{background:#edf3fb;color:#41658b;border-color:#d7e3ef}.workflow-status.status-blocked{background:#fce8e6;color:#a6382d;border-color:#efcbc7}.workflow-status.status-review{background:#fff4dc;color:#8b6418;border-color:#ead9b3}.workflow-status.status-done{background:#e9f3e8;color:#3d6c42;border-color:#cee0cc}.workflow-blocked-note{font-size:10px;color:#a6382d;line-height:1.35}.intelligence-register{margin-top:14px;border-top:1px solid #ddd}.intelligence-register-head{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:14px 0 8px}.intelligence-register-head h3{margin:0;font-size:14px}.decision-register-row,.commitment-register-row{padding:12px 2px;border-bottom:1px solid #eee}.register-row-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}.register-row-copy{min-width:0;display:flex;flex-direction:column;gap:3px}.register-row-copy strong{font-size:13px}.register-row-copy small{font-size:10px;color:#888}.register-meta{display:flex;gap:6px;flex-wrap:wrap;margin-top:7px}.commitment-owner{display:flex;align-items:center;gap:6px;margin-top:8px;font-size:11px;color:#555}.commitment-owner .person-avatar{width:25px;height:25px}.commitment-actions{display:flex;gap:6px;flex-wrap:wrap;margin-top:9px}.register-empty{padding:13px 2px;color:#888;font-size:12px}
-
-    /* Phase 7.3.1 — Visible Workflow Dashboard */
-    .workflow-filterbar{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin:14px 0 18px;padding:10px 0;border-top:1px solid #eee;border-bottom:1px solid #eee}
-    .workflow-filter{appearance:none;border:1px solid #d8d8d8;background:#fff;color:#555;border-radius:16px;padding:5px 10px;font-size:11px;font-weight:700;cursor:pointer}
-    .workflow-filter:hover{border-color:#aaa;color:#222}.workflow-filter.active{background:#333;color:#fff;border-color:#333}.workflow-filter .count{opacity:.72;margin-left:3px}
-    .task-status-menu-wrap{position:relative;display:inline-flex}.task-status-button{appearance:none;cursor:pointer}
-    .task-status-menu{position:absolute;z-index:80;top:calc(100% + 5px);left:0;min-width:145px;background:#fff;border:1px solid #ccc;border-radius:7px;box-shadow:0 7px 22px rgba(0,0,0,.13);padding:5px}
-    .task-status-option{display:flex;width:100%;align-items:center;gap:7px;border:0;background:transparent;border-radius:4px;padding:7px 8px;text-align:left;font-size:11px;color:#444;cursor:pointer}.task-status-option:hover{background:#f3f3f1}.task-status-option.current{font-weight:800;background:#f7f7f5}.status-dot{width:8px;height:8px;border:1px solid #999;border-radius:50%;display:inline-block}.workflow-saving{font-size:9px;color:#888;margin-left:4px}
 </style>
 
 </head>
@@ -767,15 +759,7 @@
       </div>
 
       <!-- Categories are Basecamp-style section headings, not cards -->
-      <div class="workflow-filterbar" x-show="currentProjectId">
-          <button type="button" class="workflow-filter" :class="{active:workflowFilter==='all'}" @click="workflowFilter='all'">All <span class="count" x-text="workflowCount('all')"></span></button>
-          <button type="button" class="workflow-filter" :class="{active:workflowFilter==='todo'}" @click="workflowFilter='todo'">To Do <span class="count" x-text="workflowCount('todo')"></span></button>
-          <button type="button" class="workflow-filter" :class="{active:workflowFilter==='in_progress'}" @click="workflowFilter='in_progress'">In Progress <span class="count" x-text="workflowCount('in_progress')"></span></button>
-          <button type="button" class="workflow-filter" :class="{active:workflowFilter==='blocked'}" @click="workflowFilter='blocked'">Blocked <span class="count" x-text="workflowCount('blocked')"></span></button>
-          <button type="button" class="workflow-filter" :class="{active:workflowFilter==='review'}" @click="workflowFilter='review'">Review <span class="count" x-text="workflowCount('review')"></span></button>
-          <button type="button" class="workflow-filter" :class="{active:workflowFilter==='done'}" @click="workflowFilter='done'">Done <span class="count" x-text="workflowCount('done')"></span></button>
-        </div>
-        <div id="category-sort-container">
+      <div id="category-sort-container">
       <template x-for="category in displayCategories" :key="category.key">
         <section class="category-section"
                  :data-category-id="category.id || null">
@@ -812,7 +796,6 @@
           <template x-for="todo in tasksForCategory(category.id)" :key="todo.id">
             <div class="todo category-todo"
                  :data-task-id="todo.id"
-                 x-show="workflowTaskVisible(todo)"
                  :class="{completed:isCompleted(todo)}">
 
               <button type="button"
@@ -830,17 +813,7 @@
                 <button type="button" class="title task-title-btn" x-text="todo.body" @click="openTaskModal(todo)" title="Edit task"></button>
 
 
-                <span class="task-status-menu-wrap" @click.outside="statusMenuTaskId=null">
-                  <button type="button" class="workflow-status task-status-button" :class="'status-'+taskStatus(todo)" @click.stop="statusMenuTaskId=(statusMenuTaskId===Number(todo.id)?null:Number(todo.id))" :disabled="workflowSavingTaskId===Number(todo.id)">
-                    <span x-text="taskStatusLabel(taskStatus(todo))"></span><span> ▾</span>
-                  </button>
-                  <span class="workflow-saving" x-show="workflowSavingTaskId===Number(todo.id)">Saving…</span>
-                  <div class="task-status-menu" x-show="statusMenuTaskId===Number(todo.id)" x-cloak>
-                    <template x-for="option in workflowStatuses" :key="option.value">
-                      <button type="button" class="task-status-option" :class="{current:taskStatus(todo)===option.value}" @click.stop="quickSetTaskStatus(todo,option.value)"><span class="status-dot"></span><span x-text="option.label"></span></button>
-                    </template>
-                  </div>
-                </span>
+                <span class="workflow-status" :class="'status-'+taskStatus(todo)" x-text="taskStatusLabel(taskStatus(todo))"></span>
 
 
                 <span class="workflow-blocked-note" x-show="taskStatus(todo)==='blocked' && todo.blocked_reason" x-text="todo.blocked_reason"></span>
@@ -1945,16 +1918,6 @@ function taskManager(){
   let csrfHash = '<?= csrf_hash() ?>';
 
   return {
-    workflowFilter:'all',
-    statusMenuTaskId:null,
-    workflowSavingTaskId:null,
-    workflowStatuses:[
-      {value:'todo',label:'To Do'},
-      {value:'in_progress',label:'In Progress'},
-      {value:'blocked',label:'Blocked'},
-      {value:'review',label:'Review'},
-      {value:'done',label:'Done'}
-    ],
     screen: 'projects',
     dashboardLoading: false,
     dashboardActivities: [],
@@ -3880,39 +3843,6 @@ function taskManager(){
         alert(`${data.created_count||0} subtask(s) created.`);
       }catch(e){alert(e.message);}
       finally{this.aiSubtaskAccepting=false;}
-    },
-
-    workflowCount(status){
-      const projectTasks=this.todos.filter(t=>Number(t.project_id)===Number(this.currentProjectId));
-      if(status==='all') return projectTasks.length;
-      return projectTasks.filter(t=>this.taskStatus(t)===status).length;
-    },
-
-    workflowTaskVisible(todo){
-      return this.workflowFilter==='all' || this.taskStatus(todo)===this.workflowFilter;
-    },
-
-    async quickSetTaskStatus(todo,status){
-      if(!todo?.id || this.workflowSavingTaskId)return;
-      let blockedReason='';
-      if(status==='blocked'){
-        blockedReason=window.prompt('Why is this task blocked?',todo.blocked_reason||'') ?? '';
-        blockedReason=blockedReason.trim();
-        if(!blockedReason)return;
-      }
-      this.workflowSavingTaskId=Number(todo.id);
-      this.statusMenuTaskId=null;
-      try{
-        const data=await this.request('<?= site_url('task-manager/workflow/tasks') ?>/'+todo.id+'/status',{
-          method:'PUT',
-          body:JSON.stringify({status,blocked_reason:blockedReason})
-        });
-        const updated=this.normalizeTask(data.task||{...todo,status,blocked_reason:blockedReason,completed:status==='done'?1:0});
-        const index=this.todos.findIndex(t=>Number(t.id)===Number(todo.id));
-        if(index>=0)this.todos.splice(index,1,updated);
-        this.saveCache();
-      }catch(e){ alert(e.message); }
-      finally{ this.workflowSavingTaskId=null; }
     },
 
     taskStatus(todo){ return todo?.status || (this.isCompleted(todo) ? 'done' : 'todo'); },

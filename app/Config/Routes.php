@@ -207,6 +207,12 @@ $routes->put('task-manager/categories/reorder', 'TaskManager::reorderCategories'
 $routes->put('task-manager/tasks/reorder', 'TaskManager::reorderTasks');
 
 
+$routes->put('task-manager/workflow/tasks/(:num)/status', 'TaskWorkflow::updateStatus/$1');
+$routes->get('task-manager/intelligence/meetings/(:num)', 'DecisionCommitmentIntelligence::meeting/$1');
+$routes->post('task-manager/intelligence/meetings/(:num)/sync', 'DecisionCommitmentIntelligence::syncMeeting/$1');
+$routes->put('task-manager/intelligence/commitments/(:num)', 'DecisionCommitmentIntelligence::updateCommitment/$1');
+$routes->post('task-manager/intelligence/commitments/(:num)/create-task', 'DecisionCommitmentIntelligence::createTask/$1');
+
 /*
  * --------------------------------------------------------------------
  * Additional Routing
