@@ -77,35 +77,46 @@
 
     [x-cloak]{display:none!important}
     .project-name{flex:1}
-    .project-actions,.category-actions{display:flex;gap:3px;opacity:0;transition:opacity .15s}
-    .project:hover .project-actions,.category-head:hover .category-actions{opacity:1}
-    .icon-btn{border:0;background:transparent;color:#999;font-size:13px;padding:2px 5px;border-radius:4px}
-    .icon-btn:hover{color:#222;background:#eee}
+    .project-actions{display:flex;gap:3px;opacity:0}.project:hover .project-actions{opacity:1}
+    .icon-btn{border:0;background:transparent;color:#999;font-size:13px;padding:2px 4px}.icon-btn:hover{color:#222}
     .task-title-btn{border:0;background:transparent;padding:0;text-align:left;font:inherit;color:inherit;cursor:pointer}
     .task-title-btn:hover{text-decoration:underline}
-    .category-block{margin-top:30px}
-    .category-head{display:flex;align-items:center;gap:8px;border-bottom:2px solid #222;padding-bottom:8px}
-    .category-head strong{font-size:15px;flex:1}
-    .category-count{font-size:11px;color:#888;font-weight:500}
-    .category-add{border:0;background:transparent;color:#666;font-size:12px;font-weight:650;padding:4px 7px;border-radius:4px}
-    .category-add:hover{background:#eee;color:#222}
-    .add-category{margin-top:25px;border:1px dashed #aaa;background:#fff;border-radius:5px;padding:9px 12px;color:#555;font-weight:650}
-    .modal-backdrop{position:fixed;inset:0;background:rgba(0,0,0,.40);display:grid;place-items:center;padding:20px;z-index:1000}
-    .modal{width:min(540px,100%);max-height:90vh;overflow:auto;background:#fff;border:1px solid #ccc;border-radius:9px;box-shadow:0 20px 60px rgba(0,0,0,.22);padding:25px}
-    .modal.modal-wide{width:min(680px,100%)}
-    .modal h3{font-size:21px;margin:0 0 7px}.modal-subtitle{font-size:13px;color:#777;margin:0 0 20px}
-    .field{margin-bottom:15px}.field label{display:block;font-size:12px;font-weight:750;color:#555;margin-bottom:6px}
-    .field input,.field select{width:100%;border:1px solid #bbb;border-radius:5px;padding:10px 11px;font-size:14px;background:#fff}
-    .modal-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:21px}.btn{border:1px solid #bbb;background:#fff;border-radius:5px;padding:9px 14px;font-weight:650}
-    .btn-primary{background:#2f7d32;color:#fff;border-color:#2f7d32}.btn:disabled{opacity:.55;cursor:not-allowed}
-    .error-box{background:#fff2f0;border:1px solid #e4b6ae;color:#8b2e22;padding:9px 11px;border-radius:5px;font-size:13px;margin:13px 0}
-    .import-summary{background:#f7f7f5;border:1px solid #ddd;border-radius:6px;padding:12px;margin-top:14px;font-size:13px}
-    .import-preview{border:1px solid #ddd;border-radius:6px;margin-top:14px;max-height:310px;overflow:auto}
-    .preview-category{padding:10px 12px 5px;font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.05em;background:#fafafa;border-top:1px solid #eee}
-    .preview-category:first-child{border-top:0}
-    .preview-task{display:flex;gap:8px;padding:7px 12px;font-size:13px;border-top:1px solid #f0f0f0}
-    .preview-task.done span:last-child{text-decoration:line-through;color:#999}
-    .empty-category{padding:14px 4px;color:#999;font-size:13px}
+    .modal-backdrop{position:fixed;inset:0;background:rgba(0,0,0,.38);display:grid;place-items:center;padding:20px;z-index:1000}
+    .modal{width:min(520px,100%);background:#fff;border-radius:8px;border:1px solid #ccc;box-shadow:0 18px 55px rgba(0,0,0,.2);padding:24px}
+    .modal h3{margin:0 0 20px;font-size:20px}.field{margin-bottom:15px}.field label{display:block;font-size:12px;font-weight:700;margin-bottom:6px;color:#555}
+    .field input,.field select{width:100%;border:1px solid #bbb;border-radius:5px;padding:10px 11px;font-size:14px}
+    .modal-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:20px}.btn{border:1px solid #bbb;background:#fff;border-radius:5px;padding:9px 14px;font-weight:650}.btn-primary{background:#2f7d32;color:#fff;border-color:#2f7d32}
+    .error-box{background:#fff2f0;border:1px solid #e4b6ae;color:#8b2e22;padding:9px 11px;border-radius:5px;font-size:13px;margin-bottom:15px}
+
+
+    /* ==============================================================
+       Phase 3 additions — deliberately follow the Phase 1 visual system
+       ============================================================== */
+    .phase3-action{padding:9px 15px;min-height:36px}
+    .people-row{display:grid;grid-template-columns:48px minmax(0,1fr) 90px 54px;gap:14px;align-items:center;padding:16px 4px;border-bottom:1px solid #ececec}
+    .person-avatar{width:42px;height:42px;border-radius:50%;background:#e9f3e8;color:#2f7d32;display:grid;place-items:center;overflow:hidden;font-size:11px;font-weight:800;flex:0 0 auto}
+    .person-avatar img{width:100%;height:100%;object-fit:cover}.person-avatar.small{width:30px;height:30px;font-size:9px}.person-avatar.tiny{width:24px;height:24px;font-size:8px;border:1px solid #fff;margin-right:-4px}.person-avatar.large{width:82px;height:82px;font-size:20px}
+    .task-assignees{border:0;background:transparent;display:flex;align-items:center;padding:0;min-width:0;color:#777}.task-assignees small{margin-left:6px;color:#777}
+    .people-info>strong,.people-info>.muted{display:block}.people-projects{display:flex;gap:5px;flex-wrap:wrap;margin-top:6px}
+    .mini-badge{display:inline-block;background:#eee;border-radius:20px;padding:3px 8px;font-size:10px;color:#666}
+    .people-count{text-align:center;color:#777;font-size:11px}.people-count strong{display:block;color:#222;font-size:15px}.people-actions{display:flex}
+    .empty-phase3{padding:20px 4px}.person-photo-preview{text-align:center;margin-bottom:14px}.person-photo-preview .person-avatar{margin:auto}
+    .project-member-add{display:grid;grid-template-columns:1fr 1fr auto;gap:8px;align-items:end}.project-member-add .field{margin-bottom:0}
+    .project-person-row{display:grid;grid-template-columns:34px minmax(0,1fr) 24px;gap:10px;align-items:center;padding:11px 2px;border-bottom:1px solid #ececec}
+    .assignee-list{margin-top:15px;max-height:330px;overflow:auto}.assignee-option{display:grid!important;grid-template-columns:22px 34px minmax(0,1fr);gap:9px;align-items:center;padding:10px 2px;border-bottom:1px solid #eee;margin:0!important}
+    .assignee-option strong,.assignee-option small{display:block}.assignee-option small{color:#777;margin-top:2px}
+    .sidebar-team{margin-top:18px;padding-top:17px;border-top:1px solid #ddd}.sidebar-avatars{display:flex;margin:10px 0}.sidebar-avatars .person-avatar{margin-right:-5px;border:2px solid #fafafa}.team-button{margin-top:8px}
+    .schedule-toolbar{display:flex;align-items:center;gap:8px;margin:4px 0 20px}.schedule-toolbar strong{min-width:145px;text-align:center}.schedule-toolbar select{margin-left:auto;border:1px solid #bbb;border-radius:5px;padding:8px 9px;background:#fff}
+    .calendar{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:1px;background:#ddd;border:1px solid #ddd}
+    .calendar-weekday{background:#fafafa;padding:8px 5px;text-align:center;font-size:10px;color:#777;font-weight:800;text-transform:uppercase;letter-spacing:.05em}
+    .calendar-day{background:#fff;min-height:105px;padding:7px}.calendar-day.outside{background:#fafafa;color:#aaa}.calendar-day.today{box-shadow:inset 0 0 0 2px #2f7d32}
+    .calendar-date{font-size:11px;font-weight:800;margin-bottom:5px}.calendar-item{display:block;width:100%;border:0;background:#e9f3e8;color:#315d35;border-radius:3px;padding:4px 5px;margin:3px 0;text-align:left;font-size:10px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+    .calendar-item.calendar-task{background:#f2eee4;color:#6b582f}.calendar-more{font-size:9px;color:#888;margin-top:3px}
+    .schedule-row{display:grid;grid-template-columns:48px minmax(0,1fr) auto;gap:12px;align-items:center;padding:12px 4px;border-bottom:1px solid #ececec}
+    .schedule-date{text-align:center}.schedule-date strong,.schedule-date span{display:block}.schedule-date strong{font-size:17px}.schedule-date span{font-size:9px;color:#777;text-transform:uppercase}
+    .schedule-info strong,.schedule-info span{display:block}.checkbox-field label{display:flex!important;align-items:center;gap:8px}.checkbox-field input{width:auto!important}.danger-btn{color:#b42318}.modal textarea{width:100%;border:1px solid #bbb;border-radius:5px;padding:10px 11px;font:inherit;min-height:80px}
+    .import-preview{max-height:300px;overflow:auto}.import-group{margin:14px 0}.import-task{padding:4px 8px;color:#555}
+    @media(max-width:800px){.people-row{grid-template-columns:42px minmax(0,1fr) 44px}.people-count{display:none}.project-member-add{grid-template-columns:1fr}.calendar{grid-template-columns:repeat(7,minmax(100px,1fr));overflow:auto}.schedule-toolbar{flex-wrap:wrap}.schedule-toolbar select{margin-left:0}}
 
 </style>
 
@@ -119,11 +130,12 @@
     </div>
 
     <nav class="topnav" aria-label="Main navigation">
-      <a href="#" class="active">Projects</a>
-      <a href="#">My Tasks</a>
-      <a href="#">Schedule</a>
-      <a href="#" @click.prevent="openImportModal()">Import</a>
-      <a href="#">Activity</a>
+      <a href="#" @click.prevent="screen='projects'" :class="{active:screen==='projects'}">Projects</a>
+      <a href="#" @click.prevent="screen='mytasks'" :class="{active:screen==='mytasks'}">My Tasks</a>
+      <a href="#" @click.prevent="openSchedule()" :class="{active:screen==='schedule'}">Schedule</a>
+      <a href="#" @click.prevent="openPeople()" :class="{active:screen==='people'}">People</a>
+      <a href="#" @click.prevent="screen='activity'" :class="{active:screen==='activity'}">Activity</a>
+      <a href="#" @click.prevent="importModal=true">Import</a>
     </nav>
 
     <div class="user-menu">
@@ -133,73 +145,224 @@
   </header>
 
   <nav class="breadcrumb" aria-label="Breadcrumb">
-    <a href="#">Home</a>
+    <a href="#" @click.prevent="screen='projects'">Home</a>
     <span class="sep">›</span>
-    <a href="#">Projects</a>
-    <span class="sep">›</span>
-    <strong x-text="currentProject.name"></strong>
-    <span class="sep">›</span>
-    <span>To-dos</span>
+    <template x-if="screen==='projects'">
+      <span style="display:flex;align-items:center;gap:7px">
+        <a href="#" @click.prevent="screen='projects'">Projects</a>
+        <span class="sep">›</span>
+        <strong x-text="currentProject.name"></strong>
+        <span class="sep">›</span>
+        <span>To-dos</span>
+      </span>
+    </template>
+    <template x-if="screen!=='projects'">
+      <strong x-text="screenTitle"></strong>
+    </template>
   </nav>
   <main class="main">
-    <template x-if="currentProject && currentProject.id">
+
+    <!-- ============================================================
+         PROJECTS — original Phase 1 Basecamp layout
+         ============================================================ -->
+    <section x-show="screen==='projects'">
+    <div class="top">
       <div>
-        <div class="top">
-          <div>
-            <h1 x-text="currentProject.name"></h1>
-            <div class="muted">Project to-dos · <span x-text="activeTodos.length"></span> remaining</div>
-          </div>
-          <span class="badge" x-text="completedTodos.length + ' completed'"></span>
-        </div>
+        <h1 x-text="currentProject.name"></h1>
+        <div class="muted">Project to-dos · <span x-text="activeTodos.length"></span> remaining</div>
+      </div>
+      <span class="badge" x-text="completedTodos.length + ' completed'"></span>
+    </div>
 
-        <div class="add-row">
-          <input x-model="newTodo" @keyup.enter="addTodo()" placeholder="Add a to-do to selected/default category…">
-          <button class="add" @click="addTodo()">Add to-do</button>
-        </div>
+    <div class="add-row">
+      <input x-model="newTodo" @keyup.enter="addTodo()" placeholder="Add a to-do…">
+      <button class="add" @click="addTodo()">Add to-do</button>
+    </div>
 
-        <!-- Basecamp-style task lists: category heading, then ordinary task rows -->
-        <template x-for="category in displayCategories" :key="category.id">
-          <section class="category-block">
-            <div class="category-head">
-              <strong x-text="category.name"></strong>
-              <span class="category-count" x-text="categoryTasks(category.id).length + ' tasks'"></span>
-              <div class="category-actions" x-show="category.id !== 0">
-                <button class="category-add" @click="openTaskModal(null, category.id)">+ task</button>
-                <button class="icon-btn" @click="openCategoryModal(category)" title="Rename category">✎</button>
-                <button class="icon-btn" @click="deleteCategory(category)" title="Delete category">×</button>
-              </div>
-            </div>
-
-            <template x-for="todo in categoryActiveTasks(category.id)" :key="todo.id">
-              <div class="todo">
-                <input type="checkbox" :checked="isCompleted(todo)" @change="toggle(todo)">
-                <button type="button" class="title task-title-btn" x-text="todo.body" @click="openTaskModal(todo)" title="Edit task"></button>
-                <div class="meta" x-text="todo.assignee || 'Unassigned'"></div>
-                <div class="meta" x-text="formatDate(todo.due_date)"></div>
-                <button class="delete" @click="remove(todo)" title="Delete">×</button>
-              </div>
-            </template>
-
-            <template x-for="todo in categoryCompletedTasks(category.id)" :key="'done-'+todo.id">
-              <div class="todo completed">
-                <input type="checkbox" :checked="isCompleted(todo)" @change="toggle(todo)">
-                <button type="button" class="title task-title-btn" x-text="todo.body" @click="openTaskModal(todo)" title="Edit task"></button>
-                <div class="meta" x-text="todo.assignee || 'Unassigned'"></div>
-                <div class="meta" x-text="formatDate(todo.due_date)"></div>
-                <button class="delete" @click="remove(todo)" title="Delete">×</button>
-              </div>
-            </template>
-
-            <div class="empty-category" x-show="categoryTasks(category.id).length === 0">No tasks in this category.</div>
-          </section>
-        </template>
-
-        <button class="add-category" @click="openCategoryModal()">+ Add category</button>
+    <div class="section-title">To-dos</div>
+    <template x-for="todo in activeTodos" :key="todo.id">
+      <div class="todo">
+        <input type="checkbox" :checked="isCompleted(todo)" @change="toggle(todo)">
+        <button type="button" class="title task-title-btn" x-text="todo.body" @click="openTaskModal(todo)" title="Edit task"></button>
+        <button type="button" class="task-assignees" @click="openAssigneeModal(todo)" title="Assign people">
+          <template x-for="person in taskPeople(todo.id).slice(0,2)" :key="person.id">
+            <span class="person-avatar tiny">
+              <img x-show="person.photo" :src="photoUrl(person.photo)" alt="">
+              <span x-show="!person.photo" x-text="initials(person.name)"></span>
+            </span>
+          </template>
+          <span x-show="taskPeople(todo.id).length===0" class="meta" x-text="todo.assignee || 'Unassigned'"></span>
+          <small x-show="taskPeople(todo.id).length>2" x-text="'+'+(taskPeople(todo.id).length-2)"></small>
+        </button>
+        <div class="meta" x-text="formatDate(todo.due_date)"></div>
+        <button class="delete" @click="remove(todo)" title="Delete">×</button>
       </div>
     </template>
+    <div x-show="activeTodos.length === 0" class="muted" style="padding:18px 4px">Everything is complete.</div>
 
-    <div x-show="loading && projects.length === 0" class="muted">Loading projects and tasks…</div>
-    <div x-show="!loading && projects.length === 0" class="muted">No projects yet. Create your first project from the sidebar.</div>
+    <div class="completed-wrap" x-show="completedTodos.length">
+      <div class="completed-head">
+        <strong>Completed</strong>
+        <button class="clear" @click="clearCompleted()">Clear completed</button>
+      </div>
+      <template x-for="todo in completedTodos" :key="todo.id">
+        <div class="todo completed">
+          <input type="checkbox" :checked="isCompleted(todo)" @change="toggle(todo)">
+          <button type="button" class="title task-title-btn" x-text="todo.body" @click="openTaskModal(todo)" title="Edit task"></button>
+          <div class="meta" x-text="todo.assignee || 'Unassigned'"></div>
+          <div class="meta" x-text="formatDate(todo.due_date)"></div>
+          <button class="delete" @click="remove(todo)">×</button>
+        </div>
+      </template>
+    </div>
+    </section>
+
+    <!-- ============================================================
+         PEOPLE — Phase 2B, using the same restrained Basecamp styling
+         ============================================================ -->
+    <section x-show="screen==='people'">
+      <div class="top">
+        <div>
+          <h1>People</h1>
+          <div class="muted">People working across your projects.</div>
+        </div>
+        <button class="add phase3-action" @click="openPersonModal()">+ Add person</button>
+      </div>
+
+      <div class="section-title">Team</div>
+
+      <template x-for="person in teamMembers" :key="person.id">
+        <div class="people-row">
+          <div class="person-avatar">
+            <img x-show="person.photo" :src="photoUrl(person.photo)" alt="">
+            <span x-show="!person.photo" x-text="initials(person.name)"></span>
+          </div>
+
+          <div class="people-info">
+            <strong x-text="person.name"></strong>
+            <span class="muted" x-text="person.job_title || 'Team member'"></span>
+            <div class="people-projects">
+              <template x-for="p in (person.projects || [])" :key="p.id">
+                <span class="mini-badge" x-text="p.name"></span>
+              </template>
+            </div>
+          </div>
+
+          <div class="people-count">
+            <strong x-text="person.active_task_count || 0"></strong>
+            <span>open tasks</span>
+          </div>
+
+          <div class="people-actions">
+            <button class="icon-btn" @click="openPersonModal(person)" title="Edit person">✎</button>
+            <button class="icon-btn" @click="deletePerson(person)" title="Delete person">×</button>
+          </div>
+        </div>
+      </template>
+
+      <div x-show="teamMembers.length===0" class="muted empty-phase3">
+        No team members yet. Click “+ Add person”.
+      </div>
+    </section>
+
+    <!-- ============================================================
+         SCHEDULE — Phase 3
+         ============================================================ -->
+    <section x-show="screen==='schedule'">
+      <div class="top">
+        <div>
+          <h1>Schedule</h1>
+          <div class="muted">Task deadlines, meetings, milestones, releases and reminders.</div>
+        </div>
+        <button class="add phase3-action" @click="openEventModal()">+ Add event</button>
+      </div>
+
+      <div class="schedule-toolbar">
+        <button class="btn" @click="changeScheduleMonth(-1)">‹</button>
+        <strong x-text="scheduleMonthLabel"></strong>
+        <button class="btn" @click="changeScheduleMonth(1)">›</button>
+        <button class="btn" @click="scheduleToday()">Today</button>
+
+        <select x-model="scheduleProjectId" @change="loadSchedule()">
+          <option value="">All projects</option>
+          <template x-for="project in projects" :key="project.id">
+            <option :value="project.id" x-text="project.name"></option>
+          </template>
+        </select>
+      </div>
+
+      <div class="calendar">
+        <template x-for="dayName in ['Mon','Tue','Wed','Thu','Fri','Sat','Sun']" :key="dayName">
+          <div class="calendar-weekday" x-text="dayName"></div>
+        </template>
+
+        <template x-for="day in calendarDays" :key="day.key">
+          <div class="calendar-day" :class="{outside:!day.current,today:day.today}">
+            <div class="calendar-date" x-text="day.date.getDate()"></div>
+
+            <template x-for="item in day.items.slice(0,4)" :key="item.kind+'-'+item.id">
+              <button type="button"
+                      class="calendar-item"
+                      :class="{'calendar-task':item.kind==='task'}"
+                      @click="item.kind==='event' ? openEventModal(item) : openTaskModal(item)">
+                <span x-text="item.title"></span>
+              </button>
+            </template>
+
+            <div class="calendar-more" x-show="day.items.length>4"
+                 x-text="'+'+(day.items.length-4)+' more'"></div>
+          </div>
+        </template>
+      </div>
+
+      <div class="completed-wrap">
+        <div class="completed-head">
+          <strong>Upcoming</strong>
+        </div>
+
+        <template x-for="item in upcomingItems" :key="item.kind+'-'+item.id">
+          <div class="schedule-row">
+            <div class="schedule-date">
+              <strong x-text="scheduleDay(item.date)"></strong>
+              <span x-text="scheduleMonthShort(item.date)"></span>
+            </div>
+            <div class="schedule-info">
+              <strong x-text="item.title"></strong>
+              <span class="muted" x-text="item.project_name || 'General'"></span>
+            </div>
+            <span class="mini-badge" x-text="item.kind==='task' ? 'Task due' : item.event_type"></span>
+          </div>
+        </template>
+
+        <div x-show="upcomingItems.length===0" class="muted empty-phase3">Nothing upcoming.</div>
+      </div>
+    </section>
+
+    <!-- My Tasks placeholder keeps the Phase 1 shell; deeper implementation can follow -->
+    <section x-show="screen==='mytasks'">
+      <div class="top">
+        <div><h1>My Tasks</h1><div class="muted">Tasks assigned to team members.</div></div>
+      </div>
+      <div class="section-title">Assigned tasks</div>
+      <template x-for="todo in myVisibleTasks" :key="todo.id">
+        <div class="todo" :class="{completed:isCompleted(todo)}">
+          <input type="checkbox" :checked="isCompleted(todo)" @change="toggle(todo)">
+          <button type="button" class="title task-title-btn" x-text="todo.body" @click="openTaskModal(todo)"></button>
+          <div class="meta" x-text="taskPeople(todo.id).map(p=>p.name).join(', ') || todo.assignee || 'Unassigned'"></div>
+          <div class="meta" x-text="formatDate(todo.due_date)"></div>
+          <button class="delete" @click="remove(todo)">×</button>
+        </div>
+      </template>
+    </section>
+
+    <section x-show="screen==='activity'">
+      <div class="top">
+        <div><h1>Activity</h1><div class="muted">Project activity feed will be expanded in Phase 4.</div></div>
+      </div>
+      <div class="section-title">Recent activity</div>
+      <div class="muted empty-phase3">Activity logging foundation is ready for the next phase.</div>
+    </section>
+
   </main>
 
   <aside class="sidebar">
@@ -209,8 +372,8 @@
         <span class="dot" :class="project.color"></span>
         <span class="project-name" x-text="project.name"></span>
         <span class="project-actions" @click.stop>
-          <button class="icon-btn" @click="openProjectModal(project)" title="Edit project">✎</button>
-          <button class="icon-btn" @click="deleteProject(project)" title="Delete project">×</button>
+          <button type="button" class="icon-btn" @click="openProjectModal(project)" title="Edit project">✎</button>
+          <button type="button" class="icon-btn" @click="deleteProject(project)" title="Delete project">×</button>
         </span>
       </div>
     </template>
@@ -220,73 +383,201 @@
       <strong>Project summary</strong><br>
       <span x-text="activeTodos.length"></span> open to-dos<br>
       <span x-text="completedTodos.length"></span> completed
+
+      <template x-if="currentProjectId">
+        <div class="sidebar-team">
+          <strong>Project team</strong>
+          <div class="sidebar-avatars">
+            <template x-for="person in projectPeople.slice(0,6)" :key="person.id">
+              <span class="person-avatar small" :title="person.name">
+                <img x-show="person.photo" :src="photoUrl(person.photo)" alt="">
+                <span x-show="!person.photo" x-text="initials(person.name)"></span>
+              </span>
+            </template>
+          </div>
+          <button class="new-project team-button" @click="openProjectPeople()">Manage people</button>
+        </div>
+      </template>
     </div>
   </aside>
 
 
-  <!-- PROJECT MODAL -->
+  <!-- Project create/update modal -->
   <div class="modal-backdrop" x-show="projectModal" x-transition @click.self="closeProjectModal()" x-cloak>
     <div class="modal">
       <h3 x-text="projectForm.id ? 'Edit project' : 'New project'"></h3>
-      <p class="modal-subtitle">Projects remain in the right sidebar, preserving the Basecamp-style workspace.</p>
       <div class="error-box" x-show="formError" x-text="formError"></div>
-      <div class="field"><label>Project name</label><input x-model="projectForm.name" @keyup.enter="saveProject()" placeholder="Project name"></div>
-      <div class="field"><label>Color</label><select x-model="projectForm.color"><option value="">Green</option><option value="blue">Blue</option><option value="orange">Orange</option><option value="purple">Purple</option></select></div>
-      <div class="modal-actions"><button class="btn" @click="closeProjectModal()">Cancel</button><button class="btn btn-primary" @click="saveProject()" :disabled="saving" x-text="saving?'Saving…':'Save project'"></button></div>
+      <div class="field">
+        <label>Project name</label>
+        <input type="text" x-model="projectForm.name" @keyup.enter="saveProject()" placeholder="Project name">
+      </div>
+      <div class="field">
+        <label>Color</label>
+        <select x-model="projectForm.color">
+          <option value="">Green</option><option value="blue">Blue</option>
+          <option value="orange">Orange</option><option value="purple">Purple</option>
+        </select>
+      </div>
+      <div class="modal-actions">
+        <button class="btn" @click="closeProjectModal()">Cancel</button>
+        <button class="btn btn-primary" @click="saveProject()" :disabled="saving" x-text="saving ? 'Saving…' : 'Save project'"></button>
+      </div>
     </div>
   </div>
 
-  <!-- CATEGORY MODAL -->
-  <div class="modal-backdrop" x-show="categoryModal" x-transition @click.self="closeCategoryModal()" x-cloak>
-    <div class="modal">
-      <h3 x-text="categoryForm.id ? 'Rename category' : 'Add category'"></h3>
-      <p class="modal-subtitle">Category headings behave like Basecamp task-list sections.</p>
-      <div class="error-box" x-show="formError" x-text="formError"></div>
-      <div class="field"><label>Category name</label><input x-model="categoryForm.name" @keyup.enter="saveCategory()" placeholder="e.g. Authentication"></div>
-      <div class="modal-actions"><button class="btn" @click="closeCategoryModal()">Cancel</button><button class="btn btn-primary" @click="saveCategory()" :disabled="saving" x-text="saving?'Saving…':'Save category'"></button></div>
-    </div>
-  </div>
-
-  <!-- TASK MODAL -->
+  <!-- Task create/update modal; quick add row still creates a simple task -->
   <div class="modal-backdrop" x-show="taskModal" x-transition @click.self="closeTaskModal()" x-cloak>
     <div class="modal">
       <h3 x-text="taskForm.id ? 'Edit task' : 'New task'"></h3>
       <div class="error-box" x-show="formError" x-text="formError"></div>
-      <div class="field"><label>Task</label><input x-model="taskForm.body" placeholder="What needs to be done?"></div>
-      <div class="field"><label>Category</label><select x-model="taskForm.category_id"><option value="">Uncategorized</option><template x-for="c in projectCategories" :key="c.id"><option :value="c.id" x-text="c.name"></option></template></select></div>
-      <div class="field"><label>Assignee</label><input x-model="taskForm.assignee" placeholder="Assignee"></div>
+      <div class="field"><label>Task</label><input type="text" x-model="taskForm.body" placeholder="What needs to be done?"></div>
+      <div class="field"><label>Assignee</label><input type="text" x-model="taskForm.assignee" placeholder="Assignee"></div>
       <div class="field"><label>Due date</label><input type="date" x-model="taskForm.due_date"></div>
-      <div class="modal-actions"><button class="btn" @click="closeTaskModal()">Cancel</button><button class="btn btn-primary" @click="saveTask()" :disabled="saving" x-text="saving?'Saving…':'Save task'"></button></div>
+      <div class="modal-actions">
+        <button class="btn" @click="closeTaskModal()">Cancel</button>
+        <button class="btn btn-primary" @click="saveTask()" :disabled="saving" x-text="saving ? 'Saving…' : 'Save task'"></button>
+      </div>
     </div>
   </div>
 
-  <!-- MARKDOWN IMPORT MODAL -->
-  <div class="modal-backdrop" x-show="importModal" x-transition @click.self="closeImportModal()" x-cloak>
-    <div class="modal modal-wide">
-      <h3>Import TASKS.md</h3>
-      <p class="modal-subtitle">Markdown <strong>## headings</strong> become categories. <strong>[ ]</strong> imports pending tasks and <strong>[x]</strong> imports completed tasks into <span x-text="currentProject.name"></span>.</p>
-      <div class="error-box" x-show="formError" x-text="formError"></div>
-      <div class="field">
-        <label>Markdown file</label>
-        <input type="file" accept=".md,.markdown,text/markdown,text/plain" @change="selectImportFile($event)">
+
+  <!-- Add / Edit person -->
+  <div class="modal-backdrop" x-show="personModal" x-transition @click.self="closePersonModal()" x-cloak>
+    <div class="modal">
+      <h3 x-text="personForm.id ? 'Edit person' : 'Add person'"></h3>
+      <div class="error-box" x-show="teamError" x-text="teamError"></div>
+
+      <div class="person-photo-preview">
+        <div class="person-avatar large">
+          <img x-show="personPhotoPreview" :src="personPhotoPreview" alt="">
+          <span x-show="!personPhotoPreview" x-text="initials(personForm.name || 'New Person')"></span>
+        </div>
       </div>
-      <div class="import-summary" x-show="importFile">
-        <strong x-text="importFile?.name"></strong><br>
-        <span class="muted"><span x-text="importPreview.length"></span> tasks detected · <span x-text="importCategoryNames.length"></span> categories detected</span>
+
+      <div class="field"><label>Photo</label><input type="file" accept="image/jpeg,image/png,image/webp" @change="selectPersonPhoto($event)"></div>
+      <div class="field"><label>Name</label><input type="text" x-model="personForm.name" placeholder="Full name"></div>
+      <div class="field"><label>Email</label><input type="email" x-model="personForm.email" placeholder="Email"></div>
+      <div class="field"><label>Job title</label><input type="text" x-model="personForm.job_title" placeholder="e.g. UI/UX Designer"></div>
+      <div class="field"><label>Phone</label><input type="text" x-model="personForm.phone" placeholder="Phone"></div>
+      <div class="field"><label>Status</label><select x-model="personForm.status"><option value="active">Active</option><option value="inactive">Inactive</option></select></div>
+
+      <div class="modal-actions">
+        <button class="btn" @click="closePersonModal()">Cancel</button>
+        <button class="btn btn-primary" @click="savePerson()">Save person</button>
       </div>
-      <div class="import-preview" x-show="importPreview.length">
-        <template x-for="group in importGroups" :key="group.name">
+    </div>
+  </div>
+
+  <!-- Manage project people -->
+  <div class="modal-backdrop" x-show="projectPeopleModal" x-transition @click.self="projectPeopleModal=false" x-cloak>
+    <div class="modal">
+      <h3>Project people</h3>
+      <div class="muted" x-text="currentProject.name"></div>
+
+      <div class="project-member-add">
+        <div class="field">
+          <label>Person</label>
+          <select x-model="projectMemberForm.team_member_id">
+            <option value="">Select person…</option>
+            <template x-for="person in availableProjectPeople" :key="person.id">
+              <option :value="person.id" x-text="person.name"></option>
+            </template>
+          </select>
+        </div>
+        <div class="field"><label>Role</label><input x-model="projectMemberForm.role" placeholder="Project role"></div>
+        <button class="btn btn-primary" @click="addPersonToProject()">Add</button>
+      </div>
+
+      <div class="section-title">Current team</div>
+      <template x-for="person in projectPeople" :key="person.id">
+        <div class="project-person-row">
+          <div class="person-avatar small">
+            <img x-show="person.photo" :src="photoUrl(person.photo)" alt="">
+            <span x-show="!person.photo" x-text="initials(person.name)"></span>
+          </div>
           <div>
-            <div class="preview-category" x-text="group.name"></div>
-            <template x-for="(task,i) in group.tasks" :key="i">
-              <div class="preview-task" :class="{done:task.completed}">
-                <span x-text="task.completed ? '☑' : '☐'"></span><span x-text="task.body"></span>
-              </div>
+            <strong x-text="person.name"></strong>
+            <div class="muted" x-text="person.role || person.job_title || 'Team member'"></div>
+          </div>
+          <button class="delete" @click="removePersonFromProject(person)">×</button>
+        </div>
+      </template>
+
+      <div class="modal-actions"><button class="btn" @click="projectPeopleModal=false">Close</button></div>
+    </div>
+  </div>
+
+  <!-- Multi-person task assignment -->
+  <div class="modal-backdrop" x-show="assigneeModal" x-transition @click.self="closeAssigneeModal()" x-cloak>
+    <div class="modal">
+      <h3>Assign people</h3>
+      <div class="muted" x-text="assignmentTask?.body"></div>
+
+      <div class="assignee-list">
+        <template x-for="person in projectPeople" :key="person.id">
+          <label class="assignee-option">
+            <input type="checkbox"
+                   :checked="selectedAssigneeIds.includes(Number(person.id))"
+                   @change="toggleAssigneeSelection(person.id)">
+            <span class="person-avatar small">
+              <img x-show="person.photo" :src="photoUrl(person.photo)" alt="">
+              <span x-show="!person.photo" x-text="initials(person.name)"></span>
+            </span>
+            <span>
+              <strong x-text="person.name"></strong>
+              <small x-text="person.job_title || 'Team member'"></small>
+            </span>
+          </label>
+        </template>
+      </div>
+
+      <div class="modal-actions">
+        <button class="btn" @click="closeAssigneeModal()">Cancel</button>
+        <button class="btn btn-primary" @click="saveTaskAssignees()">Save assignments</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Schedule event -->
+  <div class="modal-backdrop" x-show="eventModal" x-transition @click.self="eventModal=false" x-cloak>
+    <div class="modal">
+      <h3 x-text="eventForm.id ? 'Edit schedule item' : 'Add schedule item'"></h3>
+      <div class="field"><label>Title</label><input x-model="eventForm.title"></div>
+      <div class="field"><label>Project</label><select x-model="eventForm.project_id"><option value="">General / no project</option><template x-for="project in projects" :key="project.id"><option :value="project.id" x-text="project.name"></option></template></select></div>
+      <div class="field"><label>Type</label><select x-model="eventForm.event_type"><option value="meeting">Meeting</option><option value="milestone">Milestone</option><option value="release">Release</option><option value="reminder">Reminder</option><option value="event">Event</option></select></div>
+      <div class="field"><label>Starts</label><input type="datetime-local" x-model="eventForm.start_at"></div>
+      <div class="field"><label>Ends</label><input type="datetime-local" x-model="eventForm.end_at"></div>
+      <div class="field"><label>Location</label><input x-model="eventForm.location"></div>
+      <div class="field"><label>Description</label><textarea x-model="eventForm.description"></textarea></div>
+      <div class="field checkbox-field"><label><input type="checkbox" x-model="eventForm.all_day"> All day</label></div>
+      <div class="modal-actions">
+        <button class="btn danger-btn" x-show="eventForm.id" @click="deleteEvent()">Delete</button>
+        <span style="flex:1"></span>
+        <button class="btn" @click="eventModal=false">Cancel</button>
+        <button class="btn btn-primary" @click="saveEvent()">Save event</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Markdown Import -->
+  <div class="modal-backdrop" x-show="importModal" x-transition @click.self="importModal=false" x-cloak>
+    <div class="modal">
+      <h3>Import Markdown tasks</h3>
+      <div class="field"><label>Markdown file</label><input type="file" accept=".md,.markdown,text/markdown,text/plain" @change="readImport($event)"></div>
+      <div class="import-preview">
+        <template x-for="(tasks,category) in importGroups" :key="category">
+          <div class="import-group">
+            <strong x-text="category"></strong>
+            <template x-for="task in tasks" :key="task.body">
+              <div class="import-task"><span x-text="task.completed ? '☑' : '☐'"></span> <span x-text="task.body"></span></div>
             </template>
           </div>
         </template>
       </div>
-      <div class="modal-actions"><button class="btn" @click="closeImportModal()">Cancel</button><button class="btn btn-primary" @click="importTasks()" :disabled="saving || !importPreview.length" x-text="saving?'Importing…':'Import tasks'"></button></div>
+      <div class="modal-actions">
+        <button class="btn" @click="importModal=false">Cancel</button>
+        <button class="btn btn-primary" @click="importTasks()" :disabled="!importPreview.length">Import tasks</button>
+      </div>
     </div>
   </div>
 
@@ -297,201 +588,474 @@
 
 <script>
 function taskManager(){
-  let cached=null;
-  try{cached=JSON.parse(localStorage.getItem('basecamp-task-manager')||'null')}catch(e){}
-  let csrfHash='<?= csrf_hash() ?>';
+  let cached = null;
+  try { cached = JSON.parse(localStorage.getItem('basecamp-task-manager') || 'null'); } catch(e) {}
+
+  const csrfName = '<?= csrf_token() ?>';
+  let csrfHash = '<?= csrf_hash() ?>';
 
   return {
-    currentProjectId:cached?.currentProjectId?Number(cached.currentProjectId):null,
-    projects:cached?.projects||[], categories:cached?.categories||[], todos:cached?.todos||[],
-    newTodo:'',loading:false,saving:false,formError:'',
-    projectModal:false,categoryModal:false,taskModal:false,importModal:false,
-    projectForm:{id:null,name:'',color:''}, categoryForm:{id:null,name:''},
-    taskForm:{id:null,body:'',category_id:'',assignee:'',due_date:''},
-    importFile:null,importPreview:[],
+    screen: 'projects',
+    currentProjectId: cached?.currentProjectId ? Number(cached.currentProjectId) : null,
+    projects: cached?.projects || [],
+    todos: cached?.todos || [],
+    teamMembers: [],
+    projectPeople: [],
+    taskAssignments: {},
+    scheduleEvents: [],
+    scheduleTasks: [],
+    scheduleCursor: new Date(),
+    scheduleProjectId: '',
+    newTodo: '',
+    loading: false,
+    saving: false,
+    projectModal: false,
+    taskModal: false,
+    formError: '',
+    projectForm: {id:null,name:'',color:''},
+    taskForm: {id:null,body:'',assignee:'',due_date:''},
 
-    async init(){await this.loadData()},
-    get currentProject(){return this.projects.find(p=>Number(p.id)===Number(this.currentProjectId))||this.projects[0]||{name:'Projects'}},
-    get projectCategories(){return this.categories.filter(c=>Number(c.project_id)===Number(this.currentProjectId))},
-    get projectTodos(){return this.todos.filter(t=>Number(t.project_id)===Number(this.currentProjectId))},
-    get activeTodos(){return this.projectTodos.filter(t=>!this.isCompleted(t))},
-    get completedTodos(){return this.projectTodos.filter(t=>this.isCompleted(t))},
-    get displayCategories(){
-      const result=[...this.projectCategories];
-      if(this.projectTodos.some(t=>!t.category_id)) result.push({id:0,name:'Uncategorized',project_id:this.currentProjectId});
-      return result;
+    async init(){
+      await this.loadData();
+      await Promise.all([this.loadProjectPeople(),this.loadProjectAssignments()]);
     },
-    get importCategoryNames(){return [...new Set(this.importPreview.map(t=>t.category).filter(Boolean))]},
+
+    get currentProject(){ return this.projects.find(p=>Number(p.id)===Number(this.currentProjectId)) || this.projects[0] || {name:'Projects'}; },
+    get projectTodos(){ return this.todos.filter(t=>Number(t.project_id)===Number(this.currentProjectId)); },
+    get activeTodos(){ return this.projectTodos.filter(t=>!this.isCompleted(t)); },
+    get completedTodos(){ return this.projectTodos.filter(t=>this.isCompleted(t)); },
+    get screenTitle(){
+      return {mytasks:'My Tasks',schedule:'Schedule',people:'People',activity:'Activity'}[this.screen] || 'Projects';
+    },
+    get myVisibleTasks(){ return this.todos; },
+    get availableProjectPeople(){
+      const used=new Set(this.projectPeople.map(p=>Number(p.id)));
+      return this.teamMembers.filter(p=>p.status==='active' && !used.has(Number(p.id)));
+    },
+    get scheduleMonthLabel(){
+      return this.scheduleCursor.toLocaleDateString(undefined,{month:'long',year:'numeric'});
+    },
+    get calendarDays(){
+      const year=this.scheduleCursor.getFullYear(), month=this.scheduleCursor.getMonth();
+      const first=new Date(year,month,1), offset=(first.getDay()+6)%7;
+      const start=new Date(year,month,1-offset), days=[];
+      for(let i=0;i<42;i++){
+        const date=new Date(start); date.setDate(start.getDate()+i);
+        const key=this.isoDate(date), items=[];
+        this.scheduleEvents.filter(e=>String(e.start_at||'').slice(0,10)===key)
+          .forEach(e=>items.push({...e,kind:'event',date:key}));
+        this.scheduleTasks.filter(t=>String(t.due_date||'').slice(0,10)===key)
+          .forEach(t=>items.push({...t,kind:'task',title:t.body,date:key}));
+        days.push({key,date,current:date.getMonth()===month,today:key===this.isoDate(new Date()),items});
+      }
+      return days;
+    },
+    get upcomingItems(){
+      const today=this.isoDate(new Date()), items=[];
+      this.scheduleEvents.forEach(e=>items.push({...e,kind:'event',date:String(e.start_at||'').slice(0,10)}));
+      this.scheduleTasks.forEach(t=>items.push({...t,kind:'task',title:t.body,date:String(t.due_date||'').slice(0,10)}));
+      return items.filter(x=>x.date && x.date>=today).sort((a,b)=>a.date.localeCompare(b.date)).slice(0,12);
+    },
     get importGroups(){
-      const names=[...new Set(this.importPreview.map(t=>t.category||'Uncategorized'))];
-      return names.map(name=>({name,tasks:this.importPreview.filter(t=>(t.category||'Uncategorized')===name)}));
+      return this.importPreview.reduce((out,t)=>{(out[t.category]??=[]).push(t);return out;},{});
     },
 
-    isCompleted(t){return t.completed===true||t.completed===1||t.completed==='1'},
-    categoryTasks(id){return this.projectTodos.filter(t=>id===0?!t.category_id:Number(t.category_id)===Number(id))},
-    categoryActiveTasks(id){return this.categoryTasks(id).filter(t=>!this.isCompleted(t))},
-    categoryCompletedTasks(id){return this.categoryTasks(id).filter(t=>this.isCompleted(t))},
+    isCompleted(t){ return t.completed===true || t.completed===1 || t.completed==='1'; },
 
-    async request(url,options={}){
-      options.headers={...(options.headers||{}),'Accept':'application/json','X-Requested-With':'XMLHttpRequest'};
-      if(options.method&&options.method!=='GET'){options.headers['Content-Type']='application/json';options.headers['X-CSRF-TOKEN']=csrfHash}
-      const r=await fetch(url,options),data=await r.json().catch(()=>({success:false,message:'Invalid server response'}));
-      if(data.csrfHash)csrfHash=data.csrfHash;
-      if(!r.ok||data.success===false)throw new Error(data.message||('HTTP '+r.status));
+    async request(url, options={}){
+      options.headers = {...(options.headers||{}), 'Accept':'application/json', 'X-Requested-With':'XMLHttpRequest'};
+      if (options.method && options.method !== 'GET') {
+        options.headers['Content-Type'] = 'application/json';
+        options.headers['X-CSRF-TOKEN'] = csrfHash;
+      }
+      const r = await fetch(url, options);
+      const data = await r.json().catch(()=>({success:false,message:'Invalid server response'}));
+      if (data.csrfHash) csrfHash = data.csrfHash;
+      if (!r.ok || data.success===false) throw new Error(data.message || ('HTTP '+r.status));
       return data;
     },
 
     async loadData(){
       this.loading=true;
       try{
-        const d=await this.request('<?= site_url('task-manager/data') ?>');
-        this.projects=(d.projects||[]).map(p=>({...p,id:Number(p.id)}));
-        this.categories=(d.categories||[]).map(c=>({...c,id:Number(c.id),project_id:Number(c.project_id)}));
-        this.todos=(d.tasks||[]).map(t=>this.normalizeTask(t));
-        if(!this.projects.some(p=>Number(p.id)===Number(this.currentProjectId)))this.currentProjectId=this.projects[0]?.id||null;
+        const data=await this.request('<?= site_url('task-manager/data') ?>');
+        this.projects=(data.projects||[]).map(p=>({...p,id:Number(p.id)}));
+        this.todos=(data.tasks||[]).map(t=>({...t,id:Number(t.id),project_id:Number(t.project_id),completed:this.isCompleted(t)}));
+        const exists=this.projects.some(p=>Number(p.id)===Number(this.currentProjectId));
+        if((!this.currentProjectId || !exists) && this.projects.length) this.currentProjectId=this.projects[0].id;
         this.saveCache();
-      }catch(e){console.error(e)}
-      finally{this.loading=false}
-    },
-    selectProject(p){this.currentProjectId=Number(p.id);this.saveCache()},
-    saveCache(){localStorage.setItem('basecamp-task-manager',JSON.stringify({projects:this.projects,categories:this.categories,todos:this.todos,currentProjectId:this.currentProjectId}))},
-
-    openProjectModal(p=null){this.formError='';this.projectForm=p?{id:p.id,name:p.name,color:p.color||''}:{id:null,name:'',color:''};this.projectModal=true},
-    closeProjectModal(){this.projectModal=false},
-    async saveProject(){
-      if(!this.projectForm.name.trim()){this.formError='Project name is required.';return}
-      this.saving=true;this.formError='';
-      try{
-        const edit=!!this.projectForm.id,url=edit?'<?= site_url('task-manager/projects') ?>/'+this.projectForm.id:'<?= site_url('task-manager/projects') ?>';
-        const d=await this.request(url,{method:edit?'PUT':'POST',body:JSON.stringify(this.projectForm)});
-        const p={...d.project,id:Number(d.project.id)};
-        if(edit)this.projects=this.projects.map(x=>Number(x.id)===p.id?p:x);else{this.projects.push(p);this.currentProjectId=p.id}
-        this.projectModal=false;this.saveCache()
-      }catch(e){this.formError=e.message}finally{this.saving=false}
-    },
-    async deleteProject(p){
-      if(!confirm(`Delete "${p.name}" and all categories/tasks?`))return;
-      try{await this.request('<?= site_url('task-manager/projects') ?>/'+p.id,{method:'DELETE'});await this.loadData()}catch(e){alert(e.message)}
+      }catch(e){ console.error(e); }
+      finally{ this.loading=false; }
     },
 
-    openCategoryModal(c=null){this.formError='';this.categoryForm=c?{id:c.id,name:c.name}:{id:null,name:''};this.categoryModal=true},
-    closeCategoryModal(){this.categoryModal=false},
-    async saveCategory(){
-      if(!this.categoryForm.name.trim()){this.formError='Category name is required.';return}
-      this.saving=true;this.formError='';
-      try{
-        const edit=!!this.categoryForm.id,url=edit?'<?= site_url('task-manager/categories') ?>/'+this.categoryForm.id:'<?= site_url('task-manager/categories') ?>';
-        await this.request(url,{method:edit?'PUT':'POST',body:JSON.stringify({...this.categoryForm,project_id:this.currentProjectId})});
-        this.categoryModal=false;await this.loadData()
-      }catch(e){this.formError=e.message}finally{this.saving=false}
+    selectProject(project){
+      this.currentProjectId=Number(project.id);
+      this.saveCache();
+      this.loadProjectPeople();
+      this.loadProjectAssignments();
     },
-    async deleteCategory(c){
-      if(!confirm(`Delete category "${c.name}"? Its tasks will become Uncategorized.`))return;
-      try{await this.request('<?= site_url('task-manager/categories') ?>/'+c.id,{method:'DELETE'});await this.loadData()}catch(e){alert(e.message)}
-    },
+    saveCache(){ localStorage.setItem('basecamp-task-manager',JSON.stringify({projects:this.projects,todos:this.todos,currentProjectId:this.currentProjectId})); },
 
     async addTodo(){
-      const body=this.newTodo.trim();if(!body||!this.currentProjectId)return;
-      const category=this.projectCategories[0]?.id||null;
+      const body=this.newTodo.trim(); if(!body || !this.currentProjectId) return;
+      this.saving=true;
       try{
-        const d=await this.request('<?= site_url('task-manager/tasks') ?>',{method:'POST',body:JSON.stringify({project_id:this.currentProjectId,category_id:category,body})});
-        this.todos.unshift(this.normalizeTask(d.task));this.newTodo='';this.saveCache()
-      }catch(e){alert(e.message)}
+        const data=await this.request('<?= site_url('task-manager/tasks') ?>',{
+          method:'POST', body:JSON.stringify({project_id:this.currentProjectId,body})
+        });
+        this.todos.unshift(this.normalizeTask(data.task));
+        this.newTodo=''; this.saveCache();
+      }catch(e){ alert(e.message); }
+      finally{ this.saving=false; }
     },
-    openTaskModal(t=null,categoryId=null){
-      this.formError='';this.taskForm=t?{id:t.id,body:t.body,category_id:t.category_id||'',assignee:t.assignee||'',due_date:t.due_date||''}:{id:null,body:'',category_id:categoryId||'',assignee:'',due_date:''};this.taskModal=true
+
+    openTaskModal(todo=null){
+      this.formError='';
+      this.taskForm=todo ? {id:todo.id,body:todo.body,assignee:todo.assignee||'',due_date:todo.due_date||''}
+                         : {id:null,body:'',assignee:'',due_date:''};
+      this.taskModal=true;
     },
-    closeTaskModal(){this.taskModal=false},
+    closeTaskModal(){ this.taskModal=false; },
+
     async saveTask(){
-      if(!this.taskForm.body.trim()){this.formError='Task description is required.';return}
+      if(!this.taskForm.body.trim()){this.formError='Task description is required.';return;}
+      this.saving=true; this.formError='';
+      try{
+        const editing=!!this.taskForm.id;
+        const url=editing ? '<?= site_url('task-manager/tasks') ?>/'+this.taskForm.id : '<?= site_url('task-manager/tasks') ?>';
+        const data=await this.request(url,{
+          method:editing?'PUT':'POST',
+          body:JSON.stringify({...this.taskForm,project_id:this.currentProjectId})
+        });
+        const task=this.normalizeTask(data.task);
+        if(editing) this.todos=this.todos.map(t=>Number(t.id)===Number(task.id)?task:t);
+        else this.todos.unshift(task);
+        this.taskModal=false; this.saveCache();
+      }catch(e){this.formError=e.message;}
+      finally{this.saving=false;}
+    },
+
+    async toggle(todo){
+      const previous=this.isCompleted(todo);
+      todo.completed=!previous; this.saveCache();
+      try{
+        const data=await this.request('<?= site_url('task-manager/tasks') ?>/'+todo.id,{
+          method:'PUT',body:JSON.stringify({completed:todo.completed?1:0})
+        });
+        Object.assign(todo,this.normalizeTask(data.task)); this.saveCache();
+      }catch(e){todo.completed=previous;this.saveCache();alert(e.message);}
+    },
+
+    async remove(todo){
+      if(!confirm('Delete this task?')) return;
+      try{
+        await this.request('<?= site_url('task-manager/tasks') ?>/'+todo.id,{method:'DELETE'});
+        this.todos=this.todos.filter(t=>Number(t.id)!==Number(todo.id)); this.saveCache();
+      }catch(e){alert(e.message);}
+    },
+
+    async clearCompleted(){
+      const list=[...this.completedTodos];
+      if(!list.length || !confirm('Delete all completed tasks in this project?')) return;
+      for(const todo of list){
+        try{ await this.request('<?= site_url('task-manager/tasks') ?>/'+todo.id,{method:'DELETE'}); }
+        catch(e){ alert(e.message); break; }
+      }
+      await this.loadData();
+    },
+
+    openProjectModal(project=null){
+      this.formError='';
+      this.projectForm=project ? {id:project.id,name:project.name,color:project.color||''} : {id:null,name:'',color:''};
+      this.projectModal=true;
+    },
+    closeProjectModal(){this.projectModal=false;},
+
+    async saveProject(){
+      if(!this.projectForm.name.trim()){this.formError='Project name is required.';return;}
       this.saving=true;this.formError='';
       try{
-        const edit=!!this.taskForm.id,url=edit?'<?= site_url('task-manager/tasks') ?>/'+this.taskForm.id:'<?= site_url('task-manager/tasks') ?>';
-        await this.request(url,{method:edit?'PUT':'POST',body:JSON.stringify({...this.taskForm,project_id:this.currentProjectId})});
-        this.taskModal=false;await this.loadData()
-      }catch(e){this.formError=e.message}finally{this.saving=false}
+        const editing=!!this.projectForm.id;
+        const url=editing ? '<?= site_url('task-manager/projects') ?>/'+this.projectForm.id : '<?= site_url('task-manager/projects') ?>';
+        const data=await this.request(url,{method:editing?'PUT':'POST',body:JSON.stringify(this.projectForm)});
+        const project={...data.project,id:Number(data.project.id)};
+        if(editing) this.projects=this.projects.map(p=>Number(p.id)===project.id?project:p);
+        else {this.projects.push(project);this.currentProjectId=project.id;}
+        this.projectModal=false;this.saveCache();
+      }catch(e){this.formError=e.message;}
+      finally{this.saving=false;}
     },
-    async toggle(t){
-      const old=this.isCompleted(t);t.completed=!old;this.saveCache();
-      try{const d=await this.request('<?= site_url('task-manager/tasks') ?>/'+t.id,{method:'PUT',body:JSON.stringify({completed:t.completed?1:0})});Object.assign(t,this.normalizeTask(d.task));this.saveCache()}
-      catch(e){t.completed=old;this.saveCache();alert(e.message)}
-    },
-    async remove(t){if(!confirm('Delete this task?'))return;try{await this.request('<?= site_url('task-manager/tasks') ?>/'+t.id,{method:'DELETE'});this.todos=this.todos.filter(x=>Number(x.id)!==Number(t.id));this.saveCache()}catch(e){alert(e.message)}},
 
-    openImportModal(){
-      if(!this.currentProjectId){alert('Please select a project first.');return}
-      this.importFile=null;this.importPreview=[];this.formError='';this.importModal=true
+    async deleteProject(project){
+      if(!confirm(`Delete "${project.name}" and all its tasks?`)) return;
+      try{
+        await this.request('<?= site_url('task-manager/projects') ?>/'+project.id,{method:'DELETE'});
+        this.projects=this.projects.filter(p=>Number(p.id)!==Number(project.id));
+        this.todos=this.todos.filter(t=>Number(t.project_id)!==Number(project.id));
+        this.currentProjectId=this.projects[0]?.id || null; this.saveCache();
+      }catch(e){alert(e.message);}
     },
-    closeImportModal(){this.importModal=false;this.importFile=null;this.importPreview=[];this.formError=''},
-    async selectImportFile(e){
-      const f=e.target.files[0];if(!f)return;this.importFile=f;this.formError='';
-      try{this.importPreview=this.parseMarkdownTasks(await f.text());if(!this.importPreview.length)this.formError='No Markdown checkbox tasks were found.'}
-      catch(err){this.formError='Unable to read the selected file.'}
+
+
+    // --------------------------------------------------------------
+    // PEOPLE / TEAM
+    // --------------------------------------------------------------
+    async loadTeam(){
+      try{
+        const data=await this.request('<?= site_url('task-manager/team') ?>');
+        this.teamMembers=data.members||[];
+      }catch(e){console.error(e);}
     },
+
+    async openPeople(){
+      this.screen='people';
+      await this.loadTeam();
+    },
+
+    initials(name){
+      return String(name||'?').trim().split(/\s+/).slice(0,2).map(v=>v.charAt(0)).join('').toUpperCase();
+    },
+
+    photoUrl(path){
+      if(!path)return '';
+      return '<?= rtrim(base_url(), '/') ?>/' + String(path).replace(/^\/+/,'');
+    },
+
+    openPersonModal(person=null){
+      this.teamError='';
+      this.personPhoto=null;
+      this.personForm=person
+        ? {id:person.id,name:person.name||'',email:person.email||'',job_title:person.job_title||'',phone:person.phone||'',status:person.status||'active',photo:person.photo||''}
+        : {id:null,name:'',email:'',job_title:'',phone:'',status:'active',photo:''};
+      this.personPhotoPreview=person?.photo ? this.photoUrl(person.photo) : '';
+      this.personModal=true;
+    },
+
+    closePersonModal(){
+      this.personModal=false; this.personPhoto=null; this.personPhotoPreview='';
+    },
+
+    selectPersonPhoto(event){
+      const file=event.target.files?.[0]; if(!file)return;
+      this.personPhoto=file;
+      this.personPhotoPreview=URL.createObjectURL(file);
+    },
+
+    async savePerson(){
+      if(!this.personForm.name.trim()){this.teamError='Name is required.';return;}
+      const fd=new FormData();
+      ['name','email','job_title','phone','status'].forEach(k=>fd.append(k,this.personForm[k]||''));
+      if(this.personPhoto)fd.append('photo',this.personPhoto);
+      try{
+        const url='<?= site_url('task-manager/team') ?>'+(this.personForm.id?'/'+this.personForm.id:'');
+        const response=await fetch(url,{
+          method:'POST',
+          headers:{'Accept':'application/json','X-Requested-With':'XMLHttpRequest','X-CSRF-TOKEN':csrfHash},
+          body:fd
+        });
+        const data=await response.json();
+        if(data.csrfHash)csrfHash=data.csrfHash;
+        if(!response.ok||data.success===false)throw new Error(data.message||'Unable to save person.');
+        this.closePersonModal();
+        await this.loadTeam();
+        await this.loadProjectPeople();
+      }catch(e){this.teamError=e.message;}
+    },
+
+    async deletePerson(person){
+      if(!confirm(`Delete "${person.name}"?`))return;
+      try{
+        await this.request('<?= site_url('task-manager/team') ?>/'+person.id,{method:'DELETE'});
+        await Promise.all([this.loadTeam(),this.loadProjectPeople(),this.loadProjectAssignments()]);
+      }catch(e){alert(e.message);}
+    },
+
+    async loadProjectPeople(){
+      if(!this.currentProjectId){this.projectPeople=[];return;}
+      try{
+        const data=await this.request('<?= site_url('task-manager/projects') ?>/'+this.currentProjectId+'/members');
+        this.projectPeople=data.members||[];
+      }catch(e){console.error(e);}
+    },
+
+    async loadProjectAssignments(){
+      if(!this.currentProjectId){this.taskAssignments={};return;}
+      try{
+        const data=await this.request('<?= site_url('task-manager/projects') ?>/'+this.currentProjectId+'/assignments');
+        this.taskAssignments=data.assignments||{};
+      }catch(e){console.error(e);}
+    },
+
+    taskPeople(taskId){
+      return this.taskAssignments[taskId] || this.taskAssignments[String(taskId)] || [];
+    },
+
+    async openProjectPeople(){
+      await Promise.all([this.loadTeam(),this.loadProjectPeople()]);
+      this.projectMemberForm={team_member_id:'',role:''};
+      this.projectPeopleModal=true;
+    },
+
+    async addPersonToProject(){
+      if(!this.projectMemberForm.team_member_id)return;
+      try{
+        await this.request('<?= site_url('task-manager/projects') ?>/'+this.currentProjectId+'/members',{
+          method:'POST',body:JSON.stringify(this.projectMemberForm)
+        });
+        this.projectMemberForm={team_member_id:'',role:''};
+        await Promise.all([this.loadProjectPeople(),this.loadTeam()]);
+      }catch(e){alert(e.message);}
+    },
+
+    async removePersonFromProject(person){
+      if(!confirm(`Remove "${person.name}" from this project?`))return;
+      try{
+        await this.request('<?= site_url('task-manager/projects') ?>/'+this.currentProjectId+'/members/'+person.id,{method:'DELETE'});
+        await Promise.all([this.loadProjectPeople(),this.loadProjectAssignments(),this.loadTeam()]);
+      }catch(e){alert(e.message);}
+    },
+
+    async openAssigneeModal(todo){
+      await this.loadProjectPeople();
+      this.assignmentTask=todo;
+      this.selectedAssigneeIds=this.taskPeople(todo.id).map(p=>Number(p.id));
+      this.assigneeModal=true;
+    },
+
+    closeAssigneeModal(){
+      this.assigneeModal=false; this.assignmentTask=null; this.selectedAssigneeIds=[];
+    },
+
+    toggleAssigneeSelection(id){
+      id=Number(id);
+      this.selectedAssigneeIds=this.selectedAssigneeIds.includes(id)
+        ? this.selectedAssigneeIds.filter(v=>v!==id)
+        : [...this.selectedAssigneeIds,id];
+    },
+
+    async saveTaskAssignees(){
+      if(!this.assignmentTask)return;
+      try{
+        const data=await this.request('<?= site_url('task-manager/tasks') ?>/'+this.assignmentTask.id+'/assignees',{
+          method:'PUT',body:JSON.stringify({team_member_ids:this.selectedAssigneeIds})
+        });
+        this.taskAssignments={...this.taskAssignments,[this.assignmentTask.id]:data.members||[]};
+        this.closeAssigneeModal();
+      }catch(e){alert(e.message);}
+    },
+
+    // --------------------------------------------------------------
+    // SCHEDULE
+    // --------------------------------------------------------------
+    async openSchedule(){
+      this.screen='schedule';
+      await this.loadSchedule();
+    },
+
+    changeScheduleMonth(amount){
+      this.scheduleCursor=new Date(this.scheduleCursor.getFullYear(),this.scheduleCursor.getMonth()+amount,1);
+      this.loadSchedule();
+    },
+
+    scheduleToday(){
+      this.scheduleCursor=new Date();
+      this.loadSchedule();
+    },
+
+    isoDate(date){
+      const y=date.getFullYear(),m=String(date.getMonth()+1).padStart(2,'0'),d=String(date.getDate()).padStart(2,'0');
+      return `${y}-${m}-${d}`;
+    },
+
+    async loadSchedule(){
+      const y=this.scheduleCursor.getFullYear(),m=this.scheduleCursor.getMonth();
+      const from=new Date(y,m-1,20),to=new Date(y,m+2,10);
+      const query=new URLSearchParams({from:this.isoDate(from),to:this.isoDate(to)});
+      if(this.scheduleProjectId)query.set('project_id',this.scheduleProjectId);
+      try{
+        const data=await this.request('<?= site_url('task-manager/schedule') ?>?'+query.toString());
+        this.scheduleEvents=data.events||[];
+        this.scheduleTasks=data.tasks||[];
+      }catch(e){console.error(e);}
+    },
+
+    toDateTimeLocal(value){
+      return value ? String(value).replace(' ','T').slice(0,16) : '';
+    },
+
+    openEventModal(event=null){
+      this.eventForm=event
+        ? {id:event.id,project_id:event.project_id||'',title:event.title||'',description:event.description||'',event_type:event.event_type||'event',start_at:this.toDateTimeLocal(event.start_at),end_at:this.toDateTimeLocal(event.end_at),all_day:Number(event.all_day)===1,location:event.location||''}
+        : {id:null,project_id:this.scheduleProjectId||this.currentProjectId||'',title:'',description:'',event_type:'event',start_at:'',end_at:'',all_day:false,location:''};
+      this.eventModal=true;
+    },
+
+    async saveEvent(){
+      if(!this.eventForm.title.trim()||!this.eventForm.start_at){alert('Title and start date/time are required.');return;}
+      try{
+        const editing=!!this.eventForm.id;
+        const url='<?= site_url('task-manager/schedule') ?>'+(editing?'/'+this.eventForm.id:'');
+        await this.request(url,{method:editing?'PUT':'POST',body:JSON.stringify({...this.eventForm,all_day:this.eventForm.all_day?1:0})});
+        this.eventModal=false;
+        await this.loadSchedule();
+      }catch(e){alert(e.message);}
+    },
+
+    async deleteEvent(){
+      if(!this.eventForm.id||!confirm('Delete this schedule item?'))return;
+      try{
+        await this.request('<?= site_url('task-manager/schedule') ?>/'+this.eventForm.id,{method:'DELETE'});
+        this.eventModal=false;
+        await this.loadSchedule();
+      }catch(e){alert(e.message);}
+    },
+
+    scheduleDay(date){return new Date(date+'T00:00:00').getDate();},
+    scheduleMonthShort(date){return new Date(date+'T00:00:00').toLocaleDateString(undefined,{month:'short'});},
+
+    // --------------------------------------------------------------
+    // MARKDOWN IMPORT
+    // --------------------------------------------------------------
     parseMarkdownTasks(content){
-      const tasks=[];
-      let currentCategory=null;
-
+      const tasks=[]; let currentCategory=null;
       for(const rawLine of content.split(/\r?\n/)){
         const line=rawLine.trimEnd();
-
-        /*
-         * CATEGORY RULE
-         * -------------
-         * Any Markdown heading from ## through ###### becomes the current
-         * category. The nearest heading before a task wins.
-         *
-         * Example:
-         *
-         * ## Tourist Spot Hotel Results
-         * ### Tweakings
-         * - [ ] Mobile Responsive
-         *
-         * => category = Tweakings
-         *
-         * A single # heading is treated as the document title and ignored.
-         */
         const heading=line.match(/^\s*(#{2,6})\s+(.+?)\s*#*\s*$/);
-
-        if(heading){
-          currentCategory=heading[2].trim();
-          continue;
-        }
-
-        /*
-         * Import ONLY standard pending/completed checkboxes:
-         *
-         * [ ] = pending
-         * [x] / [X] = completed
-         *
-         * Markers such as [~], [?], [later] are intentionally ignored.
-         */
+        if(heading){currentCategory=heading[2].trim();continue;}
         const task=line.match(/^\s*[-*+]\s+\[([ xX])\]\s+(.+?)\s*$/);
-
-        if(!task) continue;
-
-        const body=task[2].trim();
-        if(!body) continue;
-
-        tasks.push({
-          category:currentCategory || 'Uncategorized',
-          body:body,
-          completed:task[1].toLowerCase()==='x'
-        });
+        if(!task)continue;
+        const body=task[2].trim(); if(!body)continue;
+        tasks.push({category:currentCategory||'Uncategorized',body,completed:task[1].toLowerCase()==='x'});
       }
-
       return tasks;
     },
-    async importTasks(){
-      if(!this.importPreview.length)return;this.saving=true;this.formError='';
-      try{
-        const d=await this.request('<?= site_url('task-manager/tasks/import') ?>',{method:'POST',body:JSON.stringify({project_id:this.currentProjectId,tasks:this.importPreview})});
-        await this.loadData();this.closeImportModal();alert(`${d.imported} tasks imported successfully.`)
-      }catch(e){this.formError=e.message}finally{this.saving=false}
+
+    readImport(event){
+      const file=event.target.files?.[0]; if(!file)return;
+      const reader=new FileReader();
+      reader.onload=()=>{this.importPreview=this.parseMarkdownTasks(String(reader.result||''));};
+      reader.readAsText(file);
     },
 
-    normalizeTask(t){return {...t,id:Number(t.id),project_id:Number(t.project_id),category_id:t.category_id?Number(t.category_id):null,completed:this.isCompleted(t)}},
-    formatDate(d){if(!d)return'No date';const p=String(d).split('-'),m=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];return p.length===3?m[Number(p[1])-1]+' '+Number(p[2]):d}
+    async importTasks(){
+      if(!this.currentProjectId){alert('Select a project first.');return;}
+      try{
+        const data=await this.request('<?= site_url('task-manager/tasks/import') ?>',{
+          method:'POST',body:JSON.stringify({project_id:this.currentProjectId,tasks:this.importPreview})
+        });
+        alert(data.message||`${data.imported||0} task(s) imported.`);
+        this.importModal=false; this.importPreview=[];
+        await this.loadData();
+      }catch(e){alert(e.message);}
+    },
+
+    normalizeTask(t){return {...t,id:Number(t.id),project_id:Number(t.project_id),completed:this.isCompleted(t)};},
+    formatDate(date){
+      if(!date)return 'No date';
+      const p=String(date).split('-');if(p.length!==3)return date;
+      const m=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+      return m[Number(p[1])-1]+' '+Number(p[2]);
+    }
   }
 }
 </script>

@@ -102,6 +102,63 @@ $routes->post(
     'TaskManager::importTasks'
 );
 
+
+// Team directory
+// Phase 3: People / Teams
+$routes->get('task-manager/team', 'Team::index');
+$routes->post('task-manager/team', 'Team::create');
+$routes->post('task-manager/team/(:num)', 'Team::update/$1');
+$routes->delete('task-manager/team/(:num)', 'Team::delete/$1');
+
+$routes->get('task-manager/team','Team::index');
+$routes->post('task-manager/team','Team::create');
+$routes->post('task-manager/team/(:num)','Team::update/$1');
+$routes->delete('task-manager/team/(:num)','Team::delete/$1');
+
+
+// Project membership
+$routes->get(
+    'task-manager/projects/(:num)/members',
+    'Team::projectMembers/$1'
+);
+
+$routes->post(
+    'task-manager/projects/(:num)/members',
+    'Team::addProjectMember/$1'
+);
+
+$routes->delete(
+    'task-manager/projects/(:num)/members/(:num)',
+    'Team::removeProjectMember/$1/$2'
+);
+
+// Task assignments / avatar stacks
+$routes->get(
+    'task-manager/projects/(:num)/assignments',
+    'Team::projectAssignments/$1'
+);
+
+$routes->put(
+    'task-manager/tasks/(:num)/assignees',
+    'Team::assignTask/$1'
+);
+
+// Phase 3: People / Teams
+
+$routes->get('task-manager/projects/(:num)/members','Team::projectMembers/$1');
+$routes->post('task-manager/projects/(:num)/members','Team::addProjectMember/$1');
+$routes->delete('task-manager/projects/(:num)/members/(:num)','Team::removeProjectMember/$1/$2');
+
+$routes->get('task-manager/projects/(:num)/assignments','Team::projectAssignments/$1');
+$routes->put('task-manager/tasks/(:num)/assignees','Team::assignTask/$1');
+
+// Phase 3: Schedule
+$routes->get('task-manager/schedule','Schedule::index');
+$routes->post('task-manager/schedule','Schedule::create');
+$routes->put('task-manager/schedule/(:num)','Schedule::update/$1');
+$routes->delete('task-manager/schedule/(:num)','Schedule::delete/$1');
+
+
 /*
  * --------------------------------------------------------------------
  * Additional Routing
