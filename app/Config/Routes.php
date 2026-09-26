@@ -158,6 +158,35 @@ $routes->post('task-manager/schedule','Schedule::create');
 $routes->put('task-manager/schedule/(:num)','Schedule::update/$1');
 $routes->delete('task-manager/schedule/(:num)','Schedule::delete/$1');
 
+$routes->get('task-manager/activity', 'Activity::index');
+
+$routes->put('task-manager/team/(:num)/projects', 'Team::syncMemberProjects/$1');
+
+// Merge into app/Config/Routes.php.
+
+$routes->group('task-manager/ai', static function ($routes) {
+    $routes->post('projects/(:num)/ask', 'ProjectIntelligence::ask/$1');
+    $routes->post('projects/(:num)/brief', 'ProjectIntelligence::brief/$1');
+    $routes->post('projects/(:num)/recommend-assignee', 'ProjectIntelligence::recommendAssignee/$1');
+
+    $routes->post('tasks/(:num)/breakdown', 'ProjectIntelligence::breakdownTask/$1');
+    $routes->post('tasks/(:num)/accept-subtasks', 'ProjectIntelligence::acceptSubtasks/$1');
+
+    $routes->put('suggestions/(:num)/review', 'ProjectIntelligence::reviewSuggestion/$1');
+});
+
+
+// Merge these routes into app/Config/Routes.php.
+$routes->get('task-manager/meetings', 'Meetings::index');
+$routes->get('task-manager/meetings/(:num)', 'Meetings::show/$1');
+$routes->post('task-manager/meetings', 'Meetings::create');
+$routes->put('task-manager/meetings/(:num)', 'Meetings::update/$1');
+$routes->delete('task-manager/meetings/(:num)', 'Meetings::delete/$1');
+$routes->post('task-manager/meetings/(:num)/transcripts', 'Meetings::saveTranscript/$1');
+$routes->post('task-manager/meetings/(:num)/analyze', 'Meetings::analyze/$1');
+$routes->put('task-manager/meetings/(:num)/actions/(:num)', 'Meetings::reviewAction/$1/$2');
+
+
 
 /*
  * --------------------------------------------------------------------

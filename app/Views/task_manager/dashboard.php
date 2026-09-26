@@ -149,6 +149,227 @@
       .task-form-grid{grid-template-columns:1fr}
     }
 
+
+    /* ==============================================================
+       Phase 4 — Activity feed, following the existing Basecamp style
+       ============================================================== */
+    .activity-project-filter{border:1px solid #bbb;border-radius:5px;padding:8px 10px;background:#fff;min-width:160px}
+    .activity-tabs{display:flex;gap:5px;flex-wrap:wrap;border-bottom:1px solid #ddd;margin-bottom:5px;padding-bottom:9px}
+    .activity-tabs button{border:0;background:transparent;color:#666;font-size:12px;font-weight:700;padding:7px 9px;border-radius:4px}
+    .activity-tabs button:hover,.activity-tabs button.active{background:#f0f0ee;color:#222}
+    .activity-day{margin-top:24px}
+    .activity-day-title{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.08em;color:#777;border-bottom:1px solid #ddd;padding-bottom:7px}
+    .activity-row{display:grid;grid-template-columns:62px 34px minmax(0,1fr);gap:11px;padding:14px 3px;border-bottom:1px solid #ececec;align-items:start}
+    .activity-time{font-size:11px;color:#888;padding-top:7px}
+    .activity-content{font-size:13px;line-height:1.45}
+    .activity-subject{font-size:14px;font-weight:700;margin-top:3px;color:#333}
+    .activity-project{margin-top:2px;font-size:11px}
+    .activity-changes{display:inline-block;background:#f5f5f2;border-radius:4px;padding:4px 7px;margin-top:6px;font-size:10px;color:#666}
+    .activity-load-more{text-align:center;padding:22px 0 4px}
+    @media(max-width:800px){
+      .activity-row{grid-template-columns:34px minmax(0,1fr)}
+      .activity-time{grid-column:2;font-size:10px;padding:0}
+      .activity-row>.person-avatar{grid-column:1;grid-row:1 / span 2}
+      .activity-content{grid-column:2}
+      .activity-project-filter{width:100%}
+    }
+
+
+    /* Phase 4.1 — People / project assignment */
+    .person-project-box{margin-top:18px;padding-top:4px;border-top:1px solid #e2e2e2}
+    .person-project-box .section-title{margin-top:13px}
+    .task-add-person-link{display:inline-block;margin-top:10px;padding:0;border:0;background:transparent;cursor:pointer}
+
+
+    /* Phase 4.1.1 — Add/Edit Person modal viewport fix */
+    .person-modal{
+      width:min(560px,calc(100vw - 30px));
+      max-height:calc(100vh - 40px);
+      display:flex;
+      flex-direction:column;
+      overflow:hidden;
+      padding:0;
+    }
+    .person-modal-title{
+      flex:0 0 auto;
+      margin:0;
+      padding:22px 24px 16px;
+      border-bottom:1px solid #e2e2e2;
+      background:#fff;
+    }
+    .person-modal-body{
+      flex:1 1 auto;
+      min-height:0;
+      overflow-y:auto;
+      padding:18px 24px 8px;
+      overscroll-behavior:contain;
+    }
+    .person-modal-actions{
+      flex:0 0 auto;
+      margin:0;
+      padding:14px 24px 18px;
+      border-top:1px solid #ddd;
+      background:#fff;
+      box-shadow:0 -4px 10px rgba(0,0,0,.03);
+    }
+    @media(max-height:700px){
+      .person-modal{max-height:calc(100vh - 20px)}
+      .person-modal-title{padding-top:16px;padding-bottom:12px}
+      .person-modal-body{padding-top:12px}
+      .person-modal-actions{padding-top:10px;padding-bottom:12px}
+      .person-photo-preview{margin-bottom:10px}
+    }
+
+
+    /* Phase 4.2 — multi-project people + assignee picker */
+    .project-help{margin:4px 0 10px}
+    .person-project-list{border-top:1px solid #e5e5e5}
+    .person-project-row{padding:10px 0;border-bottom:1px solid #e5e5e5}
+    .person-project-check{display:flex;align-items:center;gap:9px;font-weight:600}
+    .person-project-role{margin:8px 0 0 25px;width:calc(100% - 25px)}
+    .assignee-label-row{display:flex;align-items:center;justify-content:space-between;gap:15px;margin-bottom:6px}
+    .assignee-label-row>label{margin:0}
+    .assignee-label-actions{display:flex;align-items:center;gap:7px;font-size:12px;white-space:nowrap}
+    .assignee-picker-modal{width:min(600px,calc(100vw - 30px));max-height:calc(100vh - 40px);display:flex;flex-direction:column;overflow:hidden}
+    .assignee-picker-modal>h3{padding:20px 22px 12px;margin:0}
+    .assignee-tabs{display:flex;gap:0;padding:0 22px;border-bottom:1px solid #ddd}
+    .assignee-tabs button{border:0;background:none;padding:10px 14px;cursor:pointer;color:#666;border-bottom:2px solid transparent}
+    .assignee-tabs button.active{color:#222;border-bottom-color:#222;font-weight:700}
+    .assignee-picker-body{overflow-y:auto;min-height:160px;padding:10px 22px;flex:1}
+    .assignee-picker-person{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid #eee}
+    .assignee-picker-person>label{display:flex;align-items:center;gap:10px;flex:1;margin:0}
+    .assignee-picker-person.all-person{justify-content:space-between}
+    .assignee-picker-info{display:flex;flex-direction:column;gap:2px;flex:1}
+    .assignee-picker-info small{color:#888;font-size:11px}
+    .assignee-picker-modal>.modal-actions{flex:0 0 auto;margin:0;padding:14px 22px;border-top:1px solid #ddd;background:#fff}
+    @media(max-width:600px){
+      .assignee-label-row{align-items:flex-start;flex-direction:column;gap:4px}
+      .assignee-label-actions{white-space:normal}
+    }
+
+
+    /* Phase 4.2.1 — assignee picker avatar + checkbox fix */
+    .assignee-picker-person .mini-avatar{
+      width:34px;
+      height:34px;
+      min-width:34px;
+      min-height:34px;
+      max-width:34px;
+      max-height:34px;
+      border-radius:50%;
+      overflow:hidden;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      background:#edf2f7;
+      border:1px solid #d7dce2;
+      font-size:11px;
+      font-weight:700;
+      line-height:1;
+      vertical-align:middle;
+    }
+    .assignee-picker-person .mini-avatar img{
+      display:block;
+      width:34px !important;
+      height:34px !important;
+      min-width:34px;
+      min-height:34px;
+      max-width:34px;
+      max-height:34px;
+      object-fit:cover;
+      object-position:center;
+      border-radius:50%;
+    }
+    .assignee-picker-person input[type="checkbox"]{
+      width:16px;
+      height:16px;
+      min-width:16px;
+      cursor:pointer;
+      margin:0;
+    }
+    .assignee-picker-person,
+    .assignee-picker-person label{
+      cursor:pointer;
+    }
+    .assignee-membership-note{
+      flex:0 0 auto;
+      font-size:11px;
+      color:#777;
+      margin-left:10px;
+      white-space:nowrap;
+    }
+    .assignee-picker-person.all-person{
+      gap:12px;
+    }
+    @media(max-width:560px){
+      .assignee-membership-note{
+        white-space:normal;
+        max-width:110px;
+        text-align:right;
+      }
+    }
+
+
+    /* Phase 5 — Project Command Center, intentionally restrained/Basecamp-like */
+    .command-top{align-items:flex-start}
+    .command-actions{display:flex;gap:8px;align-items:center}
+    .command-actions select{max-width:220px}
+    .health-strip{border:1px solid #ddd;background:#fafafa;padding:16px 18px;margin:20px 0;display:grid;grid-template-columns:minmax(220px,.8fr) minmax(260px,1.2fr);gap:28px;align-items:center}
+    .health-main{display:flex;align-items:center;gap:12px}
+    .health-main>div{display:flex;flex-direction:column;gap:3px}
+    .health-dot{width:12px;height:12px;border-radius:50%;background:#8a8a8a;box-shadow:0 0 0 4px rgba(0,0,0,.04)}
+    .health-dot.health-good{background:#4f7f55}.health-dot.health-watch{background:#b18424}.health-dot.health-risk{background:#a84a45}
+    .health-progress-head{display:flex;justify-content:space-between;margin-bottom:7px;font-size:12px}
+    .progress-track,.mini-progress{height:7px;background:#e7e7e7;border-radius:20px;overflow:hidden}
+    .progress-track span,.mini-progress span{display:block;height:100%;background:#6d7784;border-radius:20px}
+    .command-metrics{display:grid;grid-template-columns:repeat(4,1fr);border:1px solid #ddd;margin-bottom:22px}
+    .command-metric{padding:15px 16px;border-right:1px solid #ddd;display:flex;flex-direction:column;gap:2px;background:#fff}
+    .command-metric:last-child{border-right:0}
+    .command-metric>span,.command-metric small{font-size:11px;color:#777}.command-metric strong{font-size:24px;font-weight:600;color:#333}
+    .command-metric.danger strong{color:#9a403b}.command-metric.warning strong{color:#946e18}
+    .command-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-bottom:18px}
+    .command-panel{border-top:2px solid #555;background:#fff}
+    .command-panel-head{padding:11px 2px 9px;border-bottom:1px solid #ddd;display:flex;align-items:center;justify-content:space-between;gap:12px}
+    .command-panel-head>span{font-size:11px}
+    .attention-row,.command-upcoming-row{width:100%;border:0;border-bottom:1px solid #eee;background:#fff;padding:11px 2px;display:flex;align-items:center;text-align:left;cursor:pointer}
+    .attention-row:hover,.command-upcoming-row:hover{background:#fafafa}
+    .attention-copy{display:flex;flex:1;min-width:0;flex-direction:column;gap:3px}.attention-copy strong{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.attention-copy small{color:#888}
+    .attention-date{font-size:11px;color:#777;margin-left:10px}.attention-date.overdue{color:#a33;font-weight:700}
+    .category-progress-row{padding:10px 2px;border-bottom:1px solid #eee}
+    .category-progress-head{display:flex;justify-content:space-between;gap:12px;font-size:12px;margin-bottom:6px}.category-progress-head small{color:#777}
+    .mini-progress{height:5px}
+    .workload-row{display:flex;align-items:center;gap:9px;padding:9px 2px;border-bottom:1px solid #eee}
+    .workload-person{display:flex;flex:1;min-width:0;flex-direction:column}.workload-person small{font-size:11px;color:#888}.workload-count{font-size:13px}
+    .command-upcoming-row{gap:11px}.command-upcoming-row>span:last-child{display:flex;flex-direction:column}.command-upcoming-row small{font-size:11px;color:#888}
+    .command-upcoming-date{width:34px;display:flex;flex-direction:column;align-items:center;border-right:1px solid #ddd}.command-upcoming-date strong{font-size:15px}.command-upcoming-date small{font-size:9px;color:#888}
+    .command-activity-panel{margin-top:4px}.dashboard-activity-row{display:flex;align-items:center;gap:10px;padding:9px 2px;border-bottom:1px solid #eee}
+    .dashboard-activity-copy{display:flex;flex:1;min-width:0;flex-direction:column}.dashboard-activity-copy small{color:#888;font-size:11px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .dashboard-activity-time{font-size:11px}.command-empty{padding:16px 2px;color:#888;font-size:12px}
+    @media(max-width:900px){.command-metrics{grid-template-columns:1fr 1fr}.command-metric:nth-child(2){border-right:0}.command-metric:nth-child(-n+2){border-bottom:1px solid #ddd}.command-grid{grid-template-columns:1fr}.health-strip{grid-template-columns:1fr}}
+    @media(max-width:560px){.command-actions{align-items:stretch;flex-direction:column}.command-metrics{grid-template-columns:1fr}.command-metric{border-right:0;border-bottom:1px solid #ddd}.command-metric:last-child{border-bottom:0}}
+
+
+    /* Phase 6 — AI project intelligence + richer people roles */
+    .phase6-help{font-size:11px;color:#888;margin-top:5px;line-height:1.45}
+    .check-line{display:flex!important;align-items:center;gap:8px;font-size:12px;font-weight:600!important}
+    .check-line input{width:auto!important}
+    .person-project-intelligence{margin:8px 0 0 25px;width:calc(100% - 25px)}
+    .person-project-intelligence textarea{min-height:62px}
+    .field-label-actions{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:7px}
+    .field-label-actions label{margin:0!important}
+    .ai-command-panel{margin-top:18px}
+    .ai-brief-body{padding:14px 2px;font-size:13px;line-height:1.55}
+    .ai-brief-body h4{margin:0 0 5px;font-size:16px}.ai-brief-body p{margin:0 0 12px}
+    .ai-list{margin:7px 0 0;padding-left:20px}.ai-list li{margin:5px 0}
+    .ai-question{display:flex;gap:8px;padding:12px 2px;border-bottom:1px solid #eee}
+    .ai-question input{flex:1;border:1px solid #bbb;border-radius:5px;padding:10px 11px;font-size:14px}
+    .ai-answer{padding:13px 2px;font-size:13px;line-height:1.55;white-space:pre-wrap}
+    .ai-subtask-modal{width:min(680px,calc(100vw - 30px));max-height:calc(100vh - 40px);display:flex;flex-direction:column;overflow:hidden}
+    .ai-subtask-body{overflow-y:auto;padding:0 24px 10px;flex:1}
+    .ai-subtask-row{display:grid;grid-template-columns:22px minmax(0,1fr) auto;gap:10px;align-items:start;padding:12px 0;border-bottom:1px solid #eee}
+    .ai-subtask-row input{margin-top:3px}.ai-subtask-copy strong,.ai-subtask-copy small{display:block}.ai-subtask-copy small{color:#777;margin-top:4px}
+    .ai-confidence{font-size:10px;color:#777;white-space:nowrap}
+
 </style>
 
 </head>
@@ -161,11 +382,12 @@
     </div>
 
     <nav class="topnav" aria-label="Main navigation">
+      <a href="#" @click.prevent="openDashboard()" :class="{active:screen==='dashboard'}">Dashboard</a>
       <a href="#" @click.prevent="screen='projects'" :class="{active:screen==='projects'}">Projects</a>
       <a href="#" @click.prevent="screen='mytasks'" :class="{active:screen==='mytasks'}">My Tasks</a>
       <a href="#" @click.prevent="openSchedule()" :class="{active:screen==='schedule'}">Schedule</a>
       <a href="#" @click.prevent="openPeople()" :class="{active:screen==='people'}">People</a>
-      <a href="#" @click.prevent="screen='activity'" :class="{active:screen==='activity'}">Activity</a>
+      <a href="#" @click.prevent="openActivity()" :class="{active:screen==='activity'}">Activity</a>
       <a href="#" @click.prevent="importModal=true">Import</a>
     </nav>
 
@@ -192,6 +414,229 @@
     </template>
   </nav>
   <main class="main">
+
+    <!-- ============================================================
+         PHASE 5 — PROJECT COMMAND CENTER
+         Current-state intelligence inside the existing Basecamp shell
+         ============================================================ -->
+    <section x-show="screen==='dashboard'">
+      <div class="top command-top">
+        <div>
+          <h1>Project Command Center</h1>
+          <div class="muted">
+            <strong x-text="currentProject.name"></strong>
+            · live delivery health, workload and upcoming commitments
+          </div>
+        </div>
+        <div class="command-actions">
+          <select x-model.number="currentProjectId" @change="dashboardProjectChanged()">
+            <template x-for="project in projects" :key="project.id">
+              <option :value="Number(project.id)" x-text="project.name"></option>
+            </template>
+          </select>
+          <button class="btn" @click="refreshDashboard()" :disabled="dashboardLoading"
+                  x-text="dashboardLoading ? 'Refreshing…' : 'Refresh'"></button>
+        </div>
+      </div>
+
+      <div class="health-strip">
+        <div class="health-main">
+          <span class="health-dot" :class="dashboardHealthClass"></span>
+          <div>
+            <strong x-text="dashboardHealthLabel"></strong>
+            <span class="muted" x-text="dashboardHealthReason"></span>
+          </div>
+        </div>
+        <div class="health-progress">
+          <div class="health-progress-head">
+            <span>Overall completion</span>
+            <strong x-text="dashboardCompletionPercent + '%'"></strong>
+          </div>
+          <div class="progress-track"><span :style="'width:'+dashboardCompletionPercent+'%'"></span></div>
+        </div>
+      </div>
+
+      <div class="command-metrics">
+        <div class="command-metric">
+          <span>Open tasks</span>
+          <strong x-text="dashboardOpenTasks.length"></strong>
+          <small x-text="dashboardCompletedTasks.length + ' completed'"></small>
+        </div>
+        <div class="command-metric" :class="{danger:dashboardOverdueTasks.length>0}">
+          <span>Overdue</span>
+          <strong x-text="dashboardOverdueTasks.length"></strong>
+          <small x-text="dashboardOverdueTasks.length ? 'needs attention' : 'nothing overdue'"></small>
+        </div>
+        <div class="command-metric" :class="{warning:dashboardDueSoonTasks.length>0}">
+          <span>Due next 7 days</span>
+          <strong x-text="dashboardDueSoonTasks.length"></strong>
+          <small>active commitments</small>
+        </div>
+        <div class="command-metric" :class="{warning:dashboardHighPriorityTasks.length>0}">
+          <span>High / urgent</span>
+          <strong x-text="dashboardHighPriorityTasks.length"></strong>
+          <small>open priority tasks</small>
+        </div>
+      </div>
+
+      <div class="command-grid">
+        <section class="command-panel">
+          <div class="command-panel-head">
+            <strong>Needs attention</strong>
+            <span class="muted">Overdue and priority work</span>
+          </div>
+
+          <template x-for="todo in dashboardAttentionTasks" :key="'attention-'+todo.id">
+            <button class="attention-row" @click="openTaskModal(todo)">
+              <span class="attention-copy">
+                <strong x-text="todo.body"></strong>
+                <small>
+                  <span x-text="dashboardTaskCategory(todo)"></span>
+                  <span> · </span>
+                  <span x-text="taskPeople(todo.id).map(p=>p.name).join(', ') || todo.assignee || 'Unassigned'"></span>
+                </small>
+              </span>
+              <span class="attention-date"
+                    :class="{overdue:isDashboardOverdue(todo)}"
+                    x-text="formatDate(todo.due_date)"></span>
+            </button>
+          </template>
+
+          <div x-show="dashboardAttentionTasks.length===0" class="command-empty">
+            No urgent attention items.
+          </div>
+        </section>
+
+        <section class="command-panel">
+          <div class="command-panel-head">
+            <strong>Category progress</strong>
+            <span class="muted">Delivery by workstream</span>
+          </div>
+
+          <template x-for="row in dashboardCategoryProgress" :key="row.key">
+            <div class="category-progress-row">
+              <div class="category-progress-head">
+                <span x-text="row.name"></span>
+                <small x-text="row.completed + '/' + row.total + ' · ' + row.percent + '%'"></small>
+              </div>
+              <div class="mini-progress"><span :style="'width:'+row.percent+'%'"></span></div>
+            </div>
+          </template>
+
+          <div x-show="dashboardCategoryProgress.length===0" class="command-empty">
+            No categories or tasks yet.
+          </div>
+        </section>
+
+        <section class="command-panel">
+          <div class="command-panel-head">
+            <strong>Team workload</strong>
+            <button class="inline-link" @click="openPeople()">View people</button>
+          </div>
+
+          <template x-for="person in dashboardWorkload" :key="'workload-'+person.id">
+            <div class="workload-row">
+              <span class="person-avatar small">
+                <img x-show="person.photo" :src="photoUrl(person.photo)" alt="">
+                <span x-show="!person.photo" x-text="initials(person.name)"></span>
+              </span>
+              <span class="workload-person">
+                <strong x-text="person.name"></strong>
+                <small x-text="person.job_title || 'Team member'"></small>
+              </span>
+              <strong class="workload-count" x-text="person.open_tasks"></strong>
+            </div>
+          </template>
+
+          <div x-show="dashboardWorkload.length===0" class="command-empty">
+            No assigned open tasks.
+          </div>
+        </section>
+
+        <section class="command-panel">
+          <div class="command-panel-head">
+            <strong>Upcoming</strong>
+            <button class="inline-link" @click="openSchedule()">Open schedule</button>
+          </div>
+
+          <template x-for="item in dashboardUpcoming" :key="'upcoming-'+item.kind+'-'+item.id">
+            <button class="command-upcoming-row"
+                    @click="item.kind==='task' ? openTaskModal(item) : openSchedule()">
+              <span class="command-upcoming-date">
+                <strong x-text="scheduleDay(item.date)"></strong>
+                <small x-text="scheduleMonthShort(item.date)"></small>
+              </span>
+              <span>
+                <strong x-text="item.title"></strong>
+                <small x-text="item.kind==='task' ? 'Task due' : (item.event_type || 'Event')"></small>
+              </span>
+            </button>
+          </template>
+
+          <div x-show="dashboardUpcoming.length===0" class="command-empty">
+            Nothing scheduled in the next 30 days.
+          </div>
+        </section>
+      </div>
+
+      <section class="command-panel command-activity-panel">
+        <div class="command-panel-head">
+          <strong>Recent activity</strong>
+          <button class="inline-link" @click="openActivity()">View full activity</button>
+        </div>
+
+        <template x-for="item in dashboardRecentActivities" :key="'dash-activity-'+item.id">
+          <div class="dashboard-activity-row">
+            <span class="person-avatar small">
+              <img x-show="item.actor_photo" :src="photoUrl(item.actor_photo)" alt="">
+              <span x-show="!item.actor_photo" x-text="initials(item.actor_name || 'System')"></span>
+            </span>
+            <span class="dashboard-activity-copy">
+              <span>
+                <strong x-text="item.actor_name || 'System'"></strong>
+                <span x-text="' ' + activityDescription(item)"></span>
+              </span>
+              <small x-text="activitySubject(item) || item.project_name || ''"></small>
+            </span>
+            <span class="muted dashboard-activity-time" x-text="activityTime(item.created_at)"></span>
+          </div>
+        </template>
+
+        <div x-show="dashboardRecentActivities.length===0" class="command-empty">
+          No recent activity has been recorded.
+        </div>
+      </section>
+
+      <!-- Phase 6: AI Project Intelligence -->
+      <section class="command-panel ai-command-panel">
+        <div class="command-panel-head">
+          <strong>AI Project Brief</strong>
+          <button type="button" class="inline-link" @click="generateProjectBrief()" :disabled="aiBriefLoading"
+                  x-text="aiBriefLoading ? 'Analyzing…' : (aiBrief ? 'Regenerate' : 'Generate brief')"></button>
+        </div>
+        <div class="ai-brief-body" x-show="aiBriefLoading">Analyzing current project…</div>
+        <div class="ai-brief-body" x-show="aiBrief && !aiBriefLoading">
+          <h4 x-text="aiBrief?.headline || 'Project brief'"></h4>
+          <p x-text="aiBrief?.summary || ''"></p>
+          <template x-if="(aiBrief?.risks || []).length">
+            <div><strong>Risks</strong><ul class="ai-list"><template x-for="(risk,i) in aiBrief.risks" :key="'risk-'+i"><li x-text="risk"></li></template></ul></div>
+          </template>
+          <template x-if="(aiBrief?.recommended_focus || []).length">
+            <div style="margin-top:12px"><strong>Recommended focus</strong><ul class="ai-list"><template x-for="(focus,i) in aiBrief.recommended_focus" :key="'focus-'+i"><li x-text="focus"></li></template></ul></div>
+          </template>
+        </div>
+        <div class="command-empty" x-show="!aiBrief && !aiBriefLoading">Generate an AI briefing from the current project's tasks, people, roles and schedule.</div>
+      </section>
+
+      <section class="command-panel ai-command-panel">
+        <div class="command-panel-head"><strong>Ask Project AI</strong><span class="muted">Answers from project context</span></div>
+        <div class="ai-question">
+          <input x-model="aiQuestion" @keydown.enter.prevent="askProjectAi()" placeholder="What should we focus on? Who is best suited for the API work?">
+          <button type="button" class="btn" @click="askProjectAi()" :disabled="aiLoading" x-text="aiLoading ? 'Thinking…' : 'Ask AI'"></button>
+        </div>
+        <div class="ai-answer" x-show="aiAnswer" x-text="aiAnswer?.answer || aiAnswer"></div>
+      </section>
+    </section>
 
     <!-- ============================================================
          PROJECTS — Phase 1 Basecamp layout, extended (not redesigned)
@@ -447,10 +892,92 @@
 
     <section x-show="screen==='activity'">
       <div class="top">
-        <div><h1>Activity</h1><div class="muted">Project activity feed will be expanded in Phase 4.</div></div>
+        <div>
+          <h1>Activity</h1>
+          <div class="muted">A chronological record of work across your projects.</div>
+        </div>
+
+        <select class="activity-project-filter"
+                x-model="activityProjectId"
+                @change="loadActivity(true)">
+          <option value="">All projects</option>
+          <template x-for="project in projects" :key="project.id">
+            <option :value="project.id" x-text="project.name"></option>
+          </template>
+        </select>
       </div>
-      <div class="section-title">Recent activity</div>
-      <div class="muted empty-phase3">Activity logging foundation is ready for the next phase.</div>
+
+      <div class="activity-tabs">
+        <button :class="{active:activityType===''}"
+                @click="activityType='';loadActivity(true)">All activity</button>
+        <button :class="{active:activityType==='task'}"
+                @click="activityType='task';loadActivity(true)">Tasks</button>
+        <button :class="{active:activityType==='category'}"
+                @click="activityType='category';loadActivity(true)">Categories</button>
+        <button :class="{active:activityType==='person'}"
+                @click="activityType='person';loadActivity(true)">People</button>
+        <button :class="{active:activityType==='schedule'}"
+                @click="activityType='schedule';loadActivity(true)">Schedule</button>
+        <button :class="{active:activityType==='import'}"
+                @click="activityType='import';loadActivity(true)">Imports</button>
+      </div>
+
+      <div x-show="activityLoading && activities.length===0"
+           class="muted empty-phase3">
+        Loading activity…
+      </div>
+
+      <template x-for="group in groupedActivities" :key="group.key">
+        <div class="activity-day">
+          <div class="activity-day-title" x-text="group.label"></div>
+
+          <template x-for="item in group.items" :key="item.id">
+            <div class="activity-row">
+
+              <div class="activity-time" x-text="activityTime(item.created_at)"></div>
+
+              <div class="person-avatar small">
+                <img x-show="item.actor_photo"
+                     :src="photoUrl(item.actor_photo)"
+                     alt="">
+                <span x-show="!item.actor_photo"
+                      x-text="initials(item.actor_name || 'System')"></span>
+              </div>
+
+              <div class="activity-content">
+                <div>
+                  <strong x-text="item.actor_name || 'System'"></strong>
+                  <span x-text="' ' + activityDescription(item)"></span>
+                </div>
+
+                <div class="activity-subject"
+                     x-show="activitySubject(item)"
+                     x-text="activitySubject(item)"></div>
+
+                <div class="muted activity-project"
+                     x-show="item.project_name"
+                     x-text="item.project_name"></div>
+
+                <div class="activity-changes"
+                     x-show="activityChanges(item)"
+                     x-text="activityChanges(item)"></div>
+              </div>
+            </div>
+          </template>
+        </div>
+      </template>
+
+      <div x-show="!activityLoading && activities.length===0"
+           class="muted empty-phase3">
+        No activity has been recorded for this filter yet.
+      </div>
+
+      <div class="activity-load-more" x-show="activityHasMore">
+        <button class="btn"
+                @click="loadActivity(false)"
+                :disabled="activityLoading"
+                x-text="activityLoading ? 'Loading…' : 'Load more'"></button>
+      </div>
     </section>
 
   </main>
@@ -545,7 +1072,14 @@
       </div>
 
       <div class="field">
-        <label>Assignees</label>
+        <div class="assignee-label-row">
+          <label>Assignees</label>
+          <div class="assignee-label-actions">
+            <button type="button" class="inline-link" @click="openAssigneePickerFromTask()">Select people</button>
+            <span>·</span>
+            <button type="button" class="inline-link" @click="openNewPersonFromTask()">+ Add new person</button>
+          </div>
+        </div>
 
         <div class="task-modal-assignees">
           <template x-for="person in projectPeople" :key="person.id">
@@ -568,11 +1102,19 @@
 
           <div x-show="projectPeople.length===0" class="muted task-no-people">
             No people have been added to this project yet.
-            <button type="button" class="inline-link" @click="taskModal=false; openProjectPeople()">
-              Add project people
-            </button>
           </div>
+
+
         </div>
+      </div>
+
+      <div class="field" x-show="taskForm.id">
+        <div class="field-label-actions">
+          <label>Subtasks</label>
+          <button type="button" class="inline-link" @click="generateAiSubtasks(taskForm.id)" :disabled="aiSubtaskLoading"
+                  x-text="aiSubtaskLoading ? 'Generating…' : '✨ Generate subtasks'"></button>
+        </div>
+        <div class="phase6-help">AI suggestions are reviewed before any subtask is created.</div>
       </div>
 
       <div class="task-form-grid">
@@ -645,8 +1187,10 @@
 
   <!-- Add / Edit person -->
   <div class="modal-backdrop" x-show="personModal" x-transition @click.self="closePersonModal()" x-cloak>
-    <div class="modal">
-      <h3 x-text="personForm.id ? 'Edit person' : 'Add person'"></h3>
+    <div class="modal person-modal">
+      <h3 class="person-modal-title" x-text="personForm.id ? 'Edit person' : 'Add person'"></h3>
+
+      <div class="person-modal-body">
       <div class="error-box" x-show="teamError" x-text="teamError"></div>
 
       <div class="person-photo-preview">
@@ -663,9 +1207,94 @@
       <div class="field"><label>Phone</label><input type="text" x-model="personForm.phone" placeholder="Phone"></div>
       <div class="field"><label>Status</label><select x-model="personForm.status"><option value="active">Active</option><option value="inactive">Inactive</option></select></div>
 
-      <div class="modal-actions">
+      <!-- Phase 6: global person intelligence profile -->
+      <div class="field">
+        <label>Role description</label>
+        <textarea x-model="personForm.role_description" placeholder="Describe what this person owns and is expected to handle."></textarea>
+      </div>
+      <div class="field">
+        <label>Skills</label>
+        <input type="text" x-model="personForm.skills_text" placeholder="PHP, CodeIgniter, AWS, REST APIs">
+        <div class="phase6-help">Separate skills with commas.</div>
+      </div>
+      <div class="field">
+        <label>Responsibilities</label>
+        <textarea x-model="personForm.responsibilities_text" placeholder="Backend architecture, API integrations, deployments"></textarea>
+        <div class="phase6-help">Use commas or one responsibility per line.</div>
+      </div>
+      <div class="field checkbox-field">
+        <label class="check-line"><input type="checkbox" x-model="personForm.ai_assignment_enabled"> Allow AI to suggest this person for work</label>
+      </div>
+
+      <div class="person-project-box">
+        <div class="section-title">Project assignments</div>
+        <div class="muted project-help">
+          A person can belong to multiple projects.
+        </div>
+
+        <div class="person-project-list">
+          <template x-for="project in projects" :key="project.id">
+            <div class="person-project-row">
+              <label class="person-project-check">
+                <input type="checkbox"
+                       :value="Number(project.id)"
+                       x-model.number="personForm.project_ids">
+                <span x-text="project.name"></span>
+              </label>
+
+              <input type="text"
+                     class="person-project-role"
+                     x-show="personForm.project_ids.includes(Number(project.id))"
+                     x-model="personForm.project_roles[project.id]"
+                     placeholder="Role (optional)">
+
+              <div class="person-project-intelligence" x-show="personForm.project_ids.includes(Number(project.id))">
+                <div class="field">
+                  <label>Project role description</label>
+                  <textarea x-model="personForm.project_role_descriptions[project.id]" placeholder="What does this person own in this project?"></textarea>
+                </div>
+                <div class="field">
+                  <label>Project responsibilities</label>
+                  <textarea x-model="personForm.project_responsibilities[project.id]" placeholder="API architecture, database design, deployment"></textarea>
+                </div>
+              </div>
+            </div>
+          </template>
+        </div>
+      </div>
+      </div><!-- /.person-modal-body -->
+
+      <div class="modal-actions person-modal-actions">
         <button class="btn" @click="closePersonModal()">Cancel</button>
-        <button class="btn btn-primary" @click="savePerson()">Save person</button>
+        <button class="btn btn-primary"
+                @click="savePerson()"
+                x-text="personForm.id ? 'Update person' : 'Add person'"></button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Phase 6: AI subtask review — suggestions are never auto-created -->
+  <div class="modal-backdrop" x-show="aiSubtaskModal" x-transition @click.self="closeAiSubtaskModal()" x-cloak>
+    <div class="modal ai-subtask-modal">
+      <h3 style="padding:22px 24px 8px;margin:0">AI subtask suggestions</h3>
+      <div class="muted" style="padding:0 24px 14px" x-text="aiSubtaskSummary || 'Review the suggestions before creating tasks.'"></div>
+      <div class="ai-subtask-body">
+        <template x-for="item in aiSubtaskSuggestions" :key="item.suggestion_id">
+          <label class="ai-subtask-row">
+            <input type="checkbox" :value="Number(item.suggestion_id)" x-model.number="selectedAiSuggestionIds">
+            <span class="ai-subtask-copy">
+              <strong x-text="item.title"></strong>
+              <small x-text="[priorityLabel(item.priority), item.assignment_reason].filter(Boolean).join(' · ')"></small>
+            </span>
+            <span class="ai-confidence" x-show="item.confidence!==null && item.confidence!==undefined" x-text="Math.round(Number(item.confidence)*100)+'% confidence'"></span>
+          </label>
+        </template>
+        <div class="command-empty" x-show="aiSubtaskSuggestions.length===0">No subtask suggestions were returned.</div>
+      </div>
+      <div class="modal-actions" style="padding:14px 24px;border-top:1px solid #ddd;margin:0">
+        <button class="btn" @click="closeAiSubtaskModal()">Cancel</button>
+        <button class="btn btn-primary" @click="acceptAiSubtasks()" :disabled="aiSubtaskAccepting || selectedAiSuggestionIds.length===0"
+                x-text="aiSubtaskAccepting ? 'Creating…' : 'Create selected ('+selectedAiSuggestionIds.length+')'"></button>
       </div>
     </div>
   </div>
@@ -709,6 +1338,86 @@
     </div>
   </div>
 
+
+  <!-- Phase 4.2: existing-person assignee picker -->
+  <div class="modal-backdrop" x-show="assigneePickerModal" x-transition
+       @click.self="closeAssigneePicker()" x-cloak>
+    <div class="modal assignee-picker-modal">
+      <h3>Select assignees</h3>
+
+      <div class="assignee-tabs">
+        <button type="button"
+                :class="{'active':assigneePickerTab==='project'}"
+                @click="assigneePickerTab='project'">
+          Project People
+        </button>
+        <button type="button"
+                :class="{'active':assigneePickerTab==='all'}"
+                @click="assigneePickerTab='all'">
+          All People
+        </button>
+      </div>
+
+      <div class="assignee-picker-body">
+        <template x-if="assigneePickerTab==='project'">
+          <div>
+            <template x-for="person in projectPeople" :key="'project-'+person.id">
+              <label class="assignee-picker-person">
+                <input type="checkbox"
+                       :checked="isAssigneePickerSelected(person.id)"
+                       @change="toggleAssigneePickerPerson(person.id, $event.target.checked)">
+                <span class="mini-avatar">
+                  <img x-show="person.photo" :src="photoUrl(person.photo)" alt="">
+                  <span x-show="!person.photo" x-text="initials(person.name)"></span>
+                </span>
+                <span class="assignee-picker-info">
+                  <strong x-text="person.name"></strong>
+                  <small x-text="person.job_title || person.email || 'Project member'"></small>
+                </span>
+              </label>
+            </template>
+
+            <div class="muted" x-show="projectPeople.length===0">
+              No people are assigned to this project.
+            </div>
+          </div>
+        </template>
+
+        <template x-if="assigneePickerTab==='all'">
+          <div>
+            <template x-for="person in teamMembers" :key="'all-'+person.id">
+              <div class="assignee-picker-person all-person">
+                <label>
+                  <input type="checkbox"
+                         :checked="isAssigneePickerSelected(person.id)"
+                         @change="toggleAllPeopleAssignee(person, $event.target.checked)">
+                  <span class="mini-avatar">
+                    <img x-show="person.photo" :src="photoUrl(person.photo)" alt="">
+                    <span x-show="!person.photo" x-text="initials(person.name)"></span>
+                  </span>
+                  <span class="assignee-picker-info">
+                    <strong x-text="person.name"></strong>
+                    <small x-text="person.job_title || person.email || 'Team member'"></small>
+                  </span>
+                </label>
+
+                <span class="assignee-membership-note"
+                      x-show="!isProjectPerson(person.id)">
+                  Selecting will add to project
+                </span>
+              </div>
+            </template>
+          </div>
+        </template>
+      </div>
+
+      <div class="modal-actions">
+        <button class="btn" @click="closeAssigneePicker()">Cancel</button>
+        <button class="btn btn-primary" @click="applyAssigneePicker()">Apply</button>
+      </div>
+    </div>
+  </div>
+
   <!-- Multi-person task assignment -->
   <div class="modal-backdrop" x-show="assigneeModal" x-transition @click.self="closeAssigneeModal()" x-cloak>
     <div class="modal">
@@ -731,6 +1440,12 @@
             </span>
           </label>
         </template>
+
+        <button type="button"
+                class="inline-link task-add-person-link"
+                @click="openNewPersonFromAssigneeModal()">
+          + Add new person
+        </button>
       </div>
 
       <div class="modal-actions">
@@ -798,6 +1513,10 @@ function taskManager(){
 
   return {
     screen: 'projects',
+    dashboardLoading: false,
+    dashboardActivities: [],
+    dashboardEvents: [],
+    dashboardScheduleTasks: [],
     currentProjectId: cached?.currentProjectId ? Number(cached.currentProjectId) : null,
     projects: cached?.projects || [],
     todos: cached?.todos || [],
@@ -826,12 +1545,24 @@ function taskManager(){
     personPhoto: null,
     personPhotoPreview: '',
     selectedTaskAssigneeIds: [],
-    personForm: {id:null,name:'',email:'',job_title:'',phone:'',status:'active',photo:''},
+    personForm: {id:null,name:'',email:'',job_title:'',phone:'',status:'active',photo:'',role_description:'',skills_text:'',responsibilities_text:'',ai_assignment_enabled:true,project_ids:[],project_roles:{},project_role_descriptions:{},project_responsibilities:{}},
+    aiBrief:null, aiBriefLoading:false, aiQuestion:'', aiAnswer:null, aiLoading:false,
+    aiSubtaskModal:false, aiSubtaskLoading:false, aiSubtaskAccepting:false, aiSubtaskTaskId:null, aiSubtaskSummary:'', aiSubtaskSuggestions:[], selectedAiSuggestionIds:[],
+    personReturnContext: null,
+    assigneePickerModal: false,
+    assigneePickerTab: 'project',
+    assigneePickerIds: [],
     projectMemberForm: {team_member_id:'',role:''},
     assignmentTask: null,
     selectedAssigneeIds: [],
     eventForm: {id:null,project_id:'',title:'',description:'',event_type:'event',start_at:'',end_at:'',all_day:false,location:''},
     importPreview: [],
+    activities: [],
+    activityType: '',
+    activityProjectId: '',
+    activityOffset: 0,
+    activityHasMore: false,
+    activityLoading: false,
     projectForm: {id:null,name:'',color:''},
     taskForm: {
       id:null,
@@ -867,9 +1598,104 @@ function taskManager(){
       return list;
     },
     get screenTitle(){
-      return {mytasks:'My Tasks',schedule:'Schedule',people:'People',activity:'Activity'}[this.screen] || 'Projects';
+      return {dashboard:'Dashboard',mytasks:'My Tasks',schedule:'Schedule',people:'People',activity:'Activity'}[this.screen] || 'Projects';
     },
     get myVisibleTasks(){ return this.todos; },
+
+    get dashboardProjectTasks(){
+      return this.todos.filter(t=>Number(t.project_id)===Number(this.currentProjectId));
+    },
+    get dashboardOpenTasks(){ return this.dashboardProjectTasks.filter(t=>!this.isCompleted(t)); },
+    get dashboardCompletedTasks(){ return this.dashboardProjectTasks.filter(t=>this.isCompleted(t)); },
+    get dashboardCompletionPercent(){
+      const total=this.dashboardProjectTasks.length;
+      return total ? Math.round((this.dashboardCompletedTasks.length/total)*100) : 0;
+    },
+    get dashboardOverdueTasks(){
+      const today=this.isoDate(new Date());
+      return this.dashboardOpenTasks.filter(t=>t.due_date && String(t.due_date).slice(0,10)<today);
+    },
+    get dashboardDueSoonTasks(){
+      const today=this.isoDate(new Date());
+      const end=new Date(); end.setDate(end.getDate()+7);
+      const until=this.isoDate(end);
+      return this.dashboardOpenTasks.filter(t=>{
+        const due=String(t.due_date||'').slice(0,10);
+        return due && due>=today && due<=until;
+      });
+    },
+    get dashboardHighPriorityTasks(){
+      return this.dashboardOpenTasks.filter(t=>['high','urgent'].includes(String(t.priority||'normal').toLowerCase()));
+    },
+    get dashboardAttentionTasks(){
+      const rows=[...this.dashboardOpenTasks].filter(t=>
+        this.isDashboardOverdue(t) || ['high','urgent'].includes(String(t.priority||'').toLowerCase())
+      );
+      return rows.sort((a,b)=>{
+        const ao=this.isDashboardOverdue(a)?0:1, bo=this.isDashboardOverdue(b)?0:1;
+        if(ao!==bo)return ao-bo;
+        const rank={urgent:0,high:1,normal:2,low:3};
+        const pr=(rank[a.priority]??2)-(rank[b.priority]??2);
+        if(pr!==0)return pr;
+        return String(a.due_date||'9999-12-31').localeCompare(String(b.due_date||'9999-12-31'));
+      }).slice(0,7);
+    },
+    get dashboardCategoryProgress(){
+      const rows=[];
+      for(const category of this.displayCategories){
+        const tasks=this.tasksForCategory(category.id);
+        if(!tasks.length)continue;
+        const completed=tasks.filter(t=>this.isCompleted(t)).length;
+        rows.push({
+          key:category.key,
+          name:category.name,
+          total:tasks.length,
+          completed,
+          percent:Math.round((completed/tasks.length)*100)
+        });
+      }
+      return rows;
+    },
+    get dashboardWorkload(){
+      const map=new Map();
+      for(const task of this.dashboardOpenTasks){
+        for(const person of this.taskPeople(task.id)){
+          const id=Number(person.id);
+          if(!map.has(id))map.set(id,{...person,id,open_tasks:0});
+          map.get(id).open_tasks++;
+        }
+      }
+      return [...map.values()].sort((a,b)=>b.open_tasks-a.open_tasks || String(a.name).localeCompare(String(b.name))).slice(0,8);
+    },
+    get dashboardUpcoming(){
+      const today=this.isoDate(new Date());
+      const end=new Date(); end.setDate(end.getDate()+30);
+      const until=this.isoDate(end), items=[];
+      this.dashboardEvents.forEach(e=>{
+        const date=String(e.start_at||'').slice(0,10);
+        if(date>=today && date<=until)items.push({...e,kind:'event',date});
+      });
+      this.dashboardScheduleTasks.forEach(t=>{
+        const date=String(t.due_date||'').slice(0,10);
+        if(date>=today && date<=until)items.push({...t,kind:'task',title:t.body,date});
+      });
+      return items.sort((a,b)=>a.date.localeCompare(b.date)).slice(0,8);
+    },
+    get dashboardRecentActivities(){ return this.dashboardActivities.slice(0,8); },
+    get dashboardHealthLabel(){
+      if(this.dashboardOverdueTasks.length>=3 || this.dashboardOverdueTasks.length>Math.max(1,Math.floor(this.dashboardOpenTasks.length*.25)))return 'At risk';
+      if(this.dashboardOverdueTasks.length>0 || this.dashboardHighPriorityTasks.length>=3)return 'Needs attention';
+      return 'On track';
+    },
+    get dashboardHealthClass(){
+      return this.dashboardHealthLabel==='At risk' ? 'health-risk' : (this.dashboardHealthLabel==='Needs attention' ? 'health-watch' : 'health-good');
+    },
+    get dashboardHealthReason(){
+      if(!this.dashboardProjectTasks.length)return 'No tasks have been added yet.';
+      if(this.dashboardOverdueTasks.length)return this.dashboardOverdueTasks.length+' overdue task'+(this.dashboardOverdueTasks.length===1?'':'s')+'.';
+      if(this.dashboardHighPriorityTasks.length)return this.dashboardHighPriorityTasks.length+' high-priority commitment'+(this.dashboardHighPriorityTasks.length===1?'':'s')+' open.';
+      return 'No overdue work detected.';
+    },
     get availableProjectPeople(){
       const used=new Set(this.projectPeople.map(p=>Number(p.id)));
       return this.teamMembers.filter(p=>p.status==='active' && !used.has(Number(p.id)));
@@ -900,6 +1726,22 @@ function taskManager(){
     },
     get importGroups(){
       return this.importPreview.reduce((out,t)=>{(out[t.category]??=[]).push(t);return out;},{});
+    },
+    get groupedActivities(){
+      const groups=[];
+      const map=new Map();
+
+      for(const item of this.activities){
+        const key=String(item.created_at||'').slice(0,10);
+        if(!map.has(key)){
+          const group={key,label:this.activityDayLabel(key),items:[]};
+          map.set(key,group);
+          groups.push(group);
+        }
+        map.get(key).items.push(item);
+      }
+
+      return groups;
     },
 
     isCompleted(t){ return t.completed===true || t.completed===1 || t.completed==='1'; },
@@ -948,6 +1790,7 @@ function taskManager(){
       this.saveCache();
       this.loadProjectPeople();
       this.loadProjectAssignments();
+      if(this.screen==='dashboard')this.refreshDashboard();
     },
     saveCache(){ localStorage.setItem('basecamp-task-manager',JSON.stringify({projects:this.projects,todos:this.todos,currentProjectId:this.currentProjectId})); },
 
@@ -1075,11 +1918,25 @@ function taskManager(){
         }
 
         // Save multi-person assignments after the task exists.
+        // Filter against current project membership so a person removed from
+        // the project cannot remain as a stale selected ID.
+        await this.loadProjectPeople();
+
+        const validProjectPersonIds=this.projectPeople.map(
+          person=>Number(person.id)
+        );
+
+        this.selectedTaskAssigneeIds=this.selectedTaskAssigneeIds.filter(
+          id=>validProjectPersonIds.includes(Number(id))
+        );
+
         const assignmentData=await this.request(
           '<?= site_url('task-manager/tasks') ?>/'+task.id+'/assignees',
           {
             method:'PUT',
-            body:JSON.stringify({team_member_ids:this.selectedTaskAssigneeIds})
+            body:JSON.stringify({
+              team_member_ids:this.selectedTaskAssigneeIds.map(Number)
+            })
           }
         );
 
@@ -1252,6 +2109,101 @@ function taskManager(){
 
 
     // --------------------------------------------------------------
+    // PHASE 5 — PROJECT COMMAND CENTER
+    // --------------------------------------------------------------
+    async openDashboard(){
+      this.screen='dashboard';
+      await this.refreshDashboard();
+    },
+
+    async dashboardProjectChanged(){
+      this.currentProjectId=Number(this.currentProjectId);
+      this.saveCache();
+      await this.refreshDashboard();
+    },
+
+    async refreshDashboard(){
+      if(!this.currentProjectId)return;
+      this.dashboardLoading=true;
+
+      try{
+        await Promise.all([
+          this.loadProjectPeople(),
+          this.loadProjectAssignments(),
+          this.loadDashboardSchedule(),
+          this.loadDashboardActivity()
+        ]);
+      }finally{
+        this.dashboardLoading=false;
+      }
+    },
+
+    async loadDashboardSchedule(){
+      if(!this.currentProjectId){
+        this.dashboardEvents=[];
+        this.dashboardScheduleTasks=[];
+        return;
+      }
+
+      const from=this.isoDate(new Date());
+      const toDate=new Date();
+      toDate.setDate(toDate.getDate()+30);
+
+      const query=new URLSearchParams({
+        from,
+        to:this.isoDate(toDate),
+        project_id:String(this.currentProjectId)
+      });
+
+      try{
+        const data=await this.request(
+          '<?= site_url('task-manager/schedule') ?>?'+query.toString()
+        );
+        this.dashboardEvents=data.events||[];
+        this.dashboardScheduleTasks=data.tasks||[];
+      }catch(e){
+        console.error(e);
+        this.dashboardEvents=[];
+        // The dashboard can still derive task deadlines from loaded tasks.
+        this.dashboardScheduleTasks=this.dashboardProjectTasks;
+      }
+    },
+
+    async loadDashboardActivity(){
+      if(!this.currentProjectId){
+        this.dashboardActivities=[];
+        return;
+      }
+
+      const query=new URLSearchParams({
+        project_id:String(this.currentProjectId),
+        limit:'8',
+        offset:'0'
+      });
+
+      try{
+        const data=await this.request(
+          '<?= site_url('task-manager/activity') ?>?'+query.toString()
+        );
+        this.dashboardActivities=data.activities||[];
+      }catch(e){
+        console.error(e);
+        this.dashboardActivities=[];
+      }
+    },
+
+    isDashboardOverdue(todo){
+      if(!todo?.due_date || this.isCompleted(todo))return false;
+      return String(todo.due_date).slice(0,10)<this.isoDate(new Date());
+    },
+
+    dashboardTaskCategory(todo){
+      if(!todo?.category_id)return 'Uncategorized';
+      return this.categories.find(c=>Number(c.id)===Number(todo.category_id))?.name || 'Uncategorized';
+    },
+
+
+    // --------------------------------------------------------------
     // PEOPLE / TEAM
     // --------------------------------------------------------------
     async loadTeam(){
@@ -1275,18 +2227,194 @@ function taskManager(){
       return '<?= rtrim(base_url(), '/') ?>/' + String(path).replace(/^\/+/,'');
     },
 
-    openPersonModal(person=null){
+    openPersonModal(person=null, options={}){
       this.teamError='';
       this.personPhoto=null;
+
+      const memberships=person?.projects || [];
+      const projectIds=memberships.map(p=>Number(p.id));
+      const projectRoles={};
+      const projectRoleDescriptions={};
+      const projectResponsibilities={};
+
+      memberships.forEach(p=>{
+        const id=Number(p.id);
+        projectRoles[id]=p.role||'';
+        projectRoleDescriptions[id]=p.role_description||'';
+        projectResponsibilities[id]=this.listText(p.responsibilities);
+      });
+
+      // When launched from a task, pre-check its current project.
+      if(options.project_id && !projectIds.includes(Number(options.project_id))){
+        projectIds.push(Number(options.project_id));
+      }
+
       this.personForm=person
-        ? {id:person.id,name:person.name||'',email:person.email||'',job_title:person.job_title||'',phone:person.phone||'',status:person.status||'active',photo:person.photo||''}
-        : {id:null,name:'',email:'',job_title:'',phone:'',status:'active',photo:''};
+        ? {
+            id:person.id,
+            name:person.name||'',
+            email:person.email||'',
+            job_title:person.job_title||'',
+            phone:person.phone||'',
+            status:person.status||'active',
+            photo:person.photo||'',
+            role_description:person.role_description||'',
+            skills_text:this.listText(person.skills),
+            responsibilities_text:this.listText(person.responsibilities),
+            ai_assignment_enabled:Number(person.ai_assignment_enabled ?? 1)===1,
+            project_ids:projectIds,
+            project_roles:projectRoles,
+            project_role_descriptions:projectRoleDescriptions,
+            project_responsibilities:projectResponsibilities
+          }
+        : {
+            id:null,
+            name:'',
+            email:'',
+            job_title:'',
+            phone:'',
+            status:'active',
+            photo:'',
+            role_description:'',
+            skills_text:'',
+            responsibilities_text:'',
+            ai_assignment_enabled:true,
+            project_ids:options.project_id ? [Number(options.project_id)] : [],
+            project_roles:{},
+            project_role_descriptions:{},
+            project_responsibilities:{}
+          };
+
       this.personPhotoPreview=person?.photo ? this.photoUrl(person.photo) : '';
+      this.personReturnContext=options.returnContext || null;
       this.personModal=true;
     },
 
-    closePersonModal(){
-      this.personModal=false; this.personPhoto=null; this.personPhotoPreview='';
+    closePersonModal(preserveContext=false){
+      this.personModal=false;
+      this.personPhoto=null;
+      this.personPhotoPreview='';
+
+      if(!preserveContext){
+        this.personReturnContext=null;
+      }
+    },
+
+    async openAssigneePickerFromTask(){
+      await this.loadTeam();
+      await this.loadProjectPeople();
+
+      this.assigneePickerIds=this.selectedTaskAssigneeIds
+        .map(Number);
+
+      this.assigneePickerTab='project';
+      this.assigneePickerModal=true;
+    },
+
+    closeAssigneePicker(){
+      this.assigneePickerModal=false;
+    },
+
+    isProjectPerson(memberId){
+      return this.projectPeople.some(
+        person=>Number(person.id)===Number(memberId)
+      );
+    },
+
+    isAssigneePickerSelected(memberId){
+      return this.assigneePickerIds
+        .map(Number)
+        .includes(Number(memberId));
+    },
+
+    toggleAssigneePickerPerson(memberId, checked){
+      const id=Number(memberId);
+      const ids=this.assigneePickerIds.map(Number);
+
+      if(checked){
+        if(!ids.includes(id)){
+          this.assigneePickerIds=[...ids,id];
+        }
+      }else{
+        this.assigneePickerIds=ids.filter(existingId=>existingId!==id);
+      }
+    },
+
+    async toggleAllPeopleAssignee(person, checked){
+      const id=Number(person.id);
+
+      if(!checked){
+        this.toggleAssigneePickerPerson(id,false);
+        return;
+      }
+
+      /*
+       * In All People, checking someone who is not yet on this project
+       * automatically creates project membership, then selects them.
+       */
+      if(!this.isProjectPerson(id)){
+        try{
+          await this.addExistingPersonToCurrentProject(person);
+        }catch(e){
+          // addExistingPersonToCurrentProject already reports the error.
+          return;
+        }
+      }
+
+      this.toggleAssigneePickerPerson(id,true);
+    },
+
+    async addExistingPersonToCurrentProject(person){
+      try{
+        await this.request(
+          '<?= site_url('task-manager/projects') ?>/'+this.currentProjectId+'/members',
+          {
+            method:'POST',
+            body:JSON.stringify({
+              team_member_id:Number(person.id),
+              role:''
+            })
+          }
+        );
+
+        await this.loadTeam();
+        await this.loadProjectPeople();
+
+        const id=Number(person.id);
+        if(!this.assigneePickerIds.includes(id)){
+          this.assigneePickerIds=[...this.assigneePickerIds,id];
+        }
+      }catch(e){
+        alert(e.message);
+        throw e;
+      }
+    },
+
+    applyAssigneePicker(){
+      // Only project members may be persisted as task assignees.
+      const valid=this.projectPeople.map(p=>Number(p.id));
+
+      this.selectedTaskAssigneeIds=this.assigneePickerIds
+        .map(Number)
+        .filter(id=>valid.includes(id));
+
+      this.closeAssigneePicker();
+    },
+
+    openNewPersonFromTask(){
+      // Keep the task modal alive underneath the person modal. This prevents
+      // losing task text/category/priority/due-date while creating a person.
+      this.openPersonModal(null,{
+        project_id:this.currentProjectId,
+        returnContext:'task-form'
+      });
+    },
+
+    openNewPersonFromAssigneeModal(){
+      this.openPersonModal(null,{
+        project_id:this.currentProjectId,
+        returnContext:'assignee-modal'
+      });
     },
 
     selectPersonPhoto(event){
@@ -1296,24 +2424,94 @@ function taskManager(){
     },
 
     async savePerson(){
-      if(!this.personForm.name.trim()){this.teamError='Name is required.';return;}
+      if(!this.personForm.name.trim()){
+        this.teamError='Name is required.';
+        return;
+      }
+
+      this.teamError='';
+
       const fd=new FormData();
-      ['name','email','job_title','phone','status'].forEach(k=>fd.append(k,this.personForm[k]||''));
+      ['name','email','job_title','phone','status','role_description'].forEach(
+        k=>fd.append(k,this.personForm[k]||'')
+      );
+      fd.append('skills',JSON.stringify(this.textList(this.personForm.skills_text)));
+      fd.append('responsibilities',JSON.stringify(this.textList(this.personForm.responsibilities_text)));
+      fd.append('ai_assignment_enabled',this.personForm.ai_assignment_enabled ? '1' : '0');
       if(this.personPhoto)fd.append('photo',this.personPhoto);
+
       try{
-        const url='<?= site_url('task-manager/team') ?>'+(this.personForm.id?'/'+this.personForm.id:'');
+        const editing=!!this.personForm.id;
+        const returnContext=this.personReturnContext;
+        const url='<?= site_url('task-manager/team') ?>'
+          +(editing?'/'+this.personForm.id:'');
+
         const response=await fetch(url,{
           method:'POST',
-          headers:{'Accept':'application/json','X-Requested-With':'XMLHttpRequest','X-CSRF-TOKEN':csrfHash},
+          headers:{
+            'Accept':'application/json',
+            'X-Requested-With':'XMLHttpRequest',
+            'X-CSRF-TOKEN':csrfHash
+          },
           body:fd
         });
+
         const data=await response.json();
         if(data.csrfHash)csrfHash=data.csrfHash;
-        if(!response.ok||data.success===false)throw new Error(data.message||'Unable to save person.');
-        this.closePersonModal();
+
+        if(!response.ok||data.success===false){
+          throw new Error(data.message||'Unable to save person.');
+        }
+
+        const member=data.member;
+        const memberId=Number(member.id);
+
+        // Synchronize every checked project in one operation.
+        const memberships=this.personForm.project_ids.map(projectId=>({
+          project_id:Number(projectId),
+          role:this.personForm.project_roles[projectId]||'',
+          role_description:this.personForm.project_role_descriptions[projectId]||'',
+          responsibilities:this.textList(this.personForm.project_responsibilities[projectId]||'')
+        }));
+
+        await this.request(
+          '<?= site_url('task-manager/team') ?>/'+memberId+'/projects',
+          {
+            method:'PUT',
+            body:JSON.stringify({projects:memberships})
+          }
+        );
+
+        this.closePersonModal(true);
         await this.loadTeam();
         await this.loadProjectPeople();
-      }catch(e){this.teamError=e.message;}
+        await this.loadProjectAssignments();
+
+        if(returnContext==='task-form'){
+          if(!this.selectedTaskAssigneeIds.includes(memberId)){
+            this.selectedTaskAssigneeIds=[
+              ...this.selectedTaskAssigneeIds,
+              memberId
+            ];
+          }
+          this.taskModal=true;
+        }
+
+        if(returnContext==='assignee-modal'){
+          if(!this.selectedAssigneeIds.includes(memberId)){
+            this.selectedAssigneeIds=[
+              ...this.selectedAssigneeIds,
+              memberId
+            ];
+          }
+          this.assigneeModal=true;
+        }
+
+        this.personReturnContext=null;
+
+      }catch(e){
+        this.teamError=e.message;
+      }
     },
 
     async deletePerson(person){
@@ -1389,13 +2587,37 @@ function taskManager(){
 
     async saveTaskAssignees(){
       if(!this.assignmentTask)return;
+
       try{
-        const data=await this.request('<?= site_url('task-manager/tasks') ?>/'+this.assignmentTask.id+'/assignees',{
-          method:'PUT',body:JSON.stringify({team_member_ids:this.selectedAssigneeIds})
-        });
-        this.taskAssignments={...this.taskAssignments,[this.assignmentTask.id]:data.members||[]};
+        await this.loadProjectPeople();
+
+        const validProjectPersonIds=this.projectPeople.map(
+          person=>Number(person.id)
+        );
+
+        // Empty [] is valid and means "remove all assignees".
+        const ids=this.selectedAssigneeIds
+          .map(Number)
+          .filter(id=>validProjectPersonIds.includes(id));
+
+        const data=await this.request(
+          '<?= site_url('task-manager/tasks') ?>/'+this.assignmentTask.id+'/assignees',
+          {
+            method:'PUT',
+            body:JSON.stringify({team_member_ids:ids})
+          }
+        );
+
+        this.taskAssignments={
+          ...this.taskAssignments,
+          [this.assignmentTask.id]:data.members||[]
+        };
+
         this.closeAssigneeModal();
-      }catch(e){alert(e.message);}
+
+      }catch(e){
+        alert(e.message);
+      }
     },
 
     // --------------------------------------------------------------
@@ -1468,6 +2690,146 @@ function taskManager(){
     scheduleMonthShort(date){return new Date(date+'T00:00:00').toLocaleDateString(undefined,{month:'short'});},
 
     // --------------------------------------------------------------
+    // ACTIVITY / AUDIT TRAIL
+    // --------------------------------------------------------------
+    async openActivity(){
+      this.screen='activity';
+      await this.loadActivity(true);
+    },
+
+    async loadActivity(reset=true){
+      if(this.activityLoading)return;
+
+      if(reset){
+        this.activityOffset=0;
+        this.activities=[];
+      }
+
+      this.activityLoading=true;
+
+      try{
+        const query=new URLSearchParams({
+          limit:'30',
+          offset:String(this.activityOffset)
+        });
+
+        if(this.activityProjectId){
+          query.set('project_id',this.activityProjectId);
+        }
+
+        if(this.activityType){
+          query.set('type',this.activityType);
+        }
+
+        const data=await this.request(
+          '<?= site_url('task-manager/activity') ?>?'+query.toString()
+        );
+
+        const rows=data.activities||[];
+
+        this.activities=reset
+          ? rows
+          : [...this.activities,...rows];
+
+        this.activityHasMore=!!data.has_more;
+        this.activityOffset=Number(data.next_offset||this.activities.length);
+
+      }catch(e){
+        console.error(e);
+        if(reset)this.activities=[];
+      }finally{
+        this.activityLoading=false;
+      }
+    },
+
+    activityDate(value){
+      if(!value)return null;
+      return new Date(String(value).replace(' ','T'));
+    },
+
+    activityTime(value){
+      const date=this.activityDate(value);
+      if(!date || Number.isNaN(date.getTime()))return '';
+      return date.toLocaleTimeString([],{
+        hour:'numeric',
+        minute:'2-digit'
+      });
+    },
+
+    activityDayLabel(key){
+      if(!key)return '';
+
+      const date=new Date(key+'T00:00:00');
+      const today=new Date();
+      const yesterday=new Date();
+      yesterday.setDate(today.getDate()-1);
+
+      if(this.isoDate(date)===this.isoDate(today))return 'Today';
+      if(this.isoDate(date)===this.isoDate(yesterday))return 'Yesterday';
+
+      return date.toLocaleDateString(undefined,{
+        weekday:'long',
+        month:'short',
+        day:'numeric',
+        year:date.getFullYear()!==today.getFullYear()?'numeric':undefined
+      });
+    },
+
+    activityDescription(item){
+      const descriptions={
+        'task.created':'created a task',
+        'task.updated':'updated a task',
+        'task.completed':'completed a task',
+        'task.reopened':'reopened a task',
+        'task.deleted':'deleted a task',
+        'task.assignees_changed':'changed task assignees',
+        'category.created':'created a category',
+        'category.updated':'updated a category',
+        'category.deleted':'deleted a category',
+        'person.added':'added a person to the project',
+        'person.removed':'removed a person from the project',
+        'schedule.created':'created a schedule item',
+        'schedule.updated':'updated a schedule item',
+        'schedule.deleted':'deleted a schedule item',
+        'project.created':'created a project',
+        'project.updated':'updated a project',
+        'project.deleted':'deleted a project',
+        'import.completed':'imported Markdown tasks'
+      };
+
+      return descriptions[item.action] || item.description || item.action || 'made a change';
+    },
+
+    activitySubject(item){
+      const meta=item.metadata||{};
+
+      if(meta.task)return '“'+meta.task+'”';
+      if(meta.category)return '“'+meta.category+'”';
+      if(meta.person)return meta.person;
+      if(meta.title)return '“'+meta.title+'”';
+
+      if(item.action==='import.completed'){
+        return `${meta.imported||0} added · ${meta.skipped||0} skipped`;
+      }
+
+      return '';
+    },
+
+    activityChanges(item){
+      const changes=item.metadata?.changes;
+      if(!changes || typeof changes!=='object')return '';
+
+      return Object.entries(changes)
+        .map(([field,value])=>{
+          if(value && typeof value==='object' && ('from' in value || 'to' in value)){
+            return `${field}: ${value.from ?? '—'} → ${value.to ?? '—'}`;
+          }
+          return `${field}: ${value ?? '—'}`;
+        })
+        .join(' · ');
+    },
+
+    // --------------------------------------------------------------
     // MARKDOWN IMPORT
     // --------------------------------------------------------------
     parseMarkdownTasks(content){
@@ -1501,6 +2863,87 @@ function taskManager(){
         this.importModal=false; this.importPreview=[];
         await this.loadData();
       }catch(e){alert(e.message);}
+    },
+
+    textList(value){
+      return String(value||'').split(/[,\n\r]+/).map(v=>v.trim()).filter(Boolean);
+    },
+
+    listText(value){
+      if(Array.isArray(value))return value.join(', ');
+      if(!value)return '';
+      if(typeof value==='string'){
+        try{const parsed=JSON.parse(value);if(Array.isArray(parsed))return parsed.join(', ');}catch(e){}
+        return value;
+      }
+      return '';
+    },
+
+    async generateProjectBrief(){
+      if(!this.currentProjectId)return;
+      this.aiBriefLoading=true;
+      try{
+        const data=await this.request(
+          `<?= site_url('task-manager/ai/projects') ?>/${this.currentProjectId}/brief`,
+          {method:'POST'}
+        );
+        this.aiBrief=data.brief||null;
+      }catch(e){alert(e.message);}
+      finally{this.aiBriefLoading=false;}
+    },
+
+    async askProjectAi(){
+      const question=this.aiQuestion.trim();
+      if(!question||!this.currentProjectId)return;
+      this.aiLoading=true;this.aiAnswer=null;
+      try{
+        const data=await this.request(
+          `<?= site_url('task-manager/ai/projects') ?>/${this.currentProjectId}/ask`,
+          {method:'POST',body:JSON.stringify({question})}
+        );
+        this.aiAnswer=data.result||null;
+      }catch(e){alert(e.message);}
+      finally{this.aiLoading=false;}
+    },
+
+    async generateAiSubtasks(taskId){
+      if(!taskId)return;
+      this.aiSubtaskLoading=true;
+      try{
+        const data=await this.request(
+          `<?= site_url('task-manager/ai/tasks') ?>/${Number(taskId)}/breakdown`,
+          {method:'POST'}
+        );
+        this.aiSubtaskTaskId=Number(taskId);
+        this.aiSubtaskSummary=data.summary||'';
+        this.aiSubtaskSuggestions=data.subtasks||[];
+        this.selectedAiSuggestionIds=this.aiSubtaskSuggestions.map(v=>Number(v.suggestion_id));
+        this.aiSubtaskModal=true;
+      }catch(e){alert(e.message);}
+      finally{this.aiSubtaskLoading=false;}
+    },
+
+    closeAiSubtaskModal(){
+      this.aiSubtaskModal=false;
+      this.aiSubtaskTaskId=null;
+      this.aiSubtaskSummary='';
+      this.aiSubtaskSuggestions=[];
+      this.selectedAiSuggestionIds=[];
+    },
+
+    async acceptAiSubtasks(){
+      if(!this.aiSubtaskTaskId||this.selectedAiSuggestionIds.length===0)return;
+      this.aiSubtaskAccepting=true;
+      try{
+        const data=await this.request(
+          `<?= site_url('task-manager/ai/tasks') ?>/${this.aiSubtaskTaskId}/accept-subtasks`,
+          {method:'POST',body:JSON.stringify({suggestion_ids:this.selectedAiSuggestionIds.map(Number)})}
+        );
+        this.closeAiSubtaskModal();
+        await this.loadData();
+        alert(`${data.created_count||0} subtask(s) created.`);
+      }catch(e){alert(e.message);}
+      finally{this.aiSubtaskAccepting=false;}
     },
 
     normalizeTask(t){
