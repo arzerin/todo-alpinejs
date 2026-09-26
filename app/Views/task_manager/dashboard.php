@@ -19,7 +19,7 @@
     button{cursor:pointer}
     .add{background:#2f7d32;color:#fff;border:0;border-radius:5px;padding:0 18px;font-weight:700}
     .section-title{font-size:15px;font-weight:800;border-bottom:2px solid #222;padding-bottom:8px;margin:25px 0 0}
-    .todo{display:grid;grid-template-columns:28px minmax(0,1fr) 105px 82px 24px;gap:8px;align-items:center;padding:12px 4px;border-bottom:1px solid #ececec}
+    .todo{display:grid;grid-template-columns:28px minmax(0,1fr) 105px 66px 82px 24px;gap:8px;align-items:center;padding:12px 4px;border-bottom:1px solid #ececec}
     .todo input[type=checkbox]{width:18px;height:18px;accent-color:#27853a}
     .title{font-size:15px;line-height:1.35}.completed .title{text-decoration:line-through;color:#999}
     .meta{font-size:12px;color:#777}.delete{border:0;background:none;color:#aaa;font-size:20px}.delete:hover{color:#b42318}
@@ -118,6 +118,37 @@
     .import-preview{max-height:300px;overflow:auto}.import-group{margin:14px 0}.import-task{padding:4px 8px;color:#555}
     @media(max-width:800px){.people-row{grid-template-columns:42px minmax(0,1fr) 44px}.people-count{display:none}.project-member-add{grid-template-columns:1fr}.calendar{grid-template-columns:repeat(7,minmax(100px,1fr));overflow:auto}.schedule-toolbar{flex-wrap:wrap}.schedule-toolbar select{margin-left:0}}
 
+
+    /* Phase 3 final: Basecamp-style categories + complete task form */
+    .category-section{margin-top:28px}
+    .category-heading{display:flex;align-items:center;justify-content:space-between;border-bottom:2px solid #222;padding-bottom:8px}
+    .category-name{font-size:13px;font-weight:800;text-transform:uppercase;letter-spacing:.055em}
+    .category-actions{display:flex;align-items:center;gap:3px}
+    .category-empty{padding:12px 4px 4px}
+    .category-add-task{border:0;background:transparent;color:#557b56;font-size:12px;font-weight:700;padding:10px 4px 3px}
+    .category-add-task:hover{text-decoration:underline}
+    .category-footer-actions{margin-top:28px}
+    .category-new{width:auto;padding:9px 15px}
+    .priority{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.03em;border-radius:12px;padding:3px 6px;text-align:center;white-space:nowrap}
+    .priority-low{background:#f1f1ef;color:#777}
+    .priority-normal{background:#edf3e9;color:#55734f}
+    .priority-high{background:#fff0d9;color:#9a641a}
+    .priority-urgent{background:#fce8e6;color:#a6382d}
+    .task-form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    .task-modal-assignees{border:1px solid #ddd;border-radius:5px;max-height:220px;overflow:auto}
+    .task-person-option{display:grid!important;grid-template-columns:22px 34px minmax(0,1fr);align-items:center;gap:9px;padding:9px 10px;margin:0!important;border-bottom:1px solid #eee;cursor:pointer}
+    .task-person-option:last-child{border-bottom:0}
+    .task-person-option input{width:auto!important}
+    .task-person-option strong,.task-person-option small{display:block}
+    .task-person-option small{font-size:10px;color:#777;margin-top:2px}
+    .task-no-people{padding:12px}
+    .inline-link{border:0;background:transparent;color:#2f7d32;text-decoration:underline;padding:0;font:inherit}
+    @media(max-width:800px){
+      .todo{grid-template-columns:28px 1fr 24px}
+      .todo .task-assignees,.todo .priority,.todo>.meta{display:none}
+      .task-form-grid{grid-template-columns:1fr}
+    }
+
 </style>
 
 </head>
@@ -163,58 +194,117 @@
   <main class="main">
 
     <!-- ============================================================
-         PROJECTS — original Phase 1 Basecamp layout
+         PROJECTS — Phase 1 Basecamp layout, extended (not redesigned)
          ============================================================ -->
     <section x-show="screen==='projects'">
-    <div class="top">
-      <div>
-        <h1 x-text="currentProject.name"></h1>
-        <div class="muted">Project to-dos · <span x-text="activeTodos.length"></span> remaining</div>
-      </div>
-      <span class="badge" x-text="completedTodos.length + ' completed'"></span>
-    </div>
-
-    <div class="add-row">
-      <input x-model="newTodo" @keyup.enter="addTodo()" placeholder="Add a to-do…">
-      <button class="add" @click="addTodo()">Add to-do</button>
-    </div>
-
-    <div class="section-title">To-dos</div>
-    <template x-for="todo in activeTodos" :key="todo.id">
-      <div class="todo">
-        <input type="checkbox" :checked="isCompleted(todo)" @change="toggle(todo)">
-        <button type="button" class="title task-title-btn" x-text="todo.body" @click="openTaskModal(todo)" title="Edit task"></button>
-        <button type="button" class="task-assignees" @click="openAssigneeModal(todo)" title="Assign people">
-          <template x-for="person in taskPeople(todo.id).slice(0,2)" :key="person.id">
-            <span class="person-avatar tiny">
-              <img x-show="person.photo" :src="photoUrl(person.photo)" alt="">
-              <span x-show="!person.photo" x-text="initials(person.name)"></span>
-            </span>
-          </template>
-          <span x-show="taskPeople(todo.id).length===0" class="meta" x-text="todo.assignee || 'Unassigned'"></span>
-          <small x-show="taskPeople(todo.id).length>2" x-text="'+'+(taskPeople(todo.id).length-2)"></small>
-        </button>
-        <div class="meta" x-text="formatDate(todo.due_date)"></div>
-        <button class="delete" @click="remove(todo)" title="Delete">×</button>
-      </div>
-    </template>
-    <div x-show="activeTodos.length === 0" class="muted" style="padding:18px 4px">Everything is complete.</div>
-
-    <div class="completed-wrap" x-show="completedTodos.length">
-      <div class="completed-head">
-        <strong>Completed</strong>
-        <button class="clear" @click="clearCompleted()">Clear completed</button>
-      </div>
-      <template x-for="todo in completedTodos" :key="todo.id">
-        <div class="todo completed">
-          <input type="checkbox" :checked="isCompleted(todo)" @change="toggle(todo)">
-          <button type="button" class="title task-title-btn" x-text="todo.body" @click="openTaskModal(todo)" title="Edit task"></button>
-          <div class="meta" x-text="todo.assignee || 'Unassigned'"></div>
-          <div class="meta" x-text="formatDate(todo.due_date)"></div>
-          <button class="delete" @click="remove(todo)">×</button>
+      <div class="top">
+        <div>
+          <h1 x-text="currentProject.name"></h1>
+          <div class="muted">
+            Project to-dos · <span x-text="activeTodos.length"></span> remaining
+          </div>
         </div>
+        <span class="badge" x-text="completedTodos.length + ' completed'"></span>
+      </div>
+
+      <!-- Quick add keeps the original Phase 1 behavior -->
+      <div class="add-row">
+        <input x-model="newTodo"
+               @keyup.enter="addTodo()"
+               placeholder="Quick add an uncategorized to-do…">
+        <button class="add" @click="addTodo()">Add to-do</button>
+      </div>
+
+      <!-- Categories are Basecamp-style section headings, not cards -->
+      <template x-for="category in displayCategories" :key="category.key">
+        <section class="category-section">
+
+          <div class="category-heading">
+            <div class="category-name" x-text="category.name"></div>
+
+            <div class="category-actions" x-show="category.id">
+              <button type="button"
+                      class="icon-btn"
+                      @click="openCategoryModal(category)"
+                      title="Edit category">✎</button>
+
+              <button type="button"
+                      class="icon-btn"
+                      @click="deleteCategory(category)"
+                      title="Delete category">×</button>
+            </div>
+          </div>
+
+          <template x-for="todo in tasksForCategory(category.id)" :key="todo.id">
+            <div class="todo category-todo" :class="{completed:isCompleted(todo)}">
+
+              <input type="checkbox"
+                     :checked="isCompleted(todo)"
+                     @change="toggle(todo)">
+
+              <button type="button"
+                      class="title task-title-btn"
+                      x-text="todo.body"
+                      @click="openTaskModal(todo)"
+                      title="Edit task"></button>
+
+              <!-- Assignee avatar stack -->
+              <button type="button"
+                      class="task-assignees"
+                      @click="openAssigneeModal(todo)"
+                      title="Assign people">
+
+                <template x-for="person in taskPeople(todo.id).slice(0,2)" :key="person.id">
+                  <span class="person-avatar tiny" :title="person.name">
+                    <img x-show="person.photo" :src="photoUrl(person.photo)" alt="">
+                    <span x-show="!person.photo" x-text="initials(person.name)"></span>
+                  </span>
+                </template>
+
+                <span x-show="taskPeople(todo.id).length===0"
+                      class="meta"
+                      x-text="todo.assignee || 'Unassigned'"></span>
+
+                <small x-show="taskPeople(todo.id).length>2"
+                       x-text="'+'+(taskPeople(todo.id).length-2)"></small>
+              </button>
+
+              <span class="priority"
+                    :class="'priority-'+(todo.priority || 'normal')"
+                    x-text="priorityLabel(todo.priority)"></span>
+
+              <div class="meta" x-text="formatDate(todo.due_date)"></div>
+
+              <button class="delete"
+                      @click="remove(todo)"
+                      title="Delete">×</button>
+            </div>
+          </template>
+
+          <div x-show="tasksForCategory(category.id).length===0"
+               class="muted category-empty">
+            No tasks in this category.
+          </div>
+
+          <button type="button"
+                  class="category-add-task"
+                  @click="openTaskModal(null, category.id)">
+            + Add task
+          </button>
+        </section>
       </template>
-    </div>
+
+      <div class="category-footer-actions">
+        <button type="button" class="new-project category-new" @click="openCategoryModal()">
+          + Add category
+        </button>
+      </div>
+
+      <div x-show="projectTodos.length===0 && categoriesForProject.length===0"
+           class="muted"
+           style="padding:18px 4px">
+        No tasks yet. Add a category or create your first to-do.
+      </div>
     </section>
 
     <!-- ============================================================
@@ -425,21 +515,133 @@
     </div>
   </div>
 
-  <!-- Task create/update modal; quick add row still creates a simple task -->
-  <div class="modal-backdrop" x-show="taskModal" x-transition @click.self="closeTaskModal()" x-cloak>
+  <!-- Full Phase 3 task create/update modal -->
+  <div class="modal-backdrop"
+       x-show="taskModal"
+       x-transition
+       @click.self="closeTaskModal()"
+       x-cloak>
     <div class="modal">
       <h3 x-text="taskForm.id ? 'Edit task' : 'New task'"></h3>
+
       <div class="error-box" x-show="formError" x-text="formError"></div>
-      <div class="field"><label>Task</label><input type="text" x-model="taskForm.body" placeholder="What needs to be done?"></div>
-      <div class="field"><label>Assignee</label><input type="text" x-model="taskForm.assignee" placeholder="Assignee"></div>
-      <div class="field"><label>Due date</label><input type="date" x-model="taskForm.due_date"></div>
+
+      <div class="field">
+        <label>Task</label>
+        <input type="text"
+               x-model="taskForm.body"
+               @keyup.enter="saveTask()"
+               placeholder="What needs to be done?">
+      </div>
+
+      <div class="field">
+        <label>Category</label>
+        <select x-model="taskForm.category_id">
+          <option value="">Uncategorized</option>
+          <template x-for="category in categoriesForProject" :key="category.id">
+            <option :value="category.id" x-text="category.name"></option>
+          </template>
+        </select>
+      </div>
+
+      <div class="field">
+        <label>Assignees</label>
+
+        <div class="task-modal-assignees">
+          <template x-for="person in projectPeople" :key="person.id">
+            <label class="task-person-option">
+              <input type="checkbox"
+                     :checked="selectedTaskAssigneeIds.includes(Number(person.id))"
+                     @change="toggleTaskFormAssignee(person.id)">
+
+              <span class="person-avatar small">
+                <img x-show="person.photo" :src="photoUrl(person.photo)" alt="">
+                <span x-show="!person.photo" x-text="initials(person.name)"></span>
+              </span>
+
+              <span>
+                <strong x-text="person.name"></strong>
+                <small x-text="person.job_title || person.role || 'Team member'"></small>
+              </span>
+            </label>
+          </template>
+
+          <div x-show="projectPeople.length===0" class="muted task-no-people">
+            No people have been added to this project yet.
+            <button type="button" class="inline-link" @click="taskModal=false; openProjectPeople()">
+              Add project people
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="task-form-grid">
+        <div class="field">
+          <label>Priority</label>
+          <select x-model="taskForm.priority">
+            <option value="low">Low</option>
+            <option value="normal">Normal</option>
+            <option value="high">High</option>
+            <option value="urgent">Urgent</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label>Due date</label>
+          <input type="date" x-model="taskForm.due_date">
+        </div>
+      </div>
+
+      <div class="field checkbox-field" x-show="taskForm.id">
+        <label>
+          <input type="checkbox" x-model="taskForm.completed">
+          Completed
+        </label>
+      </div>
+
       <div class="modal-actions">
         <button class="btn" @click="closeTaskModal()">Cancel</button>
-        <button class="btn btn-primary" @click="saveTask()" :disabled="saving" x-text="saving ? 'Saving…' : 'Save task'"></button>
+        <button class="btn btn-primary"
+                @click="saveTask()"
+                :disabled="saving"
+                x-text="saving ? 'Saving…' : 'Save task'"></button>
       </div>
     </div>
   </div>
 
+  <!-- Category create/update modal -->
+  <div class="modal-backdrop"
+       x-show="categoryModal"
+       x-transition
+       @click.self="closeCategoryModal()"
+       x-cloak>
+    <div class="modal">
+      <h3 x-text="categoryForm.id ? 'Edit category' : 'New category'"></h3>
+
+      <div class="error-box" x-show="categoryError" x-text="categoryError"></div>
+
+      <div class="field">
+        <label>Category name</label>
+        <input type="text"
+               x-model="categoryForm.name"
+               @keyup.enter="saveCategory()"
+               placeholder="e.g. Design, Backend, Tweakings">
+      </div>
+
+      <div class="field">
+        <label>Sort order</label>
+        <input type="number" min="0" x-model.number="categoryForm.sort_order">
+      </div>
+
+      <div class="modal-actions">
+        <button class="btn" @click="closeCategoryModal()">Cancel</button>
+        <button class="btn btn-primary"
+                @click="saveCategory()"
+                :disabled="saving"
+                x-text="saving ? 'Saving…' : 'Save category'"></button>
+      </div>
+    </div>
+  </div>
 
   <!-- Add / Edit person -->
   <div class="modal-backdrop" x-show="personModal" x-transition @click.self="closePersonModal()" x-cloak>
@@ -599,6 +801,7 @@ function taskManager(){
     currentProjectId: cached?.currentProjectId ? Number(cached.currentProjectId) : null,
     projects: cached?.projects || [],
     todos: cached?.todos || [],
+    categories: [],
     teamMembers: [],
     projectPeople: [],
     taskAssignments: {},
@@ -611,9 +814,35 @@ function taskManager(){
     saving: false,
     projectModal: false,
     taskModal: false,
+    categoryModal: false,
+    personModal: false,
+    projectPeopleModal: false,
+    assigneeModal: false,
+    eventModal: false,
+    importModal: false,
     formError: '',
+    categoryError: '',
+    teamError: '',
+    personPhoto: null,
+    personPhotoPreview: '',
+    selectedTaskAssigneeIds: [],
+    personForm: {id:null,name:'',email:'',job_title:'',phone:'',status:'active',photo:''},
+    projectMemberForm: {team_member_id:'',role:''},
+    assignmentTask: null,
+    selectedAssigneeIds: [],
+    eventForm: {id:null,project_id:'',title:'',description:'',event_type:'event',start_at:'',end_at:'',all_day:false,location:''},
+    importPreview: [],
     projectForm: {id:null,name:'',color:''},
-    taskForm: {id:null,body:'',assignee:'',due_date:''},
+    taskForm: {
+      id:null,
+      body:'',
+      category_id:'',
+      assignee:'',
+      due_date:'',
+      priority:'normal',
+      completed:false
+    },
+    categoryForm: {id:null,name:'',sort_order:0},
 
     async init(){
       await this.loadData();
@@ -624,6 +853,19 @@ function taskManager(){
     get projectTodos(){ return this.todos.filter(t=>Number(t.project_id)===Number(this.currentProjectId)); },
     get activeTodos(){ return this.projectTodos.filter(t=>!this.isCompleted(t)); },
     get completedTodos(){ return this.projectTodos.filter(t=>this.isCompleted(t)); },
+    get categoriesForProject(){
+      return this.categories
+        .filter(c=>Number(c.project_id)===Number(this.currentProjectId))
+        .sort((a,b)=>(Number(a.sort_order)||0)-(Number(b.sort_order)||0) || String(a.name).localeCompare(String(b.name)));
+    },
+    get displayCategories(){
+      const list=this.categoriesForProject.map(c=>({...c,key:'category-'+c.id}));
+      const hasUncategorized=this.projectTodos.some(t=>!t.category_id);
+      if(hasUncategorized || list.length===0){
+        list.push({id:null,name:'Uncategorized',sort_order:999999,key:'uncategorized'});
+      }
+      return list;
+    },
     get screenTitle(){
       return {mytasks:'My Tasks',schedule:'Schedule',people:'People',activity:'Activity'}[this.screen] || 'Projects';
     },
@@ -680,7 +922,20 @@ function taskManager(){
       try{
         const data=await this.request('<?= site_url('task-manager/data') ?>');
         this.projects=(data.projects||[]).map(p=>({...p,id:Number(p.id)}));
-        this.todos=(data.tasks||[]).map(t=>({...t,id:Number(t.id),project_id:Number(t.project_id),completed:this.isCompleted(t)}));
+        this.categories=(data.categories||[]).map(c=>({
+          ...c,
+          id:Number(c.id),
+          project_id:Number(c.project_id),
+          sort_order:Number(c.sort_order||0)
+        }));
+        this.todos=(data.tasks||[]).map(t=>({
+          ...t,
+          id:Number(t.id),
+          project_id:Number(t.project_id),
+          category_id:t.category_id ? Number(t.category_id) : null,
+          priority:t.priority||'normal',
+          completed:this.isCompleted(t)
+        }));
         const exists=this.projects.some(p=>Number(p.id)===Number(this.currentProjectId));
         if((!this.currentProjectId || !exists) && this.projects.length) this.currentProjectId=this.projects[0].id;
         this.saveCache();
@@ -696,43 +951,242 @@ function taskManager(){
     },
     saveCache(){ localStorage.setItem('basecamp-task-manager',JSON.stringify({projects:this.projects,todos:this.todos,currentProjectId:this.currentProjectId})); },
 
+    tasksForCategory(categoryId){
+      return this.projectTodos.filter(t=>{
+        const sameCategory=categoryId===null
+          ? !t.category_id
+          : Number(t.category_id)===Number(categoryId);
+        return sameCategory;
+      });
+    },
+
+    priorityLabel(priority){
+      const value=String(priority||'normal').toLowerCase();
+      return {low:'Low',normal:'Normal',high:'High',urgent:'Urgent'}[value] || 'Normal';
+    },
+
     async addTodo(){
-      const body=this.newTodo.trim(); if(!body || !this.currentProjectId) return;
+      const body=this.newTodo.trim();
+      if(!body || !this.currentProjectId)return;
+
       this.saving=true;
       try{
         const data=await this.request('<?= site_url('task-manager/tasks') ?>',{
-          method:'POST', body:JSON.stringify({project_id:this.currentProjectId,body})
+          method:'POST',
+          body:JSON.stringify({
+            project_id:this.currentProjectId,
+            category_id:null,
+            body,
+            priority:'normal'
+          })
         });
+
         this.todos.unshift(this.normalizeTask(data.task));
-        this.newTodo=''; this.saveCache();
-      }catch(e){ alert(e.message); }
-      finally{ this.saving=false; }
+        this.newTodo='';
+        this.saveCache();
+      }catch(e){
+        alert(e.message);
+      }finally{
+        this.saving=false;
+      }
     },
 
-    openTaskModal(todo=null){
+    async openTaskModal(todo=null, categoryId=null){
       this.formError='';
-      this.taskForm=todo ? {id:todo.id,body:todo.body,assignee:todo.assignee||'',due_date:todo.due_date||''}
-                         : {id:null,body:'',assignee:'',due_date:''};
+
+      // Project members are the allowed assignees.
+      await this.loadProjectPeople();
+      await this.loadProjectAssignments();
+
+      if(todo){
+        this.taskForm={
+          id:todo.id,
+          body:todo.body||'',
+          category_id:todo.category_id ? Number(todo.category_id) : '',
+          assignee:todo.assignee||'',
+          due_date:todo.due_date||'',
+          priority:todo.priority||'normal',
+          completed:this.isCompleted(todo)
+        };
+        this.selectedTaskAssigneeIds=this.taskPeople(todo.id).map(p=>Number(p.id));
+      }else{
+        this.taskForm={
+          id:null,
+          body:'',
+          category_id:categoryId ? Number(categoryId) : '',
+          assignee:'',
+          due_date:'',
+          priority:'normal',
+          completed:false
+        };
+        this.selectedTaskAssigneeIds=[];
+      }
+
       this.taskModal=true;
     },
-    closeTaskModal(){ this.taskModal=false; },
+
+    closeTaskModal(){
+      this.taskModal=false;
+      this.selectedTaskAssigneeIds=[];
+    },
+
+    toggleTaskFormAssignee(id){
+      id=Number(id);
+      this.selectedTaskAssigneeIds=this.selectedTaskAssigneeIds.includes(id)
+        ? this.selectedTaskAssigneeIds.filter(v=>v!==id)
+        : [...this.selectedTaskAssigneeIds,id];
+    },
 
     async saveTask(){
-      if(!this.taskForm.body.trim()){this.formError='Task description is required.';return;}
-      this.saving=true; this.formError='';
+      if(!this.taskForm.body.trim()){
+        this.formError='Task description is required.';
+        return;
+      }
+
+      this.saving=true;
+      this.formError='';
+
       try{
         const editing=!!this.taskForm.id;
-        const url=editing ? '<?= site_url('task-manager/tasks') ?>/'+this.taskForm.id : '<?= site_url('task-manager/tasks') ?>';
+        const url=editing
+          ? '<?= site_url('task-manager/tasks') ?>/'+this.taskForm.id
+          : '<?= site_url('task-manager/tasks') ?>';
+
+        const payload={
+          project_id:this.currentProjectId,
+          category_id:this.taskForm.category_id || null,
+          body:this.taskForm.body.trim(),
+          due_date:this.taskForm.due_date || null,
+          priority:this.taskForm.priority || 'normal',
+          completed:this.taskForm.completed ? 1 : 0
+        };
+
         const data=await this.request(url,{
           method:editing?'PUT':'POST',
-          body:JSON.stringify({...this.taskForm,project_id:this.currentProjectId})
+          body:JSON.stringify(payload)
         });
+
         const task=this.normalizeTask(data.task);
-        if(editing) this.todos=this.todos.map(t=>Number(t.id)===Number(task.id)?task:t);
-        else this.todos.unshift(task);
-        this.taskModal=false; this.saveCache();
-      }catch(e){this.formError=e.message;}
-      finally{this.saving=false;}
+
+        if(editing){
+          this.todos=this.todos.map(t=>Number(t.id)===Number(task.id)?task:t);
+        }else{
+          this.todos.unshift(task);
+        }
+
+        // Save multi-person assignments after the task exists.
+        const assignmentData=await this.request(
+          '<?= site_url('task-manager/tasks') ?>/'+task.id+'/assignees',
+          {
+            method:'PUT',
+            body:JSON.stringify({team_member_ids:this.selectedTaskAssigneeIds})
+          }
+        );
+
+        this.taskAssignments={
+          ...this.taskAssignments,
+          [task.id]:assignmentData.members||[]
+        };
+
+        this.taskModal=false;
+        this.selectedTaskAssigneeIds=[];
+        this.saveCache();
+
+      }catch(e){
+        this.formError=e.message;
+      }finally{
+        this.saving=false;
+      }
+    },
+
+    // --------------------------------------------------------------
+    // CATEGORY CRUD
+    // --------------------------------------------------------------
+    openCategoryModal(category=null){
+      this.categoryError='';
+      this.categoryForm=category
+        ? {id:category.id,name:category.name||'',sort_order:Number(category.sort_order||0)}
+        : {id:null,name:'',sort_order:this.categoriesForProject.length};
+      this.categoryModal=true;
+    },
+
+    closeCategoryModal(){
+      this.categoryModal=false;
+      this.categoryError='';
+    },
+
+    async saveCategory(){
+      if(!this.categoryForm.name.trim()){
+        this.categoryError='Category name is required.';
+        return;
+      }
+
+      this.saving=true;
+      this.categoryError='';
+
+      try{
+        const editing=!!this.categoryForm.id;
+        const url=editing
+          ? '<?= site_url('task-manager/categories') ?>/'+this.categoryForm.id
+          : '<?= site_url('task-manager/categories') ?>';
+
+        const data=await this.request(url,{
+          method:editing?'PUT':'POST',
+          body:JSON.stringify({
+            project_id:this.currentProjectId,
+            name:this.categoryForm.name.trim(),
+            sort_order:Number(this.categoryForm.sort_order||0)
+          })
+        });
+
+        const category={
+          ...data.category,
+          id:Number(data.category.id),
+          project_id:Number(data.category.project_id),
+          sort_order:Number(data.category.sort_order||0)
+        };
+
+        if(editing){
+          this.categories=this.categories.map(c=>Number(c.id)===category.id?category:c);
+        }else{
+          this.categories.push(category);
+        }
+
+        this.closeCategoryModal();
+
+      }catch(e){
+        this.categoryError=e.message;
+      }finally{
+        this.saving=false;
+      }
+    },
+
+    async deleteCategory(category){
+      if(!category?.id)return;
+
+      if(!confirm(`Delete category "${category.name}"? Its tasks will move to Uncategorized.`)){
+        return;
+      }
+
+      try{
+        await this.request('<?= site_url('task-manager/categories') ?>/'+category.id,{
+          method:'DELETE'
+        });
+
+        this.categories=this.categories.filter(c=>Number(c.id)!==Number(category.id));
+
+        // Database FK uses ON DELETE SET NULL; mirror that immediately in UI.
+        this.todos=this.todos.map(t=>
+          Number(t.category_id)===Number(category.id)
+            ? {...t,category_id:null}
+            : t
+        );
+
+        this.saveCache();
+
+      }catch(e){
+        alert(e.message);
+      }
     },
 
     async toggle(todo){
@@ -1049,7 +1503,16 @@ function taskManager(){
       }catch(e){alert(e.message);}
     },
 
-    normalizeTask(t){return {...t,id:Number(t.id),project_id:Number(t.project_id),completed:this.isCompleted(t)};},
+    normalizeTask(t){
+      return {
+        ...t,
+        id:Number(t.id),
+        project_id:Number(t.project_id),
+        category_id:t.category_id ? Number(t.category_id) : null,
+        priority:t.priority||'normal',
+        completed:this.isCompleted(t)
+      };
+    },
     formatDate(date){
       if(!date)return 'No date';
       const p=String(date).split('-');if(p.length!==3)return date;
