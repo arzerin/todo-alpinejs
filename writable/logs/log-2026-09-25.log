@@ -1,0 +1,51 @@
+CRITICAL - 2026-09-25 13:29:05 --> Invalid file: task_manager/dashboard.php
+in SYSTEMPATH/Exceptions/FrameworkException.php on line 33.
+ 1 SYSTEMPATH/View/View.php(201): CodeIgniter\Exceptions\FrameworkException::forInvalidFile('task_manager/dashboard.php')
+ 2 SYSTEMPATH/Common.php(1137): CodeIgniter\View\View->render('task_manager/dashboard', [], true)
+ 3 APPPATH/Controllers/TaskManager.php(35): view('task_manager/dashboard')
+ 4 SYSTEMPATH/CodeIgniter.php(904): App\Controllers\TaskManager->index()
+ 5 SYSTEMPATH/CodeIgniter.php(457): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\TaskManager))
+ 6 SYSTEMPATH/CodeIgniter.php(340): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 7 FCPATH/index.php(67): CodeIgniter\CodeIgniter->run()
+CRITICAL - 2026-09-25 13:30:30 --> Invalid file: task_manager/dashboard.php
+in SYSTEMPATH/Exceptions/FrameworkException.php on line 33.
+ 1 SYSTEMPATH/View/View.php(201): CodeIgniter\Exceptions\FrameworkException::forInvalidFile('task_manager/dashboard.php')
+ 2 SYSTEMPATH/Common.php(1137): CodeIgniter\View\View->render('task_manager/dashboard', [], true)
+ 3 APPPATH/Controllers/TaskManager.php(35): view('task_manager/dashboard')
+ 4 SYSTEMPATH/CodeIgniter.php(904): App\Controllers\TaskManager->index()
+ 5 SYSTEMPATH/CodeIgniter.php(457): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\TaskManager))
+ 6 SYSTEMPATH/CodeIgniter.php(340): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 7 FCPATH/index.php(67): CodeIgniter\CodeIgniter->run()
+CRITICAL - 2026-09-25 13:30:51 --> Invalid file: task_manager/dashboard.php
+in SYSTEMPATH/Exceptions/FrameworkException.php on line 33.
+ 1 SYSTEMPATH/View/View.php(201): CodeIgniter\Exceptions\FrameworkException::forInvalidFile('task_manager/dashboard.php')
+ 2 SYSTEMPATH/Common.php(1137): CodeIgniter\View\View->render('task_manager/dashboard', [], true)
+ 3 APPPATH/Controllers/TaskManager.php(35): view('task_manager/dashboard')
+ 4 SYSTEMPATH/CodeIgniter.php(904): App\Controllers\TaskManager->index()
+ 5 SYSTEMPATH/CodeIgniter.php(457): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\TaskManager))
+ 6 SYSTEMPATH/CodeIgniter.php(340): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 7 FCPATH/index.php(67): CodeIgniter\CodeIgniter->run()
+CRITICAL - 2026-09-25 13:34:42 --> Invalid file: task_manager/dashboard.php
+in SYSTEMPATH/Exceptions/FrameworkException.php on line 33.
+ 1 SYSTEMPATH/View/View.php(201): CodeIgniter\Exceptions\FrameworkException::forInvalidFile('task_manager/dashboard.php')
+ 2 SYSTEMPATH/Common.php(1137): CodeIgniter\View\View->render('task_manager/dashboard', [], true)
+ 3 APPPATH/Controllers/TaskManager.php(35): view('task_manager/dashboard')
+ 4 SYSTEMPATH/CodeIgniter.php(904): App\Controllers\TaskManager->index()
+ 5 SYSTEMPATH/CodeIgniter.php(457): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\TaskManager))
+ 6 SYSTEMPATH/CodeIgniter.php(340): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 7 FCPATH/index.php(67): CodeIgniter\CodeIgniter->run()
+CRITICAL - 2026-09-25 23:11:09 --> Invalid file: task_manager/dashboard.php
+in SYSTEMPATH/Exceptions/FrameworkException.php on line 33.
+ 1 SYSTEMPATH/View/View.php(201): CodeIgniter\Exceptions\FrameworkException::forInvalidFile('task_manager/dashboard.php')
+ 2 SYSTEMPATH/Common.php(1137): CodeIgniter\View\View->render('task_manager/dashboard', [], true)
+ 3 APPPATH/Controllers/TaskManager.php(35): view('task_manager/dashboard')
+ 4 SYSTEMPATH/CodeIgniter.php(904): App\Controllers\TaskManager->index()
+ 5 SYSTEMPATH/CodeIgniter.php(457): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\TaskManager))
+ 6 SYSTEMPATH/CodeIgniter.php(340): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 7 FCPATH/index.php(67): CodeIgniter\CodeIgniter->run()
+CRITICAL - 2026-09-25 23:47:05 --> Class "App\Models\TaskCategoryModel" not found
+in APPPATH/Controllers/TaskManager.php on line 36.
+ 1 SYSTEMPATH/CodeIgniter.php(866): App\Controllers\TaskManager->__construct()
+ 2 SYSTEMPATH/CodeIgniter.php(448): CodeIgniter\CodeIgniter->createController()
+ 3 SYSTEMPATH/CodeIgniter.php(340): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 4 FCPATH/index.php(67): CodeIgniter\CodeIgniter->run()
