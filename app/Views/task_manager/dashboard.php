@@ -475,6 +475,114 @@
     .task-status-menu-wrap{position:relative;display:inline-flex}.task-status-button{appearance:none;cursor:pointer}
     .task-status-menu{position:absolute;z-index:80;top:calc(100% + 5px);left:0;min-width:145px;background:#fff;border:1px solid #ccc;border-radius:7px;box-shadow:0 7px 22px rgba(0,0,0,.13);padding:5px}
     .task-status-option{display:flex;width:100%;align-items:center;gap:7px;border:0;background:transparent;border-radius:4px;padding:7px 8px;text-align:left;font-size:11px;color:#444;cursor:pointer}.task-status-option:hover{background:#f3f3f1}.task-status-option.current{font-weight:800;background:#f7f7f5}.status-dot{width:8px;height:8px;border:1px solid #999;border-radius:50%;display:inline-block}.workflow-saving{font-size:9px;color:#888;margin-left:4px}
+
+    /* Phase 7.6 — Dependencies & Milestones */
+    .milestone-panel{margin:14px 0 18px;border:1px solid #ddd;border-radius:6px;background:#fbfbfa}
+    .milestone-panel-head{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 14px;border-bottom:1px solid #e4e4e4}
+    .milestone-panel-head h3{margin:0;font-size:14px}.milestone-list{padding:0 14px}
+    .milestone-row{padding:12px 0;border-bottom:1px solid #e8e8e8}.milestone-row:last-child{border-bottom:0}
+    .milestone-row-top{display:flex;justify-content:space-between;gap:12px;align-items:flex-start}.milestone-title{font-size:13px;font-weight:800;color:#333}
+    .milestone-meta{font-size:10px;color:#888;margin-top:3px}.milestone-progress{height:5px;background:#e6e6e3;border-radius:5px;overflow:hidden;margin-top:8px}.milestone-progress>span{display:block;height:100%;background:#777}
+    .dependency-note{display:flex;align-items:center;gap:5px;font-size:10px;color:#777;line-height:1.3;margin-top:2px}.dependency-note.waiting{color:#9a6714;font-weight:700}
+    .waiting-badge{display:inline-flex;align-items:center;border:1px solid #ead9b3;border-radius:12px;padding:2px 7px;font-size:9px;font-weight:800;text-transform:uppercase;background:#fff4dc;color:#8b6418}
+    .dependency-editor{margin-top:8px;padding:10px;border:1px solid #e1e1e1;border-radius:5px;background:#fafafa}.dependency-checklist{max-height:170px;overflow:auto;border:1px solid #ddd;background:#fff;padding:5px}
+    .dependency-choice{display:flex;align-items:flex-start;gap:7px;padding:5px;font-size:11px;border-bottom:1px solid #f0f0f0}.dependency-choice:last-child{border-bottom:0}
+    .milestone-form{padding:14px;border-bottom:1px solid #ddd}.milestone-form-grid{display:grid;grid-template-columns:1fr 160px;gap:10px}
+    @media(max-width:760px){.milestone-form-grid{grid-template-columns:1fr}}
+
+    /* Phase 7.6.1 — Milestone management + modal usability */
+    
+
+    .milestone-description-field {
+        width: 100%;
+        margin-top: 12px;
+    }
+
+    .milestone-description-field textarea {
+        display: block;
+        width: 100%;
+        min-height: 90px;
+        box-sizing: border-box;
+
+        padding: 10px 12px;
+
+        font-family: inherit;
+        font-size: 13px;
+        line-height: 1.5;
+        color: #333;
+
+        background: #fff;
+        border: 1px solid #cfcfcf;
+        border-radius: 5px;
+
+        resize: vertical;
+        outline: none;
+    }
+
+    .milestone-description-field textarea:focus {
+        border-color: #888;
+        box-shadow: 0 0 0 2px rgba(0,0,0,.05);
+    }
+
+    .milestone-description-field textarea::placeholder {
+        color: #aaa;
+    }
+
+    .milestone-summary{display:flex;gap:8px;flex-wrap:wrap;padding:10px 14px;border-bottom:1px solid #e4e4e4;background:#fff}
+    .milestone-stat{font-size:10px;color:#666;border-right:1px solid #ddd;padding-right:10px}.milestone-stat:last-child{border-right:0}
+    .milestone-stat strong{font-size:13px;color:#333;margin-right:3px}
+    .milestone-actions{display:flex;gap:5px;align-items:center}
+    .milestone-link{border:0;background:none;padding:0;color:#315f8c;font-size:11px;cursor:pointer;text-decoration:underline}
+    .milestone-task-list{margin-top:9px;border-top:1px solid #eee;padding-top:6px}
+    .milestone-task-row{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:5px 0;font-size:11px;border-bottom:1px solid #f0f0f0}
+    .milestone-task-row:last-child{border-bottom:0}.milestone-task-title{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+    .milestone-empty-tasks{font-size:10px;color:#999;padding:5px 0}
+    .milestone-status-completed{font-size:9px;font-weight:800;color:#427548;text-transform:uppercase}
+    .milestone-status-overdue{font-size:9px;font-weight:800;color:#9b4b43;text-transform:uppercase}
+    /* Keep long task forms usable: modal body scrolls, footer/actions remain reachable. */
+    .modal-card{max-height:calc(100vh - 48px)!important;display:flex!important;flex-direction:column!important}
+    .modal-card .modal-body{overflow-y:auto!important;min-height:0!important}
+    .modal-card .modal-actions{flex:0 0 auto;position:sticky;bottom:0;background:#fff;z-index:5}
+
+    /* Phase 7.6.1 hotfix — actual Task modal scroll layout */
+    .task-edit-modal{
+        width:min(620px,calc(100vw - 30px));
+        max-height:calc(100vh - 40px);
+        padding:0;
+        display:flex;
+        flex-direction:column;
+        overflow:hidden;
+    }
+    .task-edit-modal-title{
+        flex:0 0 auto;
+        margin:0!important;
+        padding:20px 24px 15px;
+        border-bottom:1px solid #e2e2e2;
+        background:#fff;
+    }
+    .task-edit-modal-body{
+        flex:1 1 auto;
+        min-height:0;
+        overflow-y:auto;
+        overscroll-behavior:contain;
+        padding:18px 24px 10px;
+        -webkit-overflow-scrolling:touch;
+    }
+    .task-edit-modal-actions{
+        flex:0 0 auto;
+        margin:0!important;
+        padding:14px 24px 18px;
+        border-top:1px solid #ddd;
+        background:#fff;
+        box-shadow:0 -4px 10px rgba(0,0,0,.035);
+        z-index:4;
+    }
+    @media(max-height:700px){
+        .task-edit-modal{max-height:calc(100vh - 20px)}
+        .task-edit-modal-title{padding:14px 20px 11px}
+        .task-edit-modal-body{padding:12px 20px 8px}
+        .task-edit-modal-actions{padding:10px 20px 12px}
+    }
 </style>
 
 </head>
@@ -767,7 +875,65 @@
       </div>
 
       <!-- Categories are Basecamp-style section headings, not cards -->
-      <div class="workflow-filterbar" x-show="currentProjectId">
+      <div class="milestone-panel" x-show="currentProjectId">
+          <div class="milestone-panel-head">
+            <div><h3>Milestones</h3><div class="phase6-help">Project targets, dependencies and delivery progress.</div></div>
+            <button type="button" class="btn" @click="openMilestoneCreate()">+ Milestone</button>
+          </div>
+          <div class="milestone-summary">
+            <div class="milestone-stat"><strong x-text="milestones.length"></strong>Total</div>
+            <div class="milestone-stat"><strong x-text="completedMilestoneCount()"></strong>Completed</div>
+            <div class="milestone-stat"><strong x-text="activeMilestoneCount()"></strong>Active</div>
+            <div class="milestone-stat"><strong x-text="overdueMilestoneCount()"></strong>Overdue</div>
+          </div>
+          <div class="milestone-form" x-show="showMilestoneForm" x-cloak>
+            <div class="milestone-form-grid">
+              <div class="field"><label>Milestone</label><input type="text" x-model="milestoneForm.title" placeholder="e.g. Payment Launch"></div>
+              <div class="field"><label>Target date</label><input type="date" x-model="milestoneForm.target_date"></div>
+            </div>
+            <div class="field milestone-description-field"><label>Description</label><textarea rows="2" x-model="milestoneForm.description" placeholder="Short description of the delivery target"></textarea></div>
+            <div class="modal-actions">
+              <button class="btn" @click="cancelMilestoneForm()">Cancel</button>
+              <button class="btn btn-primary" @click="saveMilestone()" x-text="milestoneForm.id ? 'Update milestone' : 'Create milestone'"></button>
+            </div>
+          </div>
+          <div class="milestone-list">
+            <template x-for="m in milestones" :key="'milestone-'+m.id">
+              <div class="milestone-row">
+                <div class="milestone-row-top">
+                  <div>
+                    <div class="milestone-title" x-text="m.title"></div>
+                    <div class="milestone-meta">
+                      <span x-show="m.target_date" x-text="'Target '+formatDate(m.target_date)"></span>
+                      <span x-show="m.owner_name" x-text="' · '+m.owner_name"></span>
+                      <span x-text="' · '+Number(m.completed_tasks||0)+'/'+Number(m.total_tasks||0)+' tasks'"></span>
+                      <span class="milestone-status-completed" x-show="isMilestoneCompleted(m)"> · Completed</span>
+                      <span class="milestone-status-overdue" x-show="isMilestoneOverdue(m)"> · Overdue</span>
+                    </div>
+                  </div>
+                  <div class="milestone-actions">
+                    <button type="button" class="milestone-link" @click="toggleMilestoneTasks(m.id)" x-text="expandedMilestoneId===Number(m.id)?'Hide tasks':'View tasks'"></button>
+                    <button type="button" class="milestone-link" @click="editMilestone(m)">Edit</button>
+                    <span class="mini-badge" x-text="milestoneProgress(m)+'%'"></span>
+                  </div>
+                </div>
+                <div class="milestone-progress"><span :style="'width:'+milestoneProgress(m)+'%'"></span></div>
+                <div class="milestone-task-list" x-show="expandedMilestoneId===Number(m.id)" x-cloak>
+                  <template x-for="mt in milestoneTasks(m.id)" :key="'mt-'+mt.id">
+                    <div class="milestone-task-row">
+                      <button type="button" class="milestone-link milestone-task-title" @click="openTaskModal(mt)" x-text="mt.body"></button>
+                      <span class="workflow-status" :class="'status-'+taskStatus(mt)" x-text="taskStatusLabel(taskStatus(mt))"></span>
+                    </div>
+                  </template>
+                  <div class="milestone-empty-tasks" x-show="milestoneTasks(m.id).length===0">No tasks are attached to this milestone yet.</div>
+                </div>
+              </div>
+            </template>
+            <div class="register-empty" x-show="milestones.length===0">No milestones yet. Add a delivery target and attach tasks from the task editor.</div>
+          </div>
+        </div>
+
+        <div class="workflow-filterbar" x-show="currentProjectId">
           <button type="button" class="workflow-filter" :class="{active:workflowFilter==='all'}" @click="workflowFilter='all'">All <span class="count" x-text="workflowCount('all')"></span></button>
           <button type="button" class="workflow-filter" :class="{active:workflowFilter==='todo'}" @click="workflowFilter='todo'">To Do <span class="count" x-text="workflowCount('todo')"></span></button>
           <button type="button" class="workflow-filter" :class="{active:workflowFilter==='in_progress'}" @click="workflowFilter='in_progress'">In Progress <span class="count" x-text="workflowCount('in_progress')"></span></button>
@@ -844,6 +1010,9 @@
 
 
                 <span class="workflow-blocked-note" x-show="taskStatus(todo)==='blocked' && todo.blocked_reason" x-text="todo.blocked_reason"></span>
+                <span class="waiting-badge" x-show="todo.dependency_waiting">Waiting</span>
+                <span class="dependency-note waiting" x-show="todo.dependency_waiting" x-text="dependencySummary(todo)"></span>
+                <span class="dependency-note" x-show="!todo.dependency_waiting && Number(todo.dependency_count||0)>0" x-text="dependencySummary(todo)"></span>
 
 
               </div>
@@ -1421,8 +1590,10 @@
        x-transition
        @click.self="closeTaskModal()"
        x-cloak>
-    <div class="modal">
-      <h3 x-text="taskForm.id ? 'Edit task' : 'New task'"></h3>
+    <div class="modal task-edit-modal">
+      <h3 class="task-edit-modal-title" x-text="taskForm.id ? 'Edit task' : 'New task'"></h3>
+
+      <div class="task-edit-modal-body">
 
       <div class="error-box" x-show="formError" x-text="formError"></div>
 
@@ -1508,6 +1679,27 @@
         </div>
       </div>
 
+      <div class="field" x-show="taskForm.id">
+        <label>Milestone</label>
+        <select x-model="taskForm.milestone_id">
+          <option value="">No milestone</option>
+          <template x-for="m in milestones" :key="'task-milestone-'+m.id"><option :value="String(m.id)" x-text="m.title"></option></template>
+        </select>
+      </div>
+
+      <div class="dependency-editor" x-show="taskForm.id">
+        <label>Blocked by / depends on</label>
+        <div class="phase6-help">This task cannot start cleanly until the selected tasks are completed.</div>
+        <div class="dependency-checklist">
+          <template x-for="candidate in dependencyCandidates(taskForm.id)" :key="'dependency-'+candidate.id">
+            <label class="dependency-choice">
+              <input type="checkbox" :value="String(candidate.id)" x-model="taskForm.dependency_ids">
+              <span><strong x-text="candidate.body"></strong><small x-text="' · '+taskStatusLabel(taskStatus(candidate))"></small></span>
+            </label>
+          </template>
+        </div>
+      </div>
+
       <div class="field" x-show="taskForm.status==='blocked'"><label>Why is this blocked?</label><textarea x-model="taskForm.blocked_reason" placeholder="Dependency, approval, external provider, missing information…"></textarea></div>
       <div class="field checkbox-field" x-show="taskForm.id">
         <label>
@@ -1516,9 +1708,11 @@
         </label>
       </div>
 
-      <div class="modal-actions">
+      </div><!-- /.task-edit-modal-body -->
+
+      <div class="modal-actions task-edit-modal-actions">
         <a x-show="taskForm.id"
-           class="btn btn-secondary" 
+           class="btn btn-secondary"
            style="text-decoration:none;"
            :href="taskDetailUrl(taskForm.id)"
            title="Open task discussion, files and full details">
@@ -1945,6 +2139,10 @@ function taskManager(){
   let csrfHash = '<?= csrf_hash() ?>';
 
   return {
+    milestones:[],
+    showMilestoneForm:false,
+    milestoneForm:{id:null,title:'',description:'',target_date:''},
+    expandedMilestoneId:null,
     workflowFilter:'all',
     statusMenuTaskId:null,
     workflowSavingTaskId:null,
@@ -2037,6 +2235,8 @@ function taskManager(){
       priority:'normal',
       status:'todo',
       blocked_reason:'',
+      milestone_id:'',
+      dependency_ids:[],
       completed:false
     },
     categoryForm: {id:null,name:'',sort_order:0},
@@ -2046,6 +2246,7 @@ function taskManager(){
 
     async init(){
       await this.loadData();
+      await this.loadPlanning();
       await Promise.all([this.loadProjectPeople(),this.loadProjectAssignments()]);
       this.$nextTick(()=>this.initDragSorting());
     },
@@ -2461,6 +2662,8 @@ function taskManager(){
           priority:todo.priority||'normal',
           status:todo.status || (this.isCompleted(todo) ? 'done' : 'todo'),
           blocked_reason:todo.blocked_reason || '',
+          milestone_id:todo.milestone_id ? String(todo.milestone_id) : '',
+          dependency_ids:(todo.dependency_ids||[]).map(String),
           completed:this.isCompleted(todo)
         };
         this.selectedTaskAssigneeIds=this.taskPeople(todo.id).map(p=>Number(p.id));
@@ -2474,6 +2677,8 @@ function taskManager(){
           priority:'normal',
           status:'todo',
           blocked_reason:'',
+          milestone_id:'',
+          dependency_ids:[],
           completed:false
         };
         this.selectedTaskAssigneeIds=[];
@@ -2526,6 +2731,7 @@ function taskManager(){
         let task=this.normalizeTask(data.task);
         const workflow=await this.request('<?= site_url('task-manager/workflow/tasks') ?>/'+task.id+'/status',{method:'PUT',body:JSON.stringify({status:this.taskForm.status || 'todo',blocked_reason:this.taskForm.status==='blocked' ? (this.taskForm.blocked_reason || '') : ''})});
         task=this.normalizeTask(workflow.task || task);
+        await this.saveTaskPlanning(task.id);
 
         if(editing){
           this.todos=this.todos.map(t=>Number(t.id)===Number(task.id)?task:t);
@@ -3882,6 +4088,122 @@ function taskManager(){
       finally{this.aiSubtaskAccepting=false;}
     },
 
+    async loadPlanning(){
+      if(!this.currentProjectId){this.milestones=[];return;}
+      try{
+        const data=await this.request('<?= site_url('task-manager/planning/projects') ?>/'+this.currentProjectId);
+        this.milestones=data.milestones||[];
+        const planning=data.tasks||{};
+        this.todos=this.todos.map(t=>{
+          const p=planning[String(t.id)]||planning[t.id]||{};
+          return this.normalizeTask({...t,...p});
+        });
+      }catch(e){console.error('Planning load failed',e);}
+    },
+
+    milestoneProgress(m){
+      const total=Number(m.total_tasks||0), done=Number(m.completed_tasks||0);
+      return total ? Math.round((done/total)*100) : 0;
+    },
+
+    dependencyCandidates(taskId){
+      return this.todos.filter(t=>Number(t.project_id)===Number(this.currentProjectId) && Number(t.id)!==Number(taskId));
+    },
+
+    dependencySummary(todo){
+      const names=todo.incomplete_dependency_names||[];
+      if(todo.dependency_waiting){
+        if(names.length===1)return 'Waiting for: '+names[0];
+        if(names.length>1)return 'Waiting for '+names.length+' dependencies: '+names.slice(0,2).join(', ')+(names.length>2?'…':'');
+        return 'Waiting for incomplete dependency';
+      }
+      const count=Number(todo.dependency_count||0);
+      return count ? 'Depends on '+count+' task'+(count===1?'':'s') : '';
+    },
+
+    openMilestoneCreate(){
+      this.milestoneForm={id:null,title:'',description:'',target_date:''};
+      this.showMilestoneForm=true;
+    },
+
+    editMilestone(m){
+      this.milestoneForm={
+        id:Number(m.id),
+        title:m.title||'',
+        description:m.description||'',
+        target_date:m.target_date||''
+      };
+      this.showMilestoneForm=true;
+    },
+
+    cancelMilestoneForm(){
+      this.showMilestoneForm=false;
+      this.milestoneForm={id:null,title:'',description:'',target_date:''};
+    },
+
+    toggleMilestoneTasks(id){
+      id=Number(id);
+      this.expandedMilestoneId=this.expandedMilestoneId===id?null:id;
+    },
+
+    milestoneTasks(id){
+      return this.todos.filter(t=>Number(t.milestone_id)===Number(id));
+    },
+
+    isMilestoneCompleted(m){
+      return Number(m.total_tasks||0)>0 && Number(m.completed_tasks||0)===Number(m.total_tasks||0);
+    },
+
+    isMilestoneOverdue(m){
+      if(!m.target_date || this.isMilestoneCompleted(m))return false;
+      const today=new Date(); today.setHours(0,0,0,0);
+      const target=new Date(m.target_date+'T00:00:00');
+      return target<today;
+    },
+
+    completedMilestoneCount(){
+      return this.milestones.filter(m=>this.isMilestoneCompleted(m)).length;
+    },
+
+    activeMilestoneCount(){
+      return this.milestones.filter(m=>!this.isMilestoneCompleted(m)).length;
+    },
+
+    overdueMilestoneCount(){
+      return this.milestones.filter(m=>this.isMilestoneOverdue(m)).length;
+    },
+
+    async saveMilestone(){
+      const title=(this.milestoneForm.title||'').trim();
+      if(!title){alert('Milestone title is required.');return;}
+      try{
+        const editing=Boolean(this.milestoneForm.id);
+        const url=editing
+          ? '<?= site_url('task-manager/planning/milestones') ?>/'+this.milestoneForm.id
+          : '<?= site_url('task-manager/planning/projects') ?>/'+this.currentProjectId+'/milestones';
+        await this.request(url,{
+          method:editing?'PUT':'POST',
+          body:JSON.stringify(this.milestoneForm)
+        });
+        this.cancelMilestoneForm();
+        await this.loadPlanning();
+      }catch(e){alert(e.message);}
+    },
+
+    async saveTaskPlanning(taskId){
+      if(!taskId)return;
+      try{
+        await this.request('<?= site_url('task-manager/planning/tasks') ?>/'+taskId,{
+          method:'PUT',
+          body:JSON.stringify({
+            milestone_id:this.taskForm.milestone_id || null,
+            dependency_ids:(this.taskForm.dependency_ids||[]).map(Number)
+          })
+        });
+        await this.loadPlanning();
+      }catch(e){throw e;}
+    },
+
     workflowCount(status){
       const projectTasks=this.todos.filter(t=>Number(t.project_id)===Number(this.currentProjectId));
       if(status==='all') return projectTasks.length;
@@ -3933,6 +4255,12 @@ function taskManager(){
         priority:t.priority||'normal',
         status:t.status || (this.isCompleted(t) ? 'done' : 'todo'),
         blocked_reason:t.blocked_reason || '',
+        milestone_id:t.milestone_id || null,
+        milestone_title:t.milestone_title || '',
+        dependency_ids:Array.isArray(t.dependency_ids) ? t.dependency_ids.map(Number) : [],
+        dependency_count:Number(t.dependency_count||0),
+        dependency_waiting:Boolean(Number(t.dependency_waiting||0) || t.dependency_waiting===true),
+        incomplete_dependency_names:Array.isArray(t.incomplete_dependency_names) ? t.incomplete_dependency_names : [],
         completed:this.isCompleted(t)
       };
     },

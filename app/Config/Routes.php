@@ -213,6 +213,12 @@ $routes->post('task-manager/intelligence/meetings/(:num)/sync', 'DecisionCommitm
 $routes->put('task-manager/intelligence/commitments/(:num)', 'DecisionCommitmentIntelligence::updateCommitment/$1');
 $routes->post('task-manager/intelligence/commitments/(:num)/create-task', 'DecisionCommitmentIntelligence::createTask/$1');
 
+$routes->get('task-manager/planning/projects/(:num)', 'ProjectPlanning::project/$1');
+$routes->post('task-manager/planning/projects/(:num)/milestones', 'ProjectPlanning::createMilestone/$1');
+$routes->put('task-manager/planning/milestones/(:num)', 'ProjectPlanning::updateMilestone/$1');
+$routes->put('task-manager/planning/tasks/(:num)', 'ProjectPlanning::updateTaskPlanning/$1');
+
+
 /*
  * --------------------------------------------------------------------
  * Additional Routing
