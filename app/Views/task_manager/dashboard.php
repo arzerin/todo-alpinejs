@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Task Manager</title>
+<script defer src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.6/Sortable.min.js"></script>
 <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 <style>
 
@@ -440,6 +441,29 @@
     .meeting-file-actions button{border:0;background:transparent;color:#a33;font-size:11px;padding:0}
     .meeting-upload-status{font-size:11px;color:#777;margin-top:7px}
 
+
+    /* Phase 7.2 — Basecamp-style drag sorting */
+    .drag-handle{
+      border:0;background:transparent;color:#aaa;padding:0 5px 0 0;
+      cursor:grab;font-size:17px;line-height:1;opacity:.22;
+      user-select:none;touch-action:none
+    }
+    .category-heading:hover .drag-handle,
+    .category-todo:hover .drag-handle{opacity:.85}
+    .drag-handle:active{cursor:grabbing}
+    .category-heading-left{display:flex;align-items:center;gap:6px;min-width:0}
+    .category-sort-handle{font-size:18px}
+    .category-todo{grid-template-columns:20px 28px minmax(0,1fr) 105px 66px 82px 24px}
+    .task-sort-zone{min-height:7px}
+    .task-sort-zone:empty{min-height:32px}
+    .sortable-ghost{opacity:.28;background:#f1f1ef}
+    .sortable-chosen{background:#fafaf8}
+    .sortable-drag{box-shadow:0 4px 14px rgba(0,0,0,.12);background:#fff}
+    .drag-saving{font-size:11px;color:#888;margin-left:7px;font-weight:500}
+    @media(max-width:800px){
+      .category-todo{grid-template-columns:20px 28px minmax(0,1fr) 24px}
+    }
+
 </style>
 
 </head>
@@ -732,11 +756,24 @@
       </div>
 
       <!-- Categories are Basecamp-style section headings, not cards -->
+      <div id="category-sort-container">
       <template x-for="category in displayCategories" :key="category.key">
-        <section class="category-section">
+        <section class="category-section"
+                 :data-category-id="category.id || null">
 
           <div class="category-heading">
-            <div class="category-name" x-text="category.name"></div>
+            <div class="category-heading-left">
+              <button x-show="category.id"
+                      type="button"
+                      class="drag-handle category-sort-handle"
+                      title="Drag to reorder category"
+                      aria-label="Drag to reorder category">⠿</button>
+
+              <div class="category-name" x-text="category.name"></div>
+
+              <span class="drag-saving"
+                    x-show="dragSaving">Saving order…</span>
+            </div>
 
             <div class="category-actions" x-show="category.id">
               <button type="button"
@@ -751,8 +788,17 @@
             </div>
           </div>
 
+          <div class="task-sort-zone"
+               :data-category-id="category.id || ''">
           <template x-for="todo in tasksForCategory(category.id)" :key="todo.id">
-            <div class="todo category-todo" :class="{completed:isCompleted(todo)}">
+            <div class="todo category-todo"
+                 :data-task-id="todo.id"
+                 :class="{completed:isCompleted(todo)}">
+
+              <button type="button"
+                      class="drag-handle task-sort-handle"
+                      title="Drag to reorder or move task"
+                      aria-label="Drag to reorder task">⠿</button>
 
               <input type="checkbox"
                      :checked="isCompleted(todo)"
@@ -796,6 +842,7 @@
                       title="Delete">×</button>
             </div>
           </template>
+          </div>
 
           <div x-show="tasksForCategory(category.id).length===0"
                class="muted category-empty">
@@ -809,6 +856,7 @@
           </button>
         </section>
       </template>
+      </div>
 
       <div class="category-footer-actions">
         <button type="button" class="new-project category-new" @click="openCategoryModal()">
@@ -1926,10 +1974,14 @@ function taskManager(){
       completed:false
     },
     categoryForm: {id:null,name:'',sort_order:0},
+    dragSaving: false,
+    categorySortable: null,
+    taskSortables: [],
 
     async init(){
       await this.loadData();
       await Promise.all([this.loadProjectPeople(),this.loadProjectAssignments()]);
+      this.$nextTick(()=>this.initDragSorting());
     },
 
     get currentProject(){ return this.projects.find(p=>Number(p.id)===Number(this.currentProjectId)) || this.projects[0] || {name:'Projects'}; },
@@ -2139,6 +2191,7 @@ function taskManager(){
           id:Number(t.id),
           project_id:Number(t.project_id),
           category_id:t.category_id ? Number(t.category_id) : null,
+          sort_order:Number(t.sort_order||0),
           priority:t.priority||'normal',
           completed:this.isCompleted(t)
         }));
@@ -2155,6 +2208,7 @@ function taskManager(){
       this.loadProjectPeople();
       this.loadProjectAssignments();
       if(this.screen==='dashboard')this.refreshDashboard();
+      this.$nextTick(()=>this.initDragSorting());
     },
     saveCache(){ localStorage.setItem('basecamp-task-manager',JSON.stringify({projects:this.projects,todos:this.todos,currentProjectId:this.currentProjectId})); },
 
@@ -2164,7 +2218,133 @@ function taskManager(){
           ? !t.category_id
           : Number(t.category_id)===Number(categoryId);
         return sameCategory;
+      }).sort((a,b)=>
+        (Number(a.sort_order)||0)-(Number(b.sort_order)||0)
+        || Number(a.id)-Number(b.id)
+      );
+    },
+
+    initDragSorting(){
+      if(typeof Sortable==='undefined') return;
+
+      if(this.categorySortable){
+        this.categorySortable.destroy();
+        this.categorySortable=null;
+      }
+
+      this.taskSortables.forEach(instance=>instance.destroy());
+      this.taskSortables=[];
+
+      const categoryContainer=document.getElementById('category-sort-container');
+
+      if(categoryContainer){
+        this.categorySortable=Sortable.create(categoryContainer,{
+          animation:150,
+          handle:'.category-sort-handle',
+          draggable:'.category-section[data-category-id]',
+          ghostClass:'sortable-ghost',
+          chosenClass:'sortable-chosen',
+          dragClass:'sortable-drag',
+          onEnd:()=>this.persistCategoryOrder()
+        });
+      }
+
+      document.querySelectorAll('.task-sort-zone').forEach(zone=>{
+        this.taskSortables.push(Sortable.create(zone,{
+          group:'project-tasks',
+          animation:150,
+          handle:'.task-sort-handle',
+          draggable:'.category-todo',
+          ghostClass:'sortable-ghost',
+          chosenClass:'sortable-chosen',
+          dragClass:'sortable-drag',
+          emptyInsertThreshold:18,
+          onEnd:()=>this.persistTaskOrder()
+        }));
       });
+    },
+
+    async persistCategoryOrder(){
+      const ids=[...document.querySelectorAll(
+        '#category-sort-container > .category-section[data-category-id]'
+      )]
+        .map(section=>Number(section.dataset.categoryId))
+        .filter(Boolean);
+
+      if(!ids.length) return;
+
+      this.dragSaving=true;
+
+      try{
+        await this.request('<?= site_url('task-manager/categories/reorder') ?>',{
+          method:'PUT',
+          body:JSON.stringify({
+            project_id:this.currentProjectId,
+            category_ids:ids
+          })
+        });
+
+        ids.forEach((id,index)=>{
+          const category=this.categories.find(c=>Number(c.id)===id);
+          if(category) category.sort_order=(index+1)*10;
+        });
+      }catch(error){
+        alert(error.message || 'Unable to save category order.');
+        await this.loadData();
+      }finally{
+        this.dragSaving=false;
+        this.$nextTick(()=>this.initDragSorting());
+      }
+    },
+
+    async persistTaskOrder(){
+      const tasks=[];
+
+      document.querySelectorAll('.task-sort-zone').forEach(zone=>{
+        const categoryId=zone.dataset.categoryId
+          ? Number(zone.dataset.categoryId)
+          : null;
+
+        [...zone.querySelectorAll(':scope > .category-todo[data-task-id]')]
+          .forEach((row,index)=>{
+            tasks.push({
+              id:Number(row.dataset.taskId),
+              category_id:categoryId,
+              sort_order:(index+1)*10
+            });
+          });
+      });
+
+      if(!tasks.length) return;
+
+      this.dragSaving=true;
+
+      try{
+        await this.request('<?= site_url('task-manager/tasks/reorder') ?>',{
+          method:'PUT',
+          body:JSON.stringify({
+            project_id:this.currentProjectId,
+            tasks:tasks
+          })
+        });
+
+        tasks.forEach(item=>{
+          const task=this.todos.find(t=>Number(t.id)===Number(item.id));
+
+          if(task){
+            task.category_id=item.category_id;
+            task.sort_order=item.sort_order;
+          }
+        });
+
+        this.saveCache();
+      }catch(error){
+        alert(error.message || 'Unable to save task order.');
+        await this.loadData();
+      }finally{
+        this.dragSaving=false;
+        this.$nextTick(()=>this.initDragSorting());
+      }
     },
 
     priorityLabel(priority){

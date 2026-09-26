@@ -202,6 +202,11 @@ $routes->get('task-manager/meeting-files/(:num)/download', 'MeetingFiles::downlo
 $routes->delete('task-manager/meeting-files/(:num)', 'MeetingFiles::delete/$1');
 
 
+
+$routes->put('task-manager/categories/reorder', 'TaskManager::reorderCategories');
+$routes->put('task-manager/tasks/reorder', 'TaskManager::reorderTasks');
+
+
 /*
  * --------------------------------------------------------------------
  * Additional Routing

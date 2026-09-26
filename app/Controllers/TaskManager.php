@@ -6,7 +6,6 @@ use App\Controllers\BaseController;
 use App\Models\ProjectModel;
 use App\Models\TaskModel;
 use App\Models\TaskCategoryModel;
-use App\Services\ActivityService;
 use CodeIgniter\HTTP\ResponseInterface;
 
 /**
@@ -29,14 +28,12 @@ class TaskManager extends BaseController
     protected ProjectModel $projects;
     protected TaskModel $tasks;
     protected TaskCategoryModel $categories;
-    protected ActivityService $activity;
 
     public function __construct()
     {
         $this->projects   = new ProjectModel();
         $this->tasks      = new TaskModel();
         $this->categories = new TaskCategoryModel();
-        $this->activity   = new ActivityService();
     }
 
     /**
@@ -80,18 +77,6 @@ class TaskManager extends BaseController
      *
      * are treated as the same task/category text.
      */
-    /**
-     * Normalize task priority to the values supported by the Phase 3 UI.
-     */
-    private function validPriority(?string $priority): string
-    {
-        $priority = strtolower(trim((string) $priority));
-
-        return in_array($priority, ['low', 'normal', 'high', 'urgent'], true)
-            ? $priority
-            : 'normal';
-    }
-
     private function normalizeText(?string $value): string
     {
         $value = trim((string) $value);
@@ -158,28 +143,15 @@ class TaskManager extends BaseController
             ], 500);
         }
 
-        $project = $this->projects->find($id);
-
-        $this->activity->log(
-            (int) $id,
-            'project.created',
-            'created a project',
-            'project',
-            (int) $id,
-            ['project' => $project['name'] ?? $name]
-        );
-
         return $this->json([
             'success' => true,
-            'project' => $project,
+            'project' => $this->projects->find($id),
         ], 201);
     }
 
     public function updateProject(int $id): ResponseInterface
     {
-        $before = $this->projects->find($id);
-
-        if (!$before) {
+        if (!$this->projects->find($id)) {
             return $this->json([
                 'success' => false,
                 'message' => 'Project not found.',
@@ -210,61 +182,20 @@ class TaskManager extends BaseController
             $this->projects->update($id, $update);
         }
 
-        $project = $this->projects->find($id);
-
-        if ($update) {
-            $changes = [];
-            foreach ($update as $field => $value) {
-                if (($before[$field] ?? null) != $value) {
-                    $changes[$field] = [
-                        'from' => $before[$field] ?? null,
-                        'to'   => $value,
-                    ];
-                }
-            }
-
-            if ($changes) {
-                $this->activity->log(
-                    (int) $id,
-                    'project.updated',
-                    'updated a project',
-                    'project',
-                    (int) $id,
-                    [
-                        'project' => $project['name'] ?? '',
-                        'changes' => $changes,
-                    ]
-                );
-            }
-        }
-
         return $this->json([
             'success' => true,
-            'project' => $project,
+            'project' => $this->projects->find($id),
         ]);
     }
 
     public function deleteProject(int $id): ResponseInterface
     {
-        $project = $this->projects->find($id);
-
-        if (!$project) {
+        if (!$this->projects->find($id)) {
             return $this->json([
                 'success' => false,
                 'message' => 'Project not found.',
             ], 404);
         }
-
-        // Log before deletion. Depending on your FK policy, project deletion may
-        // intentionally remove project-scoped history together with the project.
-        $this->activity->log(
-            (int) $id,
-            'project.deleted',
-            'deleted a project',
-            'project',
-            (int) $id,
-            ['project' => $project['name'] ?? '']
-        );
 
         // Categories/tasks are removed through the database FK cascade rules.
         $this->projects->delete($id);
@@ -321,18 +252,9 @@ class TaskManager extends BaseController
             'sort_order' => $sortOrder,
         ], true);
 
-        $category = $this->categories->find($id);
-
-        $this->activity->categoryChanged(
-            $projectId,
-            'created',
-            (int) $id,
-            $category['name'] ?? $name
-        );
-
         return $this->json([
             'success'  => true,
-            'category' => $category,
+            'category' => $this->categories->find($id),
         ], 201);
     }
 
@@ -384,28 +306,15 @@ class TaskManager extends BaseController
             $this->categories->update($id, $update);
         }
 
-        $updatedCategory = $this->categories->find($id);
-
-        if ($update) {
-            $this->activity->categoryChanged(
-                (int) $category['project_id'],
-                'updated',
-                (int) $id,
-                $updatedCategory['name'] ?? $category['name']
-            );
-        }
-
         return $this->json([
             'success'  => true,
-            'category' => $updatedCategory,
+            'category' => $this->categories->find($id),
         ]);
     }
 
     public function deleteCategory(int $id): ResponseInterface
     {
-        $category = $this->categories->find($id);
-
-        if (!$category) {
+        if (!$this->categories->find($id)) {
             return $this->json([
                 'success' => false,
                 'message' => 'Category not found.',
@@ -422,13 +331,6 @@ class TaskManager extends BaseController
          * Therefore deleting a category keeps its tasks and they appear under
          * "Uncategorized" in the Basecamp-style dashboard.
          */
-        $this->activity->categoryChanged(
-            (int) $category['project_id'],
-            'deleted',
-            (int) $id,
-            $category['name']
-        );
-
         $this->categories->delete($id);
 
         return $this->json([
@@ -475,35 +377,26 @@ class TaskManager extends BaseController
             }
         }
 
+        $maxTaskSort=$this->tasks
+            ->where('project_id',$projectId)
+            ->where('category_id',$categoryId)
+            ->selectMax('sort_order')
+            ->first();
+        $nextTaskSort=((int)($maxTaskSort['sort_order'] ?? 0))+10;
+
         $id = $this->tasks->insert([
             'project_id'  => $projectId,
             'category_id' => $categoryId,
+            'sort_order'  => $nextTaskSort,
             'body'        => $body,
             'assignee'    => ($data['assignee'] ?? '') ?: null,
             'due_date'    => ($data['due_date'] ?? '') ?: null,
-            'priority'    => $this->validPriority($data['priority'] ?? 'normal'),
             'completed'   => !empty($data['completed']) ? 1 : 0,
-            'completed_at'=> !empty($data['completed']) ? date('Y-m-d H:i:s') : null,
         ], true);
-
-        $task = $this->tasks->find($id);
-
-        $this->activity->taskCreated(
-            $projectId,
-            $task
-        );
-
-        // If a task is created already completed, record that state transition too.
-        if ((int) ($task['completed'] ?? 0) === 1) {
-            $this->activity->taskCompleted(
-                $projectId,
-                $task
-            );
-        }
 
         return $this->json([
             'success' => true,
-            'task'    => $task,
+            'task'    => $this->tasks->find($id),
         ], 201);
     }
 
@@ -544,11 +437,6 @@ class TaskManager extends BaseController
 
         if (array_key_exists('completed', $data)) {
             $update['completed'] = !empty($data['completed']) ? 1 : 0;
-            $update['completed_at'] = $update['completed'] ? date('Y-m-d H:i:s') : null;
-        }
-
-        if (array_key_exists('priority', $data)) {
-            $update['priority'] = $this->validPriority($data['priority']);
         }
 
         if (array_key_exists('category_id', $data)) {
@@ -574,67 +462,20 @@ class TaskManager extends BaseController
             $this->tasks->update($id, $update);
         }
 
-        $after = $this->tasks->find($id);
-
-        if ($update) {
-            // Completion/reopen is a first-class activity event.
-            $wasCompleted = (int) ($task['completed'] ?? 0) === 1;
-            $isCompleted  = (int) ($after['completed'] ?? 0) === 1;
-
-            if (!$wasCompleted && $isCompleted) {
-                $this->activity->taskCompleted(
-                    (int) $after['project_id'],
-                    $after
-                );
-            } elseif ($wasCompleted && !$isCompleted) {
-                $this->activity->taskReopened(
-                    (int) $after['project_id'],
-                    $after
-                );
-            }
-
-            // Store field-level changes for the Activity UI.
-            $changes = [];
-
-            foreach (['body', 'category_id', 'assignee', 'priority', 'due_date'] as $field) {
-                if (($task[$field] ?? null) != ($after[$field] ?? null)) {
-                    $changes[$field] = [
-                        'from' => $task[$field] ?? null,
-                        'to'   => $after[$field] ?? null,
-                    ];
-                }
-            }
-
-            if ($changes) {
-                $this->activity->taskUpdated(
-                    (int) $after['project_id'],
-                    $after,
-                    $changes
-                );
-            }
-        }
-
         return $this->json([
             'success' => true,
-            'task'    => $after,
+            'task'    => $this->tasks->find($id),
         ]);
     }
 
     public function deleteTask(int $id): ResponseInterface
     {
-        $task = $this->tasks->find($id);
-
-        if (!$task) {
+        if (!$this->tasks->find($id)) {
             return $this->json([
                 'success' => false,
                 'message' => 'Task not found.',
             ], 404);
         }
-
-        $this->activity->taskDeleted(
-            (int) $task['project_id'],
-            $task
-        );
 
         $this->tasks->delete($id);
 
@@ -642,6 +483,92 @@ class TaskManager extends BaseController
             'success' => true,
         ]);
     }
+
+    /**
+     * Persist Basecamp-style category drag order.
+     */
+    public function reorderCategories(): ResponseInterface
+    {
+        $data=$this->input();
+        $projectId=(int)($data['project_id'] ?? 0);
+        $ids=$data['category_ids'] ?? [];
+
+        if(!$this->projects->find($projectId)){
+            return $this->json(['success'=>false,'message'=>'Project not found.'],404);
+        }
+        if(!is_array($ids)){
+            return $this->json(['success'=>false,'message'=>'Invalid category order.'],422);
+        }
+
+        $db=db_connect();
+        $db->transStart();
+
+        foreach(array_values($ids) as $index=>$rawId){
+            $id=(int)$rawId;
+            $category=$this->categories->find($id);
+            if(!$category || (int)$category['project_id']!==$projectId){
+                $db->transRollback();
+                return $this->json(['success'=>false,'message'=>'Invalid category in reorder request.'],422);
+            }
+            $this->categories->update($id,['sort_order'=>($index+1)*10]);
+        }
+
+        $db->transComplete();
+        if(!$db->transStatus()){
+            return $this->json(['success'=>false,'message'=>'Unable to save category order.'],500);
+        }
+        return $this->json(['success'=>true]);
+    }
+
+    /**
+     * Persist task order and allow a task to move between categories.
+     */
+    public function reorderTasks(): ResponseInterface
+    {
+        $data=$this->input();
+        $projectId=(int)($data['project_id'] ?? 0);
+        $items=$data['tasks'] ?? [];
+
+        if(!$this->projects->find($projectId)){
+            return $this->json(['success'=>false,'message'=>'Project not found.'],404);
+        }
+        if(!is_array($items)){
+            return $this->json(['success'=>false,'message'=>'Invalid task order.'],422);
+        }
+
+        $db=db_connect();
+        $db->transStart();
+
+        foreach($items as $item){
+            $taskId=(int)($item['id'] ?? 0);
+            $task=$this->tasks->find($taskId);
+            if(!$task || (int)$task['project_id']!==$projectId){
+                $db->transRollback();
+                return $this->json(['success'=>false,'message'=>'Invalid task in reorder request.'],422);
+            }
+
+            $categoryId=!empty($item['category_id']) ? (int)$item['category_id'] : null;
+            if($categoryId!==null){
+                $category=$this->categories->find($categoryId);
+                if(!$category || (int)$category['project_id']!==$projectId){
+                    $db->transRollback();
+                    return $this->json(['success'=>false,'message'=>'Invalid destination category.'],422);
+                }
+            }
+
+            $this->tasks->update($taskId,[
+                'category_id'=>$categoryId,
+                'sort_order'=>max(10,(int)($item['sort_order'] ?? 10)),
+            ]);
+        }
+
+        $db->transComplete();
+        if(!$db->transStatus()){
+            return $this->json(['success'=>false,'message'=>'Unable to save task order.'],500);
+        }
+        return $this->json(['success'=>true]);
+    }
+
 
     // -------------------------------------------------------------------------
     // MARKDOWN IMPORT
@@ -843,9 +770,7 @@ class TaskManager extends BaseController
                 'body'        => $body,
                 'assignee'    => null,
                 'due_date'    => null,
-                'priority'    => 'normal',
                 'completed'   => !empty($item['completed']) ? 1 : 0,
-                'completed_at'=> !empty($item['completed']) ? date('Y-m-d H:i:s') : null,
             ], true);
 
             /*
@@ -865,12 +790,6 @@ class TaskManager extends BaseController
                 'message' => 'Import failed. Database changes were rolled back.',
             ], 500);
         }
-
-        $this->activity->imported(
-            $projectId,
-            $insertedTasks,
-            $skippedTasks
-        );
 
         return $this->json([
             'success'            => true,
